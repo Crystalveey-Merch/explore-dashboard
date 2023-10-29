@@ -33,7 +33,7 @@ export const Register = () => {
 
     useEffect(() => {
         if (user) {
-            navigate("/feed")
+            navigate("/")
         }
     }, [user, navigate])
 

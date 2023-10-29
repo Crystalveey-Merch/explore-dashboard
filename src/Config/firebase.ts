@@ -22,11 +22,14 @@ import {
     where,
     getDoc,
     setDoc,
+    addDoc,
+    deleteDoc,
     doc,
     getDocs,
     updateDoc,
     serverTimestamp,
 } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 
 const firebaseConfig = {
@@ -45,13 +48,15 @@ const analytics = getAnalytics(app);
 
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
+
 
 export const createUserProfileDocument = async (userAuth: User,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     additionalData: any) => {
     if (!userAuth) return;
 
-    const userRef = doc(db, `save4LaterUsers/${userAuth.uid}`);
+    const userRef = doc(db, `admins/${userAuth.uid}`);
     const snapShot = await getDoc(userRef);
 
     if (!snapShot.exists()) {
@@ -59,11 +64,6 @@ export const createUserProfileDocument = async (userAuth: User,
         const { displayName, email, photoURL } = userAuth;
         const createdAt = new Date().toISOString()
 
-        const middleName = "";
-        const gender = "";
-        const dateOfBirth = "";
-        const phoneNumber = "";
-        const country = "";
         const lastLogin = serverTimestamp();
 
         try {
@@ -71,11 +71,6 @@ export const createUserProfileDocument = async (userAuth: User,
                 displayName,
                 email,
                 photoURL,
-                middleName,
-                gender,
-                dateOfBirth,
-                phoneNumber,
-                country,
                 createdAt,
                 lastLogin,
                 ...additionalData,
@@ -97,6 +92,7 @@ export type {
 export {
     analytics,
     auth,
+    storage,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signOut,
@@ -107,12 +103,14 @@ export {
     updateProfile,
     updateEmail,
     updatePassword,
+    deleteDoc,
     db,
     collection,
     query,
     where,
     getDoc,
     setDoc,
+    addDoc,
     doc,
     getDocs,
     updateDoc,

@@ -19,7 +19,7 @@ export const Login = () => {
 
     useEffect(() => {
         if (user) {
-            navigate("/feed")
+            navigate("/")
         }
     }, [user, navigate])
 
@@ -28,11 +28,11 @@ export const Login = () => {
 
         try {
             const { user } = await signInWithEmailAndPassword(auth, email, password)
-            const userRef = doc(db, "users", user.uid);
+            const userRef = doc(db, "admins", user.uid);
             await updateDoc(userRef, {
                 lastLogin: serverTimestamp(),
             });
-            navigate("/feed")
+            navigate("/")
             toast.success("Login Successful")
         } catch (error: any) {
             toast.error(error.message)

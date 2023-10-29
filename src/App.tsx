@@ -20,8 +20,11 @@ import {
 } from "./Config/firebase";
 import { collection, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 import './App.css'
-import { AuthLayout } from './Layout';
-import { Login, Register, ForgetPassword, VerifyEmail } from './Pages';
+import { AuthLayout, DasboardLayout } from './Layout';
+import {
+  Login, Register, ForgetPassword, VerifyEmail, Overview,
+  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage
+} from './Pages';
 
 function App() {
   const dispatch = useDispatch()
@@ -39,7 +42,7 @@ function App() {
       localStorage.setItem("user", JSON.stringify(user));
 
       // Fetch all users from Firestore
-      const usersRef = collection(db, "save4LaterUsers");
+      const usersRef = collection(db, "admins");
       const usersSnapshot = await getDocs(usersRef);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const users: any[] = [];
@@ -63,7 +66,7 @@ function App() {
 
   // Fetch all users from Firestore and update in real time
   useEffect(() => {
-    const usersRef = collection(db, "save4LaterUsers");
+    const usersRef = collection(db, "admins");
     const unsubscribe = onSnapshot(usersRef, (usersSnapshot) => {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,7 +87,7 @@ function App() {
 
   //update user profile in real time
   useEffect(() => {
-    const userRef = collection(db, "save4LaterUsers");
+    const userRef = collection(db, "admins");
     const unsubscribe = onSnapshot(userRef, (userSnapshot) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const users: any[] = [];
@@ -108,12 +111,12 @@ function App() {
   return (
     <div>
       <Routes>
-      <Route
+        <Route
           path="/"
           element={
-            <AuthLayout>
-              <Login />
-            </AuthLayout>
+            <DasboardLayout>
+              <Overview />
+            </DasboardLayout>
           }
         />
         <Route
@@ -146,6 +149,54 @@ function App() {
             <AuthLayout>
               <VerifyEmail />
             </AuthLayout>
+          }
+        />
+        <Route
+          path='/activities'
+          element={
+            <DasboardLayout>
+              <Activities />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/activities/add"
+          element={
+            <DasboardLayout>
+              <AddActivity />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/activities/edit/:id"
+          element={
+            <DasboardLayout>
+              <EditActivity />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/travel-packages"
+          element={
+            <DasboardLayout>
+              <TravelPackages />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/travel-packages/add"
+          element={
+            <DasboardLayout>
+              <AddTravelPackage />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/travel-packages/edit/:id"
+          element={
+            <DasboardLayout>
+              <EditTravelPackage />
+            </DasboardLayout>
           }
         />
       </Routes>
