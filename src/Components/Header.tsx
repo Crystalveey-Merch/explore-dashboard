@@ -66,7 +66,7 @@ export const Header = () => {
                 />
             </div> */}
             <div className='flex gap-3.5 items-center sm:gap-1'>
-                <NavLink to='/notifications' className='bar-item'>
+                <NavLink to='/' className='bar-item'>
                     <img src={notificationImg} alt="bell" className='h-6 w-6' />
                 </NavLink>
                 <ProfileDropdown />
