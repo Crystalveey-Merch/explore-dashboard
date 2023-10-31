@@ -2,8 +2,8 @@
 
 import { NavLink, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import hideImg from "../../assets/Svg/Auth/Eye.svg"
-import showImg from "../../assets/Svg/Auth/eye-closed.svg"
+import hideImg from "../../assets/SVG/Auth/Eye.svg"
+import showImg from "../../assets/SVG/Auth/eye-closed.svg"
 import { toast } from "react-toastify"
 import { useSelector } from "react-redux";
 import { selectUser } from "../../Config/userSlice"
