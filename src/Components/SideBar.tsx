@@ -32,10 +32,10 @@ export const SideBar = () => {
 
     return (
         <div className="bar-links sm:z-2" onClick={handleMenu}>
-            <div className="h-screen bg[#00afef] w-[268px] flex flex-col justify-between border-r border-gray-300 2xl:w-[250px] xl:w-max md:px2 sm:absolute sm:bg-white sm:pt-20 sm:w-[230px]">
+            <div className="h-screen bg[#00afef] w-[268px] flex flex-col justify-between border-r border-gray-300 2xl:w-[250px] xl:w-max md:px2 sm:absolute sm:bg-white sm:pt-20 sm:w-[230px]" onClick={(e) => e.stopPropagation()}>
                 <div className="flex flex-col gap10 h-full">
                     <NavLink to="/">
-                        <h2 className="bar-item px-0.5 uppercase font-bold text-4xl text-blue-700 xl:text-center xl:py-4 sm:py-0 sm:text-left sm:pl-2 sm:text-3xl">
+                        <h2 className=" px-0.5 uppercase font-bold text-4xl text-blue-700 xl:text-center xl:py-4 sm:py-0 sm:text-left sm:pl-2 sm:text-3xl">
                             <span className="xl:hidden">
                                 <img src={Logo} alt="logo" className="w-full h-20" />
                             </span>
@@ -48,7 +48,7 @@ export const SideBar = () => {
                     <div className="h-full bg-[#00afef] pt-10 p-2 flex flex-col gap-3 sm:py-3 sm:p-1">
                         <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
                             <NavLink to="/"
-                                className={({ isActive }) => (isActive ? "bar-item flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 xl:px-3 sm:h-8 bg-gray-800" : "bar-item flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 ")}
+                                className={({ isActive }) => (isActive ? "flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 bg-gray-500" : "flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 ")}
                             >
                                 <img src={barChartSVG} alt="bar-chart" className="w-6 h-6" />
                                 <h4 className={`font-semibold text-base xl:hidden sm:text-[15px] sm:block ${location.pathname === "/" ? "text-white" : "text-white"}`}>
@@ -87,7 +87,7 @@ export const SideBar = () => {
                                 className={`pl-1 flex flex-col gap-1.5 w-full h-0 overflow-hidden transition-all duration-500 ease-in-out ${activityDropdown ? "h-[90px]" : ""}`}
                             >
                                 <li className="bar-item hover:text-gray-400">
-                                    <NavLink to="/activities" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/activities" ? "bg-gray-800" : ""}`}>
+                                    <NavLink to="/activities" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/activities" ? "bg-gray-500" : ""}`}>
                                         <p className={`font-semibold text-base sm:text-[15px] ${location.pathname === "/activities" ? "text-white" : "text-white"}`}>
                                             <span className="xl:hidden sm:block"> All Activities</span>
                                             <span className="hidden xl:block sm:hidden">
@@ -97,7 +97,7 @@ export const SideBar = () => {
                                     </NavLink>
                                 </li>
                                 <li className="bar-item hover:text-gray-400">
-                                    <NavLink to="/activities/add" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/activities/add" ? "bg-gray-800" : ""}`}>
+                                    <NavLink to="/activities/add" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/activities/add" ? "bg-gray-500" : ""}`}>
                                         <img src={PlusSVG} alt="plus" className="w-4 h-4" />
                                         <p className={`font-semibold text-base xl:hidden sm:text-[15px] sm:block ${location.pathname === "/activities/add" ? "text-white" : "text-white"}`}>
                                             Add Activity
@@ -106,7 +106,7 @@ export const SideBar = () => {
                                 </li>
                             </ul>
                         </div>
-                        <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
+                        <div className=" flex flex-col items-center gap-1 xl:px-1">
                             <div
                                 className={`flex justify-between w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5  cursor-pointer`}
                                 onClick={() => setTravelPackageDropdown(!travelPackageDropdown)}
@@ -136,20 +136,20 @@ export const SideBar = () => {
                             <ul
                                 className={`pl-1 flex flex-col gap-1.5 w-full h-0 overflow-hidden transition-all duration-500 ease-in-out ${travelPackageDropdown ? "h-[90px]" : ""}`}
                             >
-                                <li className="hover:text-gray-400">
-                                    <NavLink to="/travel-packages" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/travel-packages" ? "bg-gray-800" : ""}`}>
+                                <li className="bar-item hover:text-gray-400">
+                                    <NavLink to="/travel-packages" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/travel-packages" ? "bg-gray-500" : ""}`}>
                                         <p className={`font-semibold text-base sm:text-[15px] ${location.pathname === "/travel-packages" ? "text-white" : "text-white"}`}>
                                             <span className="xl:hidden sm:block">
-                                                 All Travel Packages
-                                                 </span>
+                                                All Travel Packages
+                                            </span>
                                             <span className="hidden xl:block sm:hidden">
                                                 All
                                             </span>
                                         </p>
                                     </NavLink>
                                 </li>
-                                <li className="hover:text-gray-400">
-                                    <NavLink to="/travel-packages/add" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/travel-packages/add" ? "bg-gray-800" : ""}`}>
+                                <li className="bar-item hover:text-gray-400">
+                                    <NavLink to="/travel-packages/add" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/travel-packages/add" ? "bg-gray-500" : ""}`}>
                                         <img src={PlusSVG} alt="plus" className="w-4 h-4" />
                                         <p className={`font-semibold text-base xl:hidden sm:text-[15px] sm:block ${location.pathname === "/travel-packages/add" ? "text-white" : "text-white"}`}>
                                             Add Travel Package
