@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom"
 import { collection, getDocs, deleteDoc, doc, db } from '../../Config/firebase';
 import { toast } from "react-toastify";
-import { BlueButton } from "../../Components"
-import { WhiteButton } from "../../Components";
+import { BlueButton } from "../../Components";
 import PlusSVG from "../../assets/SVG/Dashboard/plus.svg"
 
 
@@ -60,17 +59,18 @@ export const Activities = () => {
     }
 
     return (
-        <div className="px-10 py-14 flex flex-col gap-20">
-            <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold text-gray-800">
+        <div className="px-10 py-14 flex flex-col gap-20 xl:px-6 xl:w-[calc(100vw-100px)] lg:gap-16 md:gap-12 sm:w-[100vw] sm:gap-9">
+            <div className="flex justify-between items-center sm:flex-col sm:items-start sm:gap-3">
+                <h1 className="text-3xl font-bold text-gray-800 xl:text-2xl lg:text-xl">
                     Activities
                 </h1>
                 <NavLink to="/activities/add">
                     <BlueButton
+                        className="lg:py-1.5"
                         label={
                             <div className="flex items-center gap-2">
-                                <img src={PlusSVG} alt="plus" className="w-4 h-4" />
-                                <p className="">Add New Activity</p>
+                                <img src={PlusSVG} alt="plus" className="w-4 h-4 lg:w-3.5 lg:h-3.5" />
+                                <p className="xl:text-sm xl:font-normal">Add New Activity</p>
                             </div>
                         }
                         onClick={undefined} />
@@ -79,9 +79,9 @@ export const Activities = () => {
             <div className="flex flex-col gap-10">
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
-                        <h2 className="text-xl font-bold text-gray-800">
+                        {/* <h2 className="text-xl font-bold text-gray-800">
                             Activities
-                        </h2>
+                        </h2> */}
                         <p className="text-sm text-gray-500">
                             List of all activities
                         </p>
@@ -139,7 +139,7 @@ export const Activities = () => {
                                     </div>
                                 </div>
                             </div> */}
-                            <div className="w-full min-h-[400px] flex flex-col gap-10 border border-gray-200 rounded-xl shadow ">
+                            {/* <div className="w-full min-h-[400px] flex flex-col gap-10 border border-gray-200 rounded-xl shadow overflow-x-scroll overflow-y-hidden">
                                 <table className="table-auto w-full text-left">
                                     <thead>
                                         <tr
@@ -204,6 +204,70 @@ export const Activities = () => {
                                                             className="bg-red-600 hover:bg-red-700 border-red-600 hover:border-red-700"
                                                         />
                                                     </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    ))}
+                                </table>
+                            </div> */}
+                            <div className="relative w-full lg:overflow-x-scroll xl:overflow-y-hidden shadow-md xl:rounded-lg">
+                                <table className="w-full text-sm text-left text-gray-500">
+                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                        <tr>
+
+                                            <th scope="col" className="px-6 py-3">
+                                                Activity name
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Amount
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Category
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Available
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Location
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    {activities.map((activity, index) => (
+                                        <tbody key={index}>
+                                            <tr className="bg-white border-b hover:bg-gray-50">
+
+                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex gap-2 items-center mx-5">
+                                                    <img
+                                                        src={activity.imageOne}
+                                                        alt="activity"
+                                                        className="w-14 h-14 rounded-md object-cover"
+                                                    />
+                                                    <p>
+                                                        {activity.name}
+                                                    </p>
+                                                </th>
+                                                <td className="px-6 py-4">
+                                                    {activity.price ? activity.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }) : "Free"}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    {activity.category}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    Yes
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    {activity.location}
+                                                </td>
+                                                <td className="flex items-center px-6 py-4 space-x-3">
+                                                    <NavLink
+                                                        to={`/activities/edit/${activity.id}`}
+                                                        className="font-medium my-auto text-blue-600 dark:text-blue-500 hover:underline">Edit</NavLink>
+                                                    <button
+                                                        onClick={() => handleDelete(activity.id, activity.name)}
+                                                        className="font-medium my-auto text-red-600 dark:text-red-500 hover:underline">Remove</button>
                                                 </td>
                                             </tr>
                                         </tbody>

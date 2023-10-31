@@ -5,7 +5,6 @@ import { collection, getDocs, deleteDoc, doc, db } from '../../Config/firebase';
 import { toast } from "react-toastify";
 import handleFormattedDateRange from "../../Hooks/handleFormattedDateRange";
 import { BlueButton } from "../../Components"
-import { WhiteButton } from "../../Components";
 import PlusSVG from "../../assets/SVG/Dashboard/plus.svg"
 
 
@@ -62,23 +61,25 @@ export const TravelPackages = () => {
     }
 
     return (
-        <div className="px-10 py-14 flex flex-col gap-20 xl:px-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold text-gray-800">
+        <div className="px-10 py-14 flex flex-col gap-20 xl:px-6 xl:w-[calc(100vw-100px)] lg:gap-16 md:gap-12 sm:w-[100vw] sm:gap-9">
+            <div className="flex justify-between items-center sm:flex-col sm:items-start sm:gap-3">
+                <h1 className="text-3xl font-bold text-gray-800 xl:text-2xl lg:text-xl">
                     Travel Packages
                 </h1>
                 <NavLink to="/travel-packages/add">
                     <BlueButton
+                    className="lg:py-1.5"
                         label={
                             <div className="flex items-center gap-2">
-                                <img src={PlusSVG} alt="plus" className="w-4 h-4" />
-                                <p className="">Add New Package</p>
+                                <img src={PlusSVG} alt="plus" className="w-4 h-4 lg:w-3.5 lg:h-3.5" />
+                                <p className="xl:text-sm xl:font-normal">Add New Package</p>
                             </div>
                         }
                         onClick={undefined} />
                 </NavLink>
             </div>
-            <div className="w-full min-h-[400px] flex flex-col gap-10 border border-gray-200 rounded-xl shadow">
+
+            {/* <div className="w-full min-h-[400px] flex flex-col gap-10 border border-gray-200 rounded-xl shadow">
                 <table className="table-auto w-full text-left">
                     <thead>
                         <tr
@@ -147,7 +148,71 @@ export const TravelPackages = () => {
                         </tbody >
                     ))}
                 </table >
-            </div >
+            </div > */}
+
+            <div className="relative w-full lg:overflow-x-scroll xl:overflow-y-hidden shadow-md xl:rounded-lg">
+                <table className="w-full text-sm text-left text-gray-500">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+
+                            <th scope="col" className="px-6 py-3">
+                                Package name
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Date
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Available
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Price
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Duration
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    {travelPackages.map((travelPackage, index) => (
+                        <tbody key={index} >
+                            <tr className="bg-white border-b hover:bg-gray-50 ">
+
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex gap-2 items-center mx-6">
+                                    <img
+                                        src={travelPackage.images.imageOne}
+                                        alt="travelPackage"
+                                        className="w-14 h-14 rounded-md object-cover"
+                                    />
+                                    <p >
+                                        {travelPackage.title}
+                                    </p>
+                                </th>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    {handleFormattedDateRange(travelPackage.startDate, travelPackage.endDate)}
+                                </td>
+                                <td className="px-6 py-4">
+                                    Yes
+                                </td>
+                                <td className="px-6 py-4">
+                                    {travelPackage.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                                </td>
+                                <td className="px-6 py-4">
+                                    {travelPackage.duration} days
+                                </td>
+                                <td className="flex items-center px-6 py-4 space-x-3">
+
+                                    <NavLink to={`/travel-packages/edit/${travelPackage.id}`} className="font-medium my-auto text-blue-600 dark:text-blue-500 hover:underline">Edit</NavLink>
+                                    <button
+                                        onClick={() => handleDelete(travelPackage.id, travelPackage.title)} className="font-medium my-auto text-red-600 dark:text-red-500 hover:underline">Remove</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    ))}
+                </table>
+            </div>
+
         </div >
     )
 }
