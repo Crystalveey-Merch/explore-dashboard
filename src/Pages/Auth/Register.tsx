@@ -25,7 +25,6 @@ export const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     // const [userType, setUserType] = useState("writer")
 
-
     useEffect(() => {
         // Update the display name when firstName or lastName changes
         setDisplayName(`${firstName} ${lastName}`);
