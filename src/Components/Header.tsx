@@ -2,36 +2,40 @@ import { NavLink } from 'react-router-dom'
 import notificationImg from '../assets/SVG/Dashboard/notification.svg'
 import { ProfileDropdown } from '.';
 import { useDispatch, useSelector } from 'react-redux';
+import { selectToggle, toggleMenu } from '../Config/rightBarToggleSlice';
 
 export const Header = () => {
     const dispatch = useDispatch();
+    const state = useSelector(selectToggle)
     //console.log(state)
 
-    // const handleMenu = () => {
-    //     const barLinks = document.querySelector(".bar-links");
-    //     barLinks?.classList.toggle("open");
+    const handleMenu = () => {
+        const barLinks = document.querySelector(".bar-links");
+        barLinks?.classList.toggle("open");
 
-    //     const barItems = document.querySelectorAll(".bar-item");
-    //     barItems.forEach((item) => {
-    //         item.addEventListener("click", () => {
-    //             barLinks?.classList.remove("open");
-    //             dispatch(toggleMenu())
-    //         });
-    //     });
-    //     dispatch(toggleMenu())
+        const barItems = document.querySelectorAll(".bar-item");
+        barItems.forEach((item) => {
+            item.addEventListener("click", () => {
+                barLinks?.classList.remove("open");
+                dispatch(toggleMenu())
+            });
+        });
+        dispatch(toggleMenu())
 
-    // }
+    }
 
     return (
         <div className="bg-white z-40 h-20 px-6 border-b border-gray-300  justify-between flex items-center md:px-3 sm:px-2">
             <div className="flex items-center gap-3 sm:gap-1">
                 <button
                     id="menu-btn"
-                    // onClick={handleMenu}
-                    // className={`hamburger  ${state ? "open" : ""
-                    //     } hidden sm:block focus:outline-none z-30 `}
+                    onClick={handleMenu}
+                    className={`hamburger  ${state ? "open" : ""
+                        } hidden sm:flex focus:outline-none z-30 `}
                 >
-                    <svg fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <svg fill="none" stroke="currentColor" 
+                    className='h-10 w-10'
+                    strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
                     </svg>
                 </button>

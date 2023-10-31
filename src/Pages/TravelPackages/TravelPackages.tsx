@@ -62,7 +62,7 @@ export const TravelPackages = () => {
     }
 
     return (
-        <div className="px-10 py-14 flex flex-col gap-20">
+        <div className="px-10 py-14 flex flex-col gap-20 xl:px-6">
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-gray-800">
                     Travel Packages

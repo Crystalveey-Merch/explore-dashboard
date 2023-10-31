@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './userSlice'
 import usersReducer from './usersSlice'
+import toggleSlice from './rightBarToggleSlice'
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     users: usersReducer,
+    toggle: toggleSlice,
   },
   
   // devTools: {

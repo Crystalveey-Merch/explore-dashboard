@@ -272,17 +272,17 @@ export const AddActivity = () => {
 
 
     return (
-        <div className="px-10 py-11 pb-16 flex flex-col gap-12">
+        <div className="px-10 py-11 pb-16 flex flex-col gap-12 xl:px-5 md:gap-8">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-800">
+                <h1 className="text-2xl font-bold text-gray-800 md:text-xl">
                     Add Activity
                 </h1>
             </div>
             <form className="w-full min-h-[400px] flex flex-col gap-10">
-                <div className="flex gap-10">
+                <div className="flex gap-10 xl:gap-5 lg:flex-col">
                     <div className="flex flex-1 flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                         <div className="p-3 border-b border-gray-200">
-                            <h3 className="text-xl font-semibold text-gray-700">
+                            <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
                                 Activity Info
                             </h3>
                         </div>
@@ -328,7 +328,7 @@ export const AddActivity = () => {
                     </div>
                     <div className="flex flex-1 flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                         <div className="p-3 border-b border-gray-200">
-                            <h3 className="text-xl font-semibold text-gray-700">
+                            <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
                                 Activity Images
                             </h3>
                         </div>
@@ -483,11 +483,11 @@ export const AddActivity = () => {
                 </div>
                 <div className="flex flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                     <div className="p-3 border-b border-gray-200">
-                        <h3 className="text-xl font-semibold text-gray-700">
+                        <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
                             Activity  Details
                         </h3>
                     </div>
-                    <div className="grid grid-cols-2 grid-flow-row p-4 gap-8">
+                    <div className="grid grid-cols-2 grid-flow-row p-4 gap-8 lg:flex lg:flex-col">
                         <label htmlFor="country" className="flex flex-col gap-1.5">
                             <p className="text-sm font-medium text-gray-700">
                                 Country
@@ -579,14 +579,17 @@ export const AddActivity = () => {
                             <p className="text-sm font-medium text-gray-700">
                                 What To Expect
                             </p>
+                            <div className="sticky top-32 bg-white z-10 p-2">
 
-                            <button
-                                className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
-                                type="button"
-                                onClick={handleAddWhatToExpectField}
-                            >
-                                Add What To Expect Field
-                            </button>
+
+                                <button
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
+                                    type="button"
+                                    onClick={handleAddWhatToExpectField}
+                                >
+                                    Add What To Expect Field
+                                </button>
+                            </div>
                         </div>
                         {whatToExpect.map((item, index) => (
                             <div key={index} className="flex flex-col gap-4 p-3 border border-gray-100 rounded">
@@ -598,7 +601,7 @@ export const AddActivity = () => {
                                     />
                                 )}
                                 <div className='flex flex-col gap-4 w-full'>
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-2 lg:flex-col lg:gap-3">
                                         <label htmlFor="name" className="flex flex-col gap-1.5 w-full">
                                             <p className="text-sm font-medium text-gray-700">
                                                 Name

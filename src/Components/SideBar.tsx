@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { NavLink } from "react-router-dom"
+import { useDispatch, } from 'react-redux';
+import { toggleMenu } from '../Config/rightBarToggleSlice';
 import Logo from "../../public/logo-black.png"
 import PlusSVG from "../assets/SVG/Dashboard/plus.svg"
 import barChartSVG from "../assets/SVG/Dashboard/bar-chart-square.svg"
@@ -8,29 +10,45 @@ import travelPackageSVG from "../assets/SVG/Dashboard/tour.svg"
 
 
 export const SideBar = () => {
+    const dispatch = useDispatch();
     const [activityDropdown, setActivityDropdown] = useState<boolean>(false);
     const [travelPackageDropdown, setTravelPackageDropdown] = useState<boolean>(false);
 
+    const handleMenu = () => {
+        const barLinks = document.querySelector(".bar-links");
+        barLinks?.classList.toggle("open");
+
+        const barItems = document.querySelectorAll(".bar-item");
+        barItems.forEach((item) => {
+            item.addEventListener("click", () => {
+                barLinks?.classList.remove("open");
+                dispatch(toggleMenu())
+            });
+        });
+        dispatch(toggleMenu())
+
+    }
+
 
     return (
-        <div className="bar-links sm:z-2">
-            <div className="h-screen bg[#00afef] w-[268px] flex flex-col justify-between pb-6 border-r border-gray-300 2xl:w-[240px] xl:w-max md:px-2 sm:absolute sm:bg-white sm:pt-24 sm:w-[200px]">
+        <div className="bar-links sm:z-2"  onClick={handleMenu}>
+            <div className="h-screen bg[#00afef] w-[268px] flex flex-col justify-between border-r border-gray-300 2xl:w-[240px] xl:w-max md:px2 sm:absolute sm:bg-white sm:pt-20 sm:w-[230px]">
                 <div className="flex flex-col gap10 h-full">
                     <NavLink to="/">
-                        <h2 className="bar-item px-0.5 uppercase font-bold text-4xl text-blue-700 xl:text-center sm:text-left sm:pl-2 sm:text-3xl">
-                            <span className="xl:hidden sm:block">
+                        <h2 className="bar-item px-0.5 uppercase font-bold text-4xl text-blue-700 xl:text-center xl:py-4 sm:py-0 sm:text-left sm:pl-2 sm:text-3xl">
+                            <span className="xl:hidden">
                                 <img src={Logo} alt="logo" className="w-full h-20" />
                             </span>
                             <span className="hidden xl:inline text-center text-5xl font-extrabold sm:hidden">
-                                C
+                                EC
                             </span>
                         </h2>
 
                     </NavLink>
-                    <div className="h-full bg-[#00afef] pt-10 p-4 flex flex-col gap-2">
+                    <div className="h-full bg-[#00afef] pt-10 p-4 flex flex-col gap-2 sm:py-3 sm:p-1">
                         <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
                             <NavLink to="/"
-                                className={({ isActive }) => (isActive ? "flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 xl:px-3 sm:h-8 bg-gray-800" : "flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 xl:px-3 sm:h-8")}
+                                className={({ isActive }) => (isActive ? "bar-item flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 xl:px-3 sm:h-8 bg-gray-800" : "bar-item flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 xl:px-3 sm:h-8")}
                             >
                                 <img src={barChartSVG} alt="bar-chart" className="w-6 h-6" />
                                 <h4 className={`font-semibold text-base xl:hidden sm:text-sm sm:block ${location.pathname === "/" ? "text-white" : "text-white"}`}>

@@ -86,7 +86,7 @@ export const Activities = () => {
                             List of all activities
                         </p>
                     </div>
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 w-full">
                         {/* <div className="flex justify-between items-center">
                             <div className="flex flex-col gap-2">
                                 <p className="text-sm text-gray-500">
@@ -113,7 +113,7 @@ export const Activities = () => {
                                 </div>
                             </div>
                         </div> */}
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4 w-full">
                             {/* <div className="flex justify-between items-center">
                                 <div className="flex gap-4">
                                     <div className="flex gap-2">
@@ -139,7 +139,7 @@ export const Activities = () => {
                                     </div>
                                 </div>
                             </div> */}
-                            <div className="w-full min-h-[400px] flex flex-col gap-10 border border-gray-200 rounded-xl shadow">
+                            <div className="w-full min-h-[400px] flex flex-col gap-10 border border-gray-200 rounded-xl shadow ">
                                 <table className="table-auto w-full text-left">
                                     <thead>
                                         <tr
