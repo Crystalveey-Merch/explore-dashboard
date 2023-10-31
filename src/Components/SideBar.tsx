@@ -130,7 +130,7 @@ export const SideBar = () => {
                                         </p>
                                     </NavLink>
                                 </li>
-                            </ul>rr
+                            </ul>
                         </div>
                     </div>
                 </div>

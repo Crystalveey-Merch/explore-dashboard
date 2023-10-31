@@ -25,17 +25,25 @@ export const AddActivity = () => {
         { id: 4, name: "SPA", description: "Indulge in a relaxing spa experience and rejuvenate your mind, body, and soul." },
         { id: 5, name: "Indoor Sports", description: "Enjoy indoor sports and activities with friends and family." },
         { id: 6, name: "Shopping", description: "Shopping" },
-        { id: 7, name: "Nightlife", description: "Nightlife" },
-        { id: 8, name: "History", description: "History" },
-        { id: 9, name: "Architecture", description: "Architecture" },
-        { id: 10, name: "Sports", description: "Sports" },
-        { id: 11, name: "Entertainment", description: "Entertainment" },
+        {
+            id: 7,
+            name: "Adrenaline",
+            description: "Experience the thrill of rock climbing and other exciting activities in Nigeria."
+        },
+        { id: 8, name: "Nightlife", description: "Nightlife" },
+        { id: 9, name: "History", description: "History" },
+        { id: 10, name: "Architecture", description: "Architecture" },
+        { id: 11, name: "Sports", description: "Sports" },
         { id: 12, name: "Transportation", description: "Transportation" },
         { id: 13, name: "Health", description: "Health" },
         { id: 14, name: "Business", description: "Business" },
         { id: 15, name: "Education", description: "Education" },
-        { id: 16, name: "Others", description: "Others" },
+        { id: 16, name: "Entertainment", description: "Entertainment" },
+        { id: 17, name: "Others", description: "Others" },
     ];
+
+    const countries = ["Nigeria", "Kenya", "Ghana", "Mauritius", "Rwanda", "South Africa", "Lebanon"];
+
 
     const navigate = useNavigate()
 
@@ -491,7 +499,10 @@ export const AddActivity = () => {
                                 onChange={(e) => setCountry(e.target.value)}
                                 className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out"
                             >
-                                <option value="Nigeria">Nigeria</option>
+                                <option value="">--Select Country--</option>
+                                {countries.map((country) => (
+                                    <option key={country} value={country}>{country}</option>
+                                ))}
                             </select>
                         </label>
                         <label htmlFor="location" className="flex flex-col gap-1.5">
