@@ -34,7 +34,7 @@ export const Header = () => {
                         } hidden sm:flex focus:outline-none z-30 `}
                 >
                     <svg fill="none" stroke="currentColor" 
-                    className='h-10 w-10'
+                    className='h-7 w-7'
                     strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
                     </svg>
