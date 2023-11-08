@@ -1,4 +1,5 @@
 export * from './Auth'
 export * from './Dashboard'
+export * from './Invoices'
 export * from './Activities'
 export * from './TravelPackages'

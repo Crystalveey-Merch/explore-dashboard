@@ -23,7 +23,7 @@ import './App.css'
 import { AuthLayout, DasboardLayout } from './Layout';
 import {
   Login, Register, ForgetPassword, VerifyEmail, Overview,
-  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage
+  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, Invoice, Invoices, EditInvoice
 } from './Pages';
 
 function App() {
@@ -149,6 +149,30 @@ function App() {
             <AuthLayout>
               <VerifyEmail />
             </AuthLayout>
+          }
+        />
+        <Route
+          path="/invoices"
+          element={
+            <DasboardLayout>
+              <Invoices />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/invoices/edit/:id"
+          element={
+            <DasboardLayout>
+              <EditInvoice />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/invoices/:id"
+          element={
+            <DasboardLayout>
+              <Invoice />
+            </DasboardLayout>
           }
         />
         <Route
