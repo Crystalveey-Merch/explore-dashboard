@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+// import { NavLink } from "react-router-dom";
 import { collection, getDocs, deleteDoc, doc, db } from '../../Config/firebase';
 import { toast } from "react-toastify";
-import moment from "moment";
-import { BlueButton, InvoicesOverview } from "../../Components";
-import { handleFormatDate, handleFormatTime } from "../../Hooks";
+// import moment from "moment";
+import { InvoiceRow, InvoicesOverview } from "../../Components";
 
 
 
@@ -47,38 +46,6 @@ export const Invoices = () => {
         }
     }
 
-    const [showActions, setshowActions] = useState({});
-    const actionRefs = useRef([]);
-
-    useEffect(() => {
-        const handleOutsideClick = (event) => {
-            if (actionRefs.current.length > 0) {
-                let closeActions = true;
-
-                // Check if the click occurred inside any of the actionRefs
-                actionRefs.current.forEach((ref, index) => {
-                    if (ref.current && ref.current.contains(event.target)) {
-                        closeActions = false;
-                    }
-                });
-
-                if (closeActions) {
-                    setshowActions({});
-                }
-            }
-        };
-        document.addEventListener("mousedown", handleOutsideClick);
-        return () => {
-            document.removeEventListener("mousedown", handleOutsideClick);
-        };
-    }, []);
-
-    const toggleAction = (id: string | number) => {
-        setshowActions((prevState) => ({
-            ...prevState,
-            [id]: !prevState[id]
-        }));
-    };
 
 
     if (loading) {
@@ -189,109 +156,16 @@ export const Invoices = () => {
                             </tbody>
                         ) : (
                             <>
-                                {invoices.map((invoice) => {
-
-                                    return (
-                                        <tbody key={invoice.id}>
-                                            <tr className="bg-white border-b hover:bg-gray-50">
-                                                <td className="w-4 p-4">
-                                                    <div className="flex items-center">
-                                                        <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 hover:cursor-pointer" />
-                                                        <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
-                                                    </div>
-                                                </td>
-                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                    <div className="flex gap-4 items-center">
-                                                        <div className="w-10 h-10 rounded-full bg-[#276c79a8] text-white text-lg flex items-center justify-center">
-                                                            {invoice.name[0]}
-                                                        </div>
-                                                        <p className="text-sm font-medium text-ellipsis">
-                                                            {invoice.name}
-                                                        </p>
-                                                    </div>
-                                                </th>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex flex-col gap-1 items-start">
-                                                        <p className="text-[rgb(33,43,54)] text-sm font-normal whitespace-nowrap">
-                                                            {handleFormatDate(invoice.dateCreated)}
-                                                        </p>
-                                                        <p className="text-[rgb(99,115,129)] text-xs font-normal">
-                                                            {handleFormatTime(invoice.timeCreated)}
-                                                        </p>
-                                                    </div>
-                                                </td>
-                                                {/* <td className="px-6 py-4">
-                                                <div className="flex flex-col gap-1 items-start">
-                                                    <p className="text-[rgb(33,43,54)] text-sm font-normal whitespace-nowrap">
-                                                        22 Nov 2023
-                                                    </p>
-                                                    <p className="text-[rgb(99,115,129)] text-xs font-normal">
-                                                        12:00 PM
-                                                    </p>
-                                                </div>
-                                            </td> */}
-                                                <td className="px-6 py-4 text-[rgb(33,43,54)] text-sm">
-                                                    {invoice.overallPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {invoice.id}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {/* <p className="h-6 bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)] rounded-md px-1.5 text-xs font-bold inline-flex items-center">
-                                                    Paid
-                                                </p> */}
-                                                    {invoice.status === "paid" && (
-                                                        <p className="h-6 bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)] rounded-md px-1.5 text-xs font-bold inline-flex items-center">
-                                                            Paid
-                                                        </p>
-                                                    )}
-                                                    {invoice.status === "installment" && (
-                                                        <p className="h-6 bg-purple-300 text-purple-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center">
-                                                            Installment
-                                                        </p>
-                                                    )}
-                                                    {invoice.status === "pending" && (
-                                                        <p className="h-6 bg-orange-200 text-orange-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center">
-                                                            In Review
-                                                        </p>
-                                                    )}
-                                                </td>
-                                                <td className="flex items-center px-6 py-4 space-x-3"
-                                                >
-                                                    <div className="relative"
-                                                        ref={actionRefs.current[invoice.id]}
-                                                    >
-                                                        <button
-                                                            onClick={() => toggleAction(invoice.id)}
-                                                            className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-200 focus:outline-none"
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
-                                                            </svg>
-                                                        </button>
-                                                        {showActions[invoice.id] && (
-                                                            <div className="absolute top-0 right-6 z-10 w-32 py-2 bg-white rounded-md flex flex-col bg-gradient-to-bl from-purple-50 via-white to-green-50"
-                                                                style={{ boxShadow: "rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) -20px 20px 40px -4px" }}
-                                                            >
-                                                                <button>
-                                                                    view
-                                                                </button>
-                                                                <button>
-                                                                    Edit
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => handleDeleteInvoice(invoice.id)}
-                                                                >
-                                                                    Delete
-                                                                </button>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    )
-                                })}
+                                <tbody>
+                                    {invoices.map((invoice) => (
+                                        <InvoiceRow
+                                            key={invoice.id}
+                                            invoice={invoice}
+                                            // handleFormatDate={handleFormatDate}
+                                            handleDeleteInvoice={handleDeleteInvoice}
+                                        />
+                                    ))}
+                                </tbody>
                             </>
                         )}
                     </table>
