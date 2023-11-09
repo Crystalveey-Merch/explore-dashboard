@@ -23,7 +23,7 @@ import './App.css'
 import { AuthLayout, DasboardLayout } from './Layout';
 import {
   Login, Register, ForgetPassword, VerifyEmail, Overview,
-  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, Invoice, Invoices, EditInvoice
+  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications
 } from './Pages';
 
 function App() {
@@ -220,6 +220,30 @@ function App() {
           element={
             <DasboardLayout>
               <EditTravelPackage />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/flight-bookings"
+          element={
+            <DasboardLayout>
+              <FlightBookings />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/hotel-reservations"
+          element={
+            <DasboardLayout>
+              <HotelReservations />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/visa-applications"
+          element={
+            <DasboardLayout>
+              <VisaApplications />
             </DasboardLayout>
           }
         />

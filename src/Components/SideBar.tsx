@@ -8,12 +8,17 @@ import barChartSVG from "../assets/SVG/Dashboard/bar-chart-square.svg"
 import invoiceSVG from "../assets/SVG/Dashboard/invoice-dollar.svg"
 import activitySVG from "../assets/SVG/Dashboard/outdoor-trip.svg"
 import travelPackageSVG from "../assets/SVG/Dashboard/tour.svg"
+import bookingsSVG from "../assets/SVG/Dashboard/ticket.svg"
+import flightSVG from "../assets/SVG/Dashboard/flight-takeoff.svg"
+import hotelSVG from "../assets/SVG/Dashboard/hotel.svg"
+import visaSVG from "../assets/SVG/Dashboard/passport.svg"
 
 
 export const SideBar = () => {
     const dispatch = useDispatch();
     const [activityDropdown, setActivityDropdown] = useState<boolean>(false);
     const [travelPackageDropdown, setTravelPackageDropdown] = useState<boolean>(false);
+    const [bookingDropdown, setBookingDropdown] = useState<boolean>(false);
 
     const handleMenu = () => {
         const barLinks = document.querySelector(".bar-links");
@@ -174,6 +179,62 @@ export const SideBar = () => {
                                             <img src={PlusSVG} alt="plus" className="w-4 h-4" />
                                             <p className={`font-semibold text-base xl:hidden sm:text-[15px] sm:block ${location.pathname === "/travel-packages/add" ? "text-white" : "text-white"}`}>
                                                 Add Travel Package
+                                            </p>
+                                        </NavLink>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="flex flex-col items-center gap-2 xl:px-1">
+                                <div
+                                    className={`flex justify-between w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer`}
+                                    onClick={() => setBookingDropdown(!bookingDropdown)}
+                                >
+                                    <div className="flex gap-3.5 items-center">
+                                        <img src={bookingsSVG} alt="bookings svg" className="w-6 h-6" />
+                                        <h4 className={`font-semibold text-base xl:hidden sm:text-[15px] sm:block ${location.pathname === "/bookings" ? "text-white" : "text-white"}`}>
+                                            Bookings
+                                        </h4>
+                                    </div>
+                                    <svg
+                                        className={`w-4 h-4 transform transition-transform duration-500 ${bookingDropdown ? "rotate-180" : ""}`}
+                                        aria-hidden="true"
+                                        fill="none"
+                                        stroke="#ffffff"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M19 9l-7 7-7-7"
+                                        ></path>
+                                    </svg>
+                                </div>
+                                <ul
+                                    className={`pl-1 flex flex-col gap-1.5 w-full h-0 overflow-hidden transition-all duration-500 ease-in-out ${bookingDropdown ? "h-[180px]" : ""}`}
+                                >
+                                    <li className="bar-item hover:text-gray-400">
+                                        <NavLink to="/flight-bookings" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/flight-bookings" ? "bg-gray-500" : ""}`}>
+                                            <img src={flightSVG} alt="plus" className="w-4 h-4" />
+                                            <p className={`font-semibold text-base xl:hidden sm:text-[15px] sm:block ${location.pathname === "/flight-bookings" ? "text-white" : "text-white"}`}>
+                                                Flight Bookings
+                                            </p>
+                                        </NavLink>
+                                    </li>
+                                    <li className="bar-item hover:text-gray-400">
+                                        <NavLink to="/hotel-reservations" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/hotel-reservations" ? "bg-gray-500" : ""}`}>
+                                            <img src={hotelSVG} alt="plus" className="w-4 h-4" />
+                                            <p className={`font-semibold text-base xl:hidden sm:text-[15px] sm:block ${location.pathname === "/hotel-reservations" ? "text-white" : "text-white"}`}>
+                                                Hotel Reservations
+                                            </p>
+                                        </NavLink>
+                                    </li>
+                                    <li className="bar-item hover:text-gray-400">
+                                        <NavLink to="/visa-applications" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/visa-applications" ? "bg-gray-500" : ""}`}>
+                                            <img src={visaSVG} alt="plus" className="w-4 h-4" />
+                                            <p className={`font-semibold text-base xl:hidden sm:text-[15px] sm:block ${location.pathname === "/visa-applications" ? "text-white" : "text-white"}`}>
+                                                Visa Applications
                                             </p>
                                         </NavLink>
                                     </li>
