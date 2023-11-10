@@ -85,7 +85,7 @@ export const Invoices = () => {
                         <p className="text-sm font-semibold text-[rgb(99,115,129)]">
                             Paid
                         </p>
-                        <p className="h-6 w-6 bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)] rounded-md px-1 text-xs font-bold inline-flex items-center">
+                        <p className="h-6 w-6 bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)] rounded-md px-1 text-xs font-bold inline-flex items-center justify-center">
                             20
                         </p>
                     </button>
