@@ -7,7 +7,8 @@ import installmentInvoiceSVG from "../../assets/SVG/Invoice/dollar-finance-money
 export const InvoicesOverview = ({ invoices }: { invoices: any }) => {
     return (
         <div
-            className="w-full rounded-2xl flex justify-evenly"
+            className="w-full rounded-2xl flex justify-evenly xl:w-auto
+            xl:max-w-full xl:overflow-y-hidden xl:overflow-x-scroll xl:justify-between"
             style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
         >
             <div className="min-w-[200px] font-public-sans py-4 px-5 flex gap-5 items-center">

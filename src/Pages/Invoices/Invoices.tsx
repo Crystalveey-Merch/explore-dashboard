@@ -67,7 +67,7 @@ export const Invoices = () => {
             <InvoicesOverview invoices={invoices} />
 
             <div
-                className="w-full rounded-2xl flex flex-col"
+                className="w-full rounded-2xl flex flex-col xl:overflow-y-hidden xl:overflow-x-scroll"
                 style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
             >
                 <div className="px-4 flex gap-10"
@@ -102,16 +102,16 @@ export const Invoices = () => {
                     <table className="w-full text-sm text-left text-gray-500">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
-                                <th scope="col" className="p-4">
+                                <th scope="col" className="p-4 xl:p-2">
                                     <div className="flex items-center">
                                         <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 hover:cursor-pointer" />
                                         <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
                                     </div>
                                 </th>
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3 xl:px-3">
                                     Customer
                                 </th>
-                                <th scope="col" className="px-6 py-3 flex gap-1 items-center">
+                                <th scope="col" className="px-6 py-3 flex gap-1 items-center xl:px-3">
                                     <p>
                                         Create
                                     </p>
@@ -122,16 +122,16 @@ export const Invoices = () => {
                                 {/* <th scope="col" className="px-6 py-3">
                                     Due
                                 </th> */}
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3 xl:px-3">
                                     amount
                                 </th>
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3 xl:px-1">
                                     Transaction ID
                                 </th>
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3 xl:px-3">
                                     Status
                                 </th>
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3 xl:px-1">
                                     Action
                                 </th>
                             </tr>
@@ -139,7 +139,7 @@ export const Invoices = () => {
                         {invoices.length === 0 ? (
                             <tbody className="bg-white border-b border-gray-200">
                                 <tr className="bg-white border-b hover:bg-gray-50">
-                                    <td className="w-4 p-4">
+                                    <td className="w-4 p-4 xl:p-2">
                                         <div className="flex items-center">
                                             <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" />
                                             <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>

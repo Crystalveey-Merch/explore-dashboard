@@ -53,7 +53,7 @@ export const SideBar = () => {
                     </NavLink>
                     <div className="h-full bg-[rgb(0,108,156)] pt-10 p-2 flex flex-col gap-5 sm:py-3 sm:p-1">
                         <div className="flex flex-col gap-2.5">
-                            <h4 className="pl-3.5 uppercase font-extrabold text-[0.75rem] text-gray-100">
+                            <h4 className="pl-2 uppercase font-extrabold text-[0.75rem] text-gray-100">
                                 Overview
                             </h4>
                             <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
@@ -68,8 +68,13 @@ export const SideBar = () => {
                             </div>
                         </div>
                         <div className="flex flex-col gap-2.5">
-                            <h4 className="pl-3.5 uppercase font-extrabold text-[0.75rem] text-gray-100">
-                                Management
+                            <h4 className="pl-2 uppercase font-extrabold text-[0.75rem] text-gray-100">
+                                <span className="hidden xl:block sm:hidden">
+                                    Manage
+                                </span>
+                                <span className="xl:hidden sm:block">
+                                    Management
+                                </span>
                             </h4>
                             <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
                                 <NavLink
