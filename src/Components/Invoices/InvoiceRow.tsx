@@ -66,17 +66,17 @@ export const InvoiceRow = ({ invoice, handleDeleteInvoice }: { invoice: any, han
             </td>
             <td className="px-6 py-4 xl:px-3">
                 {invoice.status === "paid" && (
-                    <p className="h-6 bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)] rounded-md px-1.5 text-xs font-bold inline-flex items-center">
+                    <p className="h-6 bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)] rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
                         Paid
                     </p>
                 )}
                 {invoice.status === "installment" && (
-                    <p className="h-6 bg-purple-300 text-purple-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center">
+                    <p className="h-6 bg-purple-300 text-purple-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
                         Installment
                     </p>
                 )}
                 {invoice.status === "pending" && (
-                    <p className="h-6 bg-orange-200 text-orange-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center">
+                    <p className="h-6 bg-orange-200 text-orange-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
                         In Review
                     </p>
                 )}

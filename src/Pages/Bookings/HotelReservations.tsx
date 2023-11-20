@@ -60,7 +60,7 @@ export const HotelReservations = () => {
                 </h1>
             </div>
             <div
-                className="w-full rounded-2xl flex flex-col"
+                className="w-full rounded-2xl flex flex-col lg:overflow-x-scroll xl:overflow-y-hidden xl:rounded-lg"
                 style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
             >
                 <div className="relative sm:rounded-lg">
@@ -73,25 +73,25 @@ export const HotelReservations = () => {
                                         <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
                                     </div>
                                 </th> */}
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3 2xl:px-4 xl:px-3">
                                     Customer
                                 </th>
-                                <th scope="col" className="px-6 py-3 flex gap-1 items-center">
+                                <th scope="col" className="px-6 py-3 flex gap-1 items-center 2xl:px-4 xl:px-3">
                                     Hotel Location/Name
                                 </th>
                                 {/* <th scope="col" className="px-6 py-3">
                                     Destination Location
                                 </th> */}
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3 2xl:px-4 xl:px-3">
                                      Check In Date
                                 </th>
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3 2xl:px-4 xl:px-3">
                                     Check Out Date
                                 </th>
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3 2xl:px-4 xl:px-3">
                                     Status
                                 </th>
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3 2xl:px-4 xl:px-3">
                                     Action
                                 </th>
                             </tr>

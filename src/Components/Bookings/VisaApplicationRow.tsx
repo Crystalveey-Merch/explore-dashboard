@@ -37,7 +37,7 @@ export const VisaApplicationRow = ({ application, handleDeleteVisaApplication }:
                     <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
                 </div>
             </td>
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap 2xl:px-4 xl:px-3">
                 <div className="flex gap-4 items-center">
                     <div className="w-10 h-10 rounded-full bg-[#276c79a8] text-white text-lg flex items-center justify-center">
                         {application.firstName[0]}
@@ -47,38 +47,38 @@ export const VisaApplicationRow = ({ application, handleDeleteVisaApplication }:
                     </p>
                 </div>
             </th>
-            <td className="px-6 py-4 text-[rgb(33,43,54)] text-sm capitalize">
+            <td className="px-6 py-4 text-[rgb(33,43,54)] text-sm capitalize 2xl:px-4 xl:px-3">
                 {application.visaCountry}
             </td>
-            <td className="px-6 py-4">
+            <td className="px-6 py-4 2xl:px-4 xl:px-3">
                 <p className="text-[rgb(33,43,54)] text-sm font-normal whitespace-nowrap">
                     {application.createdAt ? handleFormatTimestampToDateC(application.createdAt) : "N/A"}
                 </p>
             </td>
-            <td className="px-6 py-4">
+            <td className="px-6 py-4 2xl:px-4 xl:px-3">
                 {application.email}
             </td>
-            <td className="px-6 py-4">
+            <td className="px-6 py-4 2xl:px-4 xl:px-3">
                 {application.status === "paid" && (
-                    <p className="h-6 bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)] rounded-md px-1.5 text-xs font-bold inline-flex items-center">
+                    <p className="h-6 bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)] rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
                         Paid
                     </p>
                 )}
                 {application.status === "installment" && (
-                    <p className="h-6 bg-purple-300 text-purple-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center">
+                    <p className="h-6 bg-purple-300 text-purple-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
                         Installment
                     </p>
                 )}
                 {application.status === "pending" && (
-                    <p className="h-6 bg-orange-200 text-orange-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center">
+                    <p className="h-6 bg-orange-200 text-orange-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
                         In Review
                     </p>
                 )}
-                <p className="h-6 bg-orange-200 text-orange-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center">
+                <p className="h-6 bg-orange-200 text-orange-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
                     In Review
                 </p>
             </td>
-            <td className="flex items-center px-6 py-4 space-x-3"
+            <td className="flex items-center px-6 py-4 space-x-3 2xl:px-4 xl:px-3"
             >
                 <ActionComp
                     showActions={showActions}
