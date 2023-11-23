@@ -2,7 +2,8 @@ import { useState } from "react"
 import { NavLink } from "react-router-dom"
 import { useDispatch, } from 'react-redux';
 import { toggleMenu } from '../Config/rightBarToggleSlice';
-import Logo from "../../public/logo-black.png"
+import Logo from "../../public/modified-logo-removebg-preview.png"
+import LogoSmall from "../../public/20231116_210104-removebg-preview.png"
 import PlusSVG from "../assets/SVG/Dashboard/plus.svg"
 import barChartSVG from "../assets/SVG/Dashboard/bar-chart-square.svg"
 import invoiceSVG from "../assets/SVG/Dashboard/invoice-dollar.svg"
@@ -41,13 +42,13 @@ export const SideBar = () => {
             <div className="h-screen font-public-sans bg[#00afef] w-[268px] flex flex-col justify-between border-r border-gray-300 2xl:w-[250px] xl:w-max md:px2 sm:absolute sm:bg-white sm:pt-20 sm:w-[230px]" onClick={(e) => e.stopPropagation()}>
                 <div className="flex flex-col gap10 h-full">
                     <NavLink to="/">
-                        <h2 className=" px-0.5 uppercase font-bold text-4xl text-blue-700 xl:text-center xl:py-4 sm:py-0 sm:text-left sm:pl-2 sm:text-3xl">
-                            <span className="xl:hidden">
-                                <img src={Logo} alt="logo" className="w-full h-20" />
-                            </span>
-                            <span className="hidden xl:inline text-center text-5xl font-extrabold sm:hidden">
-                                EC
-                            </span>
+                        <h2 className=" px-0.5 uppercase font-bold text-4xl text-blue-700 xl:text-center xl:py-1 sm:py-0 sm:text-left sm:pl-2 sm:text-3xl">
+                            <div className="xl:hidden p-2">
+                                <img src={Logo} alt="logo" className="w-full h-[63px]" />
+                            </div>
+                            <div className="hidden xl:inline-flex justify-center sm:hidden">
+                                <img src={LogoSmall} alt="logo" className="w-[60px] h-[63px]" />
+                            </div>
                         </h2>
 
                     </NavLink>
