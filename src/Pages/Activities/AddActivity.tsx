@@ -30,7 +30,7 @@ export const AddActivity = () => {
             name: "Adrenaline",
             description: "Experience the thrill of rock climbing and other exciting activities in Nigeria."
         },
-        { id: 8, name: "Nightlife", description: "Nightlife" },
+        { id: 8, name: "Food And Wine Tasting", description: "Food And Wine Tasting" },
         { id: 9, name: "History", description: "History" },
         { id: 10, name: "Architecture", description: "Architecture" },
         { id: 11, name: "Sports", description: "Sports" },
@@ -39,7 +39,8 @@ export const AddActivity = () => {
         { id: 14, name: "Business", description: "Business" },
         { id: 15, name: "Education", description: "Education" },
         { id: 16, name: "Entertainment", description: "Entertainment" },
-        { id: 17, name: "Others", description: "Others" },
+        { id: 17, name: "Nightlife", description: "Nightlife" },
+        { id: 18, name: "Others", description: "Others" },
     ];
 
     const countries = ["Nigeria", "Kenya", "Ghana", "Mauritius", "Rwanda", "South Africa", "Lebanon"];
