@@ -184,7 +184,7 @@ export const Overview = () => {
                 </div>
             </div>
             <div className="flex justify-between items-start gap-5 lg:flex-col sm:gap-4">
-                <div className="p-6 flex flex-col gap-6" style={{
+                <div className="p-6 flex flex-col gap-6 sm:p-5" style={{
                     width: "100%",
                     // height: "400px",
                     borderRadius: "16px",
@@ -193,10 +193,10 @@ export const Overview = () => {
                 }}>
                     <div className="flex justify-between">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-semibold">
+                            <p className="text-sm font-semibold sm:text-sm">
                                 Total Income
                             </p>
-                            <h5 className="font-bold text-[2rem]">
+                            <h5 className="font-bold text-[2rem] sm:text-[1.5rem]">
                                 {paidTransactions.reduce((acc: any, curr: { overallPrice: any }) => acc + curr.overallPrice, 0).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
                             </h5>
                         </div>
@@ -218,7 +218,7 @@ export const Overview = () => {
                                     {percentageDifference.toFixed(2)}%
                                 </p>
                             </div>
-                            <p className="text-sm font-normal text-black">
+                            <p className="text-sm font-normal text-black sm:text-xs">
                                 {lastMonthTotalIncome > thisMonthTotalIncome ? "less than last month" : "than last month"}
                             </p>
                         </div>
