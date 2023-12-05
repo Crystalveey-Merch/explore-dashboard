@@ -2,7 +2,9 @@
 import allInvoicesSVG from "../../assets/SVG/Invoice/invoice-bill.svg"
 import paidInvoiceSVg from "../../assets/SVG/Invoice/invoice-paid.svg"
 import reviewInvoiceSVG from "../../assets/SVG/Invoice/contract-pending-line.svg"
+// import moment from "moment"
 import installmentInvoiceSVG from "../../assets/SVG/Invoice/dollar-finance-money.svg"
+import bellSvg from "../../assets/SVG/Invoice/bell-bing.svg"
 
 export const InvoicesOverview = ({ invoices }: { invoices: any }) => {
     return (
@@ -56,10 +58,15 @@ export const InvoicesOverview = ({ invoices }: { invoices: any }) => {
                         Installment
                     </h5>
                     <p className="text-[rgb(145,158,171)] font-normal text-sm">
-                        {invoices.filter((invoice: { status: string }) => invoice.status === "installment").length} Invoices
+                        {invoices.filter((invoice: { installment: boolean }) =>
+                            // installments is true
+                            invoice.installment === true).length} Invoices
+
                     </p>
                     <h6 className="font-semibold text-sm">
-                        {invoices.filter((invoice: { status: string }) => invoice.status === "installment").reduce((acc: any, curr: { overallPrice: any }) => acc + curr.overallPrice, 0).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                        {invoices.filter((invoice: { installment: boolean }) =>
+                            // installments is true
+                            invoice.installment === true).reduce((acc: any, curr: { overallPrice: any }) => acc + curr.overallPrice, 0).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
                     </h6>
                 </div>
             </div>
@@ -80,23 +87,23 @@ export const InvoicesOverview = ({ invoices }: { invoices: any }) => {
                     </h6>
                 </div>
             </div>
-            {/* <hr className="shrink-0 border border-dashed border-[rgba(145,158,171,0.2)] h-auto self-stretch" />
+            <hr className="shrink-0 border border-dashed border-[rgba(145,158,171,0.2)] h-auto self-stretch" />
             <div className="min-w-[200px] font-public-sans py-4 px-5 flex gap-5 items-center">
-                <div className="w-14 h-14 p-2 rounded-full border-[3px] border-[#90e0ef]">
-                    <img src={allInvoicesSVG} alt="All Invoices" className="w-full h-full" />
+                <div className="w-14 h-14 p-2 rounded-full border-[3px] border-red-300">
+                    <img src={bellSvg} alt="bell svg" className="w-full h-full" />
                 </div>
                 <div className="flex flex-col gap-1 w-max">
                     <h5 className="font-semibold text-base">
-                        Draft
+                        Overdue
                     </h5>
                     <p className="text-[rgb(145,158,171)] font-normal text-sm">
-                        20 Invoices
+                        {invoices.filter((invoice: {installment : boolean, status: string }) => invoice.installment === true && invoice.status === "pending").length} Invoices
                     </p>
                     <h6 className="font-semibold text-sm">
-                        $46,218.04
+                      
                     </h6>
                 </div>
-            </div> */}
+            </div>
         </div>
     )
 }

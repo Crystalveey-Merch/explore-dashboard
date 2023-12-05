@@ -43,6 +43,14 @@ export const Register = () => {
             toast.error("Passwords do not match")
             return;
         }
+
+        // if email is not victoria@crystalveey.com, do not register
+        if (email !== "victoria@crystalveey.com") {
+            toast.error("You are not allowed to register")
+            return;
+        }
+
+
         try {
             const { user } = await createUserWithEmailAndPassword(
                 auth,
