@@ -55,6 +55,26 @@ export const Overview = () => {
 
     const paidPercentage = (paidTransactionsLength / totalTransactions) * 100;
 
+    // cancelled transactions
+    const cancelledTransactionsLength = transactions.filter((transaction) => transaction.isCancelled === true).length;
+
+    const cancelledPercentage = (cancelledTransactionsLength / totalTransactions) * 100;
+
+    // installments transactions
+    const installmentsTransactionsLength = transactions.filter((transaction) => transaction.installment === true).length;
+
+    const installmentsPercentage = (installmentsTransactionsLength / totalTransactions) * 100;
+
+    // Exciting Activities transactions
+    const excitingActivitiesTransactionsLength = transactions.filter((transaction) => transaction.type === 'Exciting Activities').length;
+
+    const excitingActivitiesPercentage = (excitingActivitiesTransactionsLength / totalTransactions) * 100;
+
+    // Promoted Travel Package  transactions
+    const promotedTravelPackageTransactionsLength = transactions.filter((transaction) => transaction.type === 'Promoted Travel Package').length;
+
+    const promotedTravelPackagePercentage = (promotedTravelPackageTransactionsLength / totalTransactions) * 100;
+
 
     const [paidTransactions, setPaidTransactions] = useState<any[]>([]);
 
@@ -263,13 +283,79 @@ export const Overview = () => {
                                     style={{ width: `${paidPercentage}%` }}></p>
                             </div>
                         </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Cancelled
+                                </p>
+                                <p className="">
+                                    {cancelledTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(255,0,0)] rounded absolute top-0 left-0"
+                                    style={{ width: `${cancelledPercentage}%` }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Installments
+                                </p>
+                                <p className="">
+                                    {installmentsTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(0,171,255)] rounded absolute top-0 left-0"
+                                    style={{ width: `${installmentsPercentage}%` }}></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className="rounded-2xl bg-white text-[rgb(33,43,54)] w-full py-4 pr-6 pl-4 flex flex-col justify-between"
+                <div className="rounded-2xl bg-white text-[rgb(33,43,54)] w-full py-4 pr-6 pl-4 flex flex-col gap-9 justify-between"
                     style={{
                         boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px"
                     }}
-                ></div>
+                >
+                    <h5 className="text-lg font-bold">
+                        Booking Types
+                    </h5>
+                    <div className="flex flex-col gap-6 p-6">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Exciting Activities
+                                </p>
+                                <p className="">
+                                    {excitingActivitiesTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(255,171,0)] rounded absolute top-0 left-0"
+                                    style={{ width: `${excitingActivitiesPercentage}%` }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Promoted Travel Package
+                                </p>
+                                <p className="">
+                                    {promotedTravelPackageTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(34,197,94)] rounded absolute top-0 left-0"
+                                    style={{ width: `${promotedTravelPackagePercentage}%` }}></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -13,6 +13,8 @@ export const InvoiceRow = ({ invoice, handleDeleteInvoice }: { invoice: any, han
         setShowActions(!showActions);
     };
 
+    const viewRoute = `/invoices/${invoice.id}`;
+
     useEffect(() => {
         // Add event listener to close dropdown when clicking outside
         function handleClickOutside(event: { target: any; }) {
@@ -86,6 +88,7 @@ export const InvoiceRow = ({ invoice, handleDeleteInvoice }: { invoice: any, han
                 <ActionComp
                     showActions={showActions}
                     handleDelete={handleDeleteInvoice}
+                    viewRoute={viewRoute}
                     id={invoice.id}
                     toggleActions={toggleActions}
                     showRef={showRef}

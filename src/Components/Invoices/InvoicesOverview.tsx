@@ -13,7 +13,7 @@ export const InvoicesOverview = ({ invoices }: { invoices: any }) => {
             xl:max-w-full xl:overflow-y-hidden xl:overflow-x-scroll xl:justify-between"
             style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
         >
-            <div className="min-w-[200px] font-public-sans py-4 px-5 flex gap-5 items-center">
+            <div className="min-w-[230px] font-public-sans py-4 px-5 flex gap-5 items-center">
                 <div className="w-14 h-14 p-2 rounded-full border-[3px] border-[#90e0ef]">
                     <img src={allInvoicesSVG} alt="All Invoices" className="w-full h-full" />
                 </div>
@@ -31,7 +31,7 @@ export const InvoicesOverview = ({ invoices }: { invoices: any }) => {
                 </div>
             </div>
             <hr className="shrink-0 border border-dashed border-[rgba(145,158,171,0.2)] h-auto self-stretch" />
-            <div className="min-w-[200px] font-public-sans py-4 px-5 flex gap-5 items-center">
+            <div className="min-w-[230px] font-public-sans py-4 px-5 flex gap-5 items-center">
                 <div className="w-14 h-14 p-2 rounded-full border-[3px] border-green-300">
                     <img src={paidInvoiceSVg} alt="All Invoices"
                         className="w-full h-full" />
@@ -49,7 +49,7 @@ export const InvoicesOverview = ({ invoices }: { invoices: any }) => {
                 </div>
             </div>
             <hr className="shrink-0 border border-dashed border-[rgba(145,158,171,0.2)] h-auto self-stretch" />
-            <div className="min-w-[200px] font-public-sans py-4 px-5 flex gap-5 items-center">
+            <div className="min-w-[230px] font-public-sans py-4 px-5 flex gap-5 items-center">
                 <div className="w-14 h-14 p-2 rounded-full border-[3px] border-purple-400">
                     <img src={installmentInvoiceSVG} alt="All Invoices" className="w-full h-full" />
                 </div>
@@ -71,7 +71,7 @@ export const InvoicesOverview = ({ invoices }: { invoices: any }) => {
                 </div>
             </div>
             <hr className="shrink-0 border border-dashed border-[rgba(145,158,171,0.2)] h-auto self-stretch" />
-            <div className="min-w-[200px] font-public-sans py-4 px-5 flex gap-5 items-center">
+            <div className="min-w-[230px] font-public-sans py-4 px-5 flex gap-5 items-center">
                 <div className="w-14 h-14 p-2 rounded-full border-[3px] border-orange-300">
                     <img src={reviewInvoiceSVG} alt="All Invoices" className="w-full h-full" />
                 </div>
@@ -88,7 +88,7 @@ export const InvoicesOverview = ({ invoices }: { invoices: any }) => {
                 </div>
             </div>
             <hr className="shrink-0 border border-dashed border-[rgba(145,158,171,0.2)] h-auto self-stretch" />
-            <div className="min-w-[200px] font-public-sans py-4 px-5 flex gap-5 items-center">
+            <div className="min-w-[230px] font-public-sans py-4 px-5 flex gap-5 items-center">
                 <div className="w-14 h-14 p-2 rounded-full border-[3px] border-red-300">
                     <img src={bellSvg} alt="bell svg" className="w-full h-full" />
                 </div>
@@ -97,10 +97,10 @@ export const InvoicesOverview = ({ invoices }: { invoices: any }) => {
                         Overdue
                     </h5>
                     <p className="text-[rgb(145,158,171)] font-normal text-sm">
-                        {invoices.filter((invoice: {installment : boolean, status: string }) => invoice.installment === true && invoice.status === "pending").length} Invoices
+                        {invoices.filter((invoice: {installment : boolean, status: string, payDeadline: any, isInstallmentCompleted: boolean }) => invoice.installment === true && invoice.payDeadline < Date.now() && invoice.isInstallmentCompleted === false && invoice.status === "pending").length} Invoices
                     </p>
                     <h6 className="font-semibold text-sm">
-                      
+                        {invoices.filter((invoice: {installment : boolean, status: string, payDeadline: any, isInstallmentCompleted: boolean }) => invoice.installment === true && invoice.payDeadline < Date.now() && invoice.isInstallmentCompleted === false && invoice.status === "pending").reduce((acc: any, curr: { overallPrice: any }) => acc + curr.overallPrice, 0).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
                     </h6>
                 </div>
             </div>
