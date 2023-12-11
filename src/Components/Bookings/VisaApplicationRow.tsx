@@ -29,6 +29,8 @@ export const VisaApplicationRow = ({ application, handleDeleteVisaApplication }:
         };
     }, []);
 
+    const viewRoute = `/visa-applications/${application.id}`;
+
     return (
         <tr className="bg-white border-b hover:bg-gray-50">
             <td className="w-4 p-4">
@@ -83,6 +85,7 @@ export const VisaApplicationRow = ({ application, handleDeleteVisaApplication }:
                 <ActionComp
                     showActions={showActions}
                     handleDelete={handleDeleteVisaApplication}
+                    viewRoute={viewRoute}
                     id={application.id}
                     toggleActions={toggleActions}
                     showRef={showRef}

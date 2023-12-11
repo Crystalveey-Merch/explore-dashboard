@@ -29,6 +29,8 @@ export const HotelReservationRow = ({ hotelReservation, handleDeleteHotelReserva
         };
     }, []);
 
+    const viewRoute = `/hotel-reservations/${hotelReservation.id}`;
+
     return (
         <tr className="bg-white border-b hover:bg-gray-50">
             {/* <td className="w-4 p-4">
@@ -89,8 +91,10 @@ export const HotelReservationRow = ({ hotelReservation, handleDeleteHotelReserva
             </td>
             <td className="flex items-center px-6 py-4 space-x-3 2xl:px-4 xl:px-3"
             >
-                <ActionComp showActions={showActions}
+                <ActionComp
+                    showActions={showActions}
                     handleDelete={handleDeleteHotelReservation}
+                    viewRoute={viewRoute}
                     id={hotelReservation.id}
                     toggleActions={toggleActions}
                     showRef={showRef}

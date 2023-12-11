@@ -30,6 +30,8 @@ export const FlightBookingRow = ({ flightBooking, handleDeleteFlightBooking }: {
         };
     }, []);
 
+    const viewRoute = `/flight-bookings/${flightBooking.id}`;
+
     return (
         <tr className="bg-white border-b hover:bg-gray-50">
             {/* <td className="w-4 p-4">
@@ -90,8 +92,10 @@ export const FlightBookingRow = ({ flightBooking, handleDeleteFlightBooking }: {
             </td>
             <td className="flex items-center px-6 py-4 space-x-3 2xl:px-4 xl:px-3"
             >
-                <ActionComp showActions={showActions}
+                <ActionComp
+                    showActions={showActions}
                     handleDelete={handleDeleteFlightBooking}
+                    viewRoute={viewRoute}
                     id={flightBooking.id}
                     toggleActions={toggleActions}
                     showRef={showRef}
