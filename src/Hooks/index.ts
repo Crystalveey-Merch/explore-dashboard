@@ -1,6 +1,7 @@
 export * from "./HandleCreateDefaultAvatar"
 export * from "./handleFormattedDateRange"
 export * from "./handleFormatDate"
+export * from "./handleFormatDate2"
 export * from "./handleFormatTime"
 export * from "./Booking"
 export * from "./Sort" 

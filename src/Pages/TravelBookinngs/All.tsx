@@ -1,18 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-// import { NavLink } from "react-router-dom";
-import { collection, getDocs, deleteDoc, doc, db } from '../../Config/firebase';
-import { toast } from "react-toastify";
-// import moment from "moment";
+import { Link } from "react-router-dom"
+import { collection, getDocs, db } from '../../Config/firebase';
+import { TableRow } from "../../Components/TravelBookings";
 import { Sort } from "../../Hooks";
-import { InvoiceRow, InvoicesOverview } from "../../Components";
+import noResultImg from "../../assets/Images/Dashboard/no-results.png"
 
 
-
-export const Invoices = () => {
-    const [invoices, setInvoices] = useState<any[]>([]);
-    const [displayedInvoices, setDisplayedInvoices] = useState<any[]>([]);
-    // show filter types
+export const All = () => {
+    const [travelBookings, setTravelBookings] = useState<any[]>([])
+    const [displayedBookings, setDisplayedBookings] = useState<any[]>([])
+    // show filter
     const [activeFilter, setActiveFilter] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -25,101 +23,96 @@ export const Invoices = () => {
     };
 
     useEffect(() => {
-        const fetchInvoices = async () => {
+        const fetchTravelBookings = async () => {
             setLoading(true);
-            const invoicesRef = collection(db, "transactions");
-            const invoicesSnapshot = await getDocs(invoicesRef);
-            const invoices: any[] = [];
-            invoicesSnapshot.forEach((doc) => {
-                invoices.push({
+            const bookingsRef = collection(db, "transactions");
+            const bookingsSnapshot = await getDocs(bookingsRef);
+            const bookings: any[] = [];
+            bookingsSnapshot.forEach((doc) => {
+                bookings.push({
                     id: doc.id,
                     ...doc.data(),
                 });
             });
-            setInvoices(invoices);
+            // set bookings of type "Promoted Travel Package" to state
+            setTravelBookings(bookings.filter((booking: { type: string }) => booking.type === "Promoted Travel Package"));
             setLoading(false);
-        };
-        fetchInvoices();
-    }, []);
-
-    const handleDeleteInvoice = async (id: string) => {
-        if (window.confirm("Are you sure you want to delete this invoice?")) {
-            try {
-                await deleteDoc(doc(db, "transactions", id));
-
-                const updatedInvoices = invoices.filter((invoice) => invoice.id !== id);
-                setInvoices(updatedInvoices);
-
-                toast.success("Invoice deleted successfully");
-            } catch (error) {
-                console.log(error);
-                toast.error("Error deleting invoice");
-            }
         }
-    }
+        fetchTravelBookings()
+    }, [])
 
     const [status, setStatus] = useState<string>("all");
 
-    // displayed invoices based on their status
+    // display bookings based on status
     useEffect(() => {
         if (status === "all") {
-            setDisplayedInvoices(invoices);
-            // clear only status filter from active filter
-            setActiveFilter(activeFilter.filter((filter) => filter.type !== "status"));
+            setDisplayedBookings(travelBookings);
         } else if (status === "paid") {
-            setDisplayedInvoices(invoices.filter((invoice) => invoice.status === "paid"));
-            // set active filter with type status and value paid
-            setActiveFilter([{ type: "status", value: "paid" }]);
+            setDisplayedBookings(travelBookings.filter((booking) => booking.status === "paid"));
         } else if (status === "installment") {
-            setDisplayedInvoices(invoices.filter((invoice) => invoice.installment === true));
-            // set active filter with type status and value installment
-            setActiveFilter([{ type: "status", value: "installment" }]);
+            setDisplayedBookings(travelBookings.filter((booking) => booking.installment === true));
         } else if (status === "pending") {
-            setDisplayedInvoices(invoices.filter((invoice) => invoice.status === "pending"));
-            // set active filter with type status and value pending
-            setActiveFilter([{ type: "status", value: "pending" }]);
-        } else if (status === "overdue") {
-            setDisplayedInvoices(invoices.filter((invoice) => (invoice.installment === true && invoice.payDeadline < new Date() && invoice.isInstallmentCompleted === false && invoice.status === "pending")));
-            // set active filter with type status and value overdue
-            setActiveFilter([{ type: "status", value: "overdue" }]);
+            setDisplayedBookings(travelBookings.filter((booking) => booking.status === "pending"));
+        } else if (status === "cancelled") {
+            setDisplayedBookings(travelBookings.filter((booking) => (booking.isCancelled === true)));
+        } else if (status === "refunded") {
+            setDisplayedBookings(travelBookings.filter((booking) => (booking.status === "refunded")));
         } else {
-            setDisplayedInvoices(invoices);
+            setDisplayedBookings(travelBookings);
+        }
+    }, [status, travelBookings]);
+
+
+    // set active filter
+    useEffect(() => {
+        if (status === "all") {
             // clear only status filter from active filter
             setActiveFilter(activeFilter.filter((filter) => filter.type !== "status"));
+        } else {
+            // set active filter with type status and value based on status
+            setActiveFilter([{ type: "status", value: status }]);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [status, invoices]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [status]);
+
+    // format date to string
+    const formatDateToString = (dateString: string): number => new Date(dateString).getTime();
 
     // sort 
     useEffect(() => {
         if (sort === "asc" && activeTab === "customer") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => a.name[0].localeCompare(b.name[0])));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => a.name[0].localeCompare(b.name[0])));
         } else if (sort === "desc" && activeTab === "customer") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => b.name[0].localeCompare(a.name[0])));
-        } else if (sort === "asc" && activeTab === "created") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => a.dateCreated - b.dateCreated));
-        } else if (sort === "desc" && activeTab === "created") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => b.dateCreated - a.dateCreated));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => b.name[0].localeCompare(a.name[0])));
+        } else if (sort === "asc" && activeTab === "package") {
+            setDisplayedBookings([...displayedBookings].sort((a, b) => a.title.localeCompare(b.title)));
+        } else if (sort === "desc" && activeTab === "package") {
+            setDisplayedBookings([...displayedBookings].sort((a, b) => b.title.localeCompare(a.title)));
         } else if (sort === "asc" && activeTab === "amount") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => a.overallPrice - b.overallPrice));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => a.overallPrice - b.overallPrice));
         } else if (sort === "desc" && activeTab === "amount") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => b.overallPrice - a.overallPrice));
-        } else if (sort === "asc" && activeTab === "transactionId") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => a.id.localeCompare(b.id)));
-        } else if (sort === "desc" && activeTab === "transactionId") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => b.id.localeCompare(a.id)));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => b.overallPrice - a.overallPrice));
+        } else if (sort === "asc" && activeTab === "travellers") {
+            setDisplayedBookings([...displayedBookings].sort((a, b) => a.travellers - b.travellers));
+        } else if (sort === "desc" && activeTab === "travellers") {
+            setDisplayedBookings([...displayedBookings].sort((a, b) => b.travellers - a.travellers));
+        } else if (sort === "asc" && activeTab === "checkInDate") {
+            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(a.moreData.startDate) - formatDateToString(b.moreData.startDate)));
+        } else if (sort === "desc" && activeTab === "checkInDate") {
+            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(b.moreData.startDate) - formatDateToString(a.moreData.startDate)));
+        } else if (sort === "asc" && activeTab === "bookingId") {
+            setDisplayedBookings([...displayedBookings].sort((a, b) => a.id.localeCompare(b.id)));
+        } else if (sort === "desc" && activeTab === "bookingId") {
+            setDisplayedBookings([...displayedBookings].sort((a, b) => b.id.localeCompare(a.id)));
         } else if (sort === "asc" && activeTab === "status") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => a.status.localeCompare(b.status)));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => a.status.localeCompare(b.status)));
         } else if (sort === "desc" && activeTab === "status") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => b.status.localeCompare(a.status)));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => b.status.localeCompare(a.status)));
         } else {
-            setDisplayedInvoices(displayedInvoices);
+            setDisplayedBookings(displayedBookings);
         }
-    }, [sort, activeTab, displayedInvoices]);
-
-
-
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sort, activeTab]);
 
 
     if (loading) {
@@ -131,15 +124,29 @@ export const Invoices = () => {
     }
 
     return (
-        <div className="px-10 py-14 flex flex-col gap-10 xl:px-6 xl:w-[calc(100vw-100px)] lg:gap-16 md:gap-12 sm:w-[100vw] sm:gap-9">
-            <div className="flex justify-between items-center sm:flex-col sm:items-start sm:gap-3">
-                <h1 className="text-[28px] font-public-sans font-bold text-black xl:text-2xl lg:text-xl">
-                    Invoices List
-                </h1>
+        <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 xl:w-[calc(100vw-100px)] lg:gap-16 md:gap-12 sm:w-[100vw] sm:gap-9">
+            <div className="flex flex-col gap-2">
+                <h2 className="text-2xl font-semibold text-[#1C1C1C]">
+                    All Travel Bookings
+                </h2>
+                <div className="flex gap-2.5 items-center">
+                    <Link to="/" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
+                        Dashboard
+                    </Link>
+                    {/* a dot */}
+                    <span className="h-1 w-1 rounded-full bg-[rgb(99,115,129)]">
+                    </span>
+                    <Link to="/travel-bookings" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
+                        Travel Bookings
+                    </Link>
+                    {/* a dot */}
+                    <span className="h-1 w-1 rounded-full bg-[rgb(99,115,129)]">
+                    </span>
+                    <span className="text-[rgb(99,115,129)] text-sm font-medium">
+                        All
+                    </span>
+                </div>
             </div>
-
-            <InvoicesOverview invoices={invoices} />
-
             <div
                 className="w-full rounded-2xl flex flex-col mb-10"
                 style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
@@ -154,7 +161,16 @@ export const Invoices = () => {
                             All
                         </p>
                         <p className={`h-6 w-6 bg-black text-white rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out`}>
-                            {invoices.length}
+                            {travelBookings.length}
+                        </p>
+                    </button>
+                    <button onClick={() => setStatus("pending")}
+                        className={`flex gap-2 items-center max-w-[360px] min-w-[max-content] min-h-[48px] pb-1 border-b-2 transition duration-300 ease-in-out  ${status === "pending" ? "border-black" : "border-transparent"}`}>
+                        <p className={`text-sm font-semibold text-[rgb(99,115,129)] transition duration-300 ease-in-out ${status === "pending" ? "text-black" : "text-[rgb(99,115,129)]"}`}>
+                            In Review
+                        </p>
+                        <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "pending" ? "bg-orange-800 text-[#ffffff]" : "bg-orange-200 text-orange-800"}`}>
+                            {travelBookings.filter((invoice) => invoice.status === "pending").length}
                         </p>
                     </button>
                     <button
@@ -164,7 +180,7 @@ export const Invoices = () => {
                             Paid
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "paid" ? "bg-[rgb(17,141,87)] text-[#ffffff]" : "bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)]"}`}>
-                            {invoices.filter((invoice) => invoice.status === "paid").length}
+                            {travelBookings.filter((invoice) => invoice.status === "paid").length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("installment")}
@@ -173,31 +189,31 @@ export const Invoices = () => {
                             Installment
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "installment" ? "bg-purple-800 text-[#ffffff]" : "bg-purple-200 text-purple-800"}`}>
-                            {invoices.filter((invoice) => invoice.installment === true).length}
+                            {travelBookings.filter((invoice) => invoice.installment === true).length}
                         </p>
                     </button>
-                    <button onClick={() => setStatus("pending")}
-                        className={`flex gap-2 items-center max-w-[360px] min-w-[max-content] min-h-[48px] pb-1 border-b-2 transition duration-300 ease-in-out  ${status === "pending" ? "border-black" : "border-transparent"}`}>
-                        <p className={`text-sm font-semibold text-[rgb(99,115,129)] transition duration-300 ease-in-out ${status === "pending" ? "text-black" : "text-[rgb(99,115,129)]"}`}>
-                            In Review
+                    <button onClick={() => setStatus("cancelled")}
+                        className={`flex gap-2 items-center max-w-[360px] min-w-[max-content] min-h-[48px] pb-1 border-b-2 transition duration-300 ease-in-out  ${status === "cancelled" ? "border-black" : "border-transparent"}`}>
+                        <p className={`text-sm font-semibold text-[rgb(99,115,129)] transition duration-300 ease-in-out ${status === "cancelled" ? "text-black" : "text-[rgb(99,115,129)]"}`}>
+                            Cancelled
                         </p>
-                        <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "pending" ? "bg-orange-800 text-[#ffffff]" : "bg-orange-200 text-orange-800"}`}>
-                            {invoices.filter((invoice) => invoice.status === "pending").length}
+                        <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "cancelled" ? "bg-red-700 text-[#ffffff]" : "bg-red-200 text-red-700"}`}>
+                            {travelBookings.filter((invoice) => invoice.isCancelled === true).length}
                         </p>
                     </button>
-                    <button onClick={() => setStatus("overdue")}
-                        className={`flex gap-2 items-center max-w-[360px] min-w-[max-content] min-h-[48px] pb-1 border-b-2 transition duration-300 ease-in-out  ${status === "overdue" ? "border-black" : "border-transparent"}`}>
-                        <p className={`text-sm font-semibold text-[rgb(99,115,129)] transition duration-300 ease-in-out ${status === "overdue" ? "text-black" : "text-[rgb(99,115,129)]"}`}>
-                            Overdue
+                    <button onClick={() => setStatus("refunded")}
+                        className={`flex gap-2 items-center max-w-[360px] min-w-[max-content] min-h-[48px] pb-1 border-b-2 transition duration-300 ease-in-out  ${status === "refunded" ? "border-black" : "border-transparent"}`}>
+                        <p className={`text-sm font-semibold text-[rgb(99,115,129)] transition duration-300 ease-in-out ${status === "refunded" ? "text-black" : "text-[rgb(99,115,129)]"}`}>
+                            Refunded
                         </p>
-                        <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "overdue" ? "bg-red-800 text-[#ffffff]" : "bg-red-200 text-red-800"}`}>
-                            {invoices.filter((invoice) => (invoice.installment === true && invoice.payDeadline < new Date() && invoice.isInstallmentCompleted === false && invoice.status === "pending")).length}
+                        <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "refunded" ? "bg-stone-700 text-[#ffffff]" : "bg-stone-200 text-stone-700"}`}>
+                            {travelBookings.filter((invoice) => invoice.status === "refunded").length}
                         </p>
                     </button>
                 </div>
                 <div className="p-5 flex flex-col gap-3">
                     <p className="text-sm font-bold text-[rgb(99,115,129)]">
-                        {displayedInvoices.length}
+                        {displayedBookings.length}
                         <span className="text-[rgb(145,158,171)] font-medium ml-0.5">
                             results found
                         </span>
@@ -257,6 +273,15 @@ export const Invoices = () => {
                                         sort={sort}
                                         activeTab={activeTab}
                                         handleSortChange={handleSortChange}
+                                        tab="package"
+                                        label="Package"
+                                    />
+                                </th>
+                                <th scope="col" className="px-6 py-3 xl:px-3">
+                                    <Sort
+                                        sort={sort}
+                                        activeTab={activeTab}
+                                        handleSortChange={handleSortChange}
                                         tab="customer"
                                         label="Customer"
                                     />
@@ -266,20 +291,17 @@ export const Invoices = () => {
                                         sort={sort}
                                         activeTab={activeTab}
                                         handleSortChange={handleSortChange}
-                                        tab="created"
-                                        label="Created"
+                                        tab="travellers"
+                                        label="Travellers"
                                     />
                                 </th>
-                                {/* <th scope="col" className="px-6 py-3">
-                                    Due
-                                </th> */}
                                 <th scope="col" className="px-6 py-3 xl:px-3">
                                     <Sort
                                         sort={sort}
                                         activeTab={activeTab}
                                         handleSortChange={handleSortChange}
-                                        tab="amount"
-                                        label="amount"
+                                        tab="checkInDate"
+                                        label="Check In Date"
                                     />
                                 </th>
                                 <th scope="col" className="px-6 py-3 xl:px-1">
@@ -288,8 +310,8 @@ export const Invoices = () => {
                                         sort={sort}
                                         activeTab={activeTab}
                                         handleSortChange={handleSortChange}
-                                        tab="transactionId"
-                                        label="Transaction ID"
+                                        tab="bookingId"
+                                        label="Booking ID"
                                     />
                                 </th>
                                 <th scope="col" className="px-6 py-3 xl:px-3">
@@ -306,19 +328,18 @@ export const Invoices = () => {
                                 </th>
                             </tr>
                         </thead>
-                        {displayedInvoices.length === 0 ? (
+                        {displayedBookings.length === 0 ? (
                             <tbody className="bg-white border-b border-gray-200">
-                                <tr className="bg-white border-b hover:bg-gray-50">
-                                    <td className="w-4 p-4 xl:p-2">
-                                        <div className="flex items-center">
-                                            <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" />
-                                            <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4" colSpan={8}>
+                                <tr className="bg-white border-b">
+                                    <td className="px-6 py-6" colSpan={8}>
                                         <div className="flex flex-col gap-1 items-center">
+                                            <img
+                                                src={noResultImg}
+                                                alt="No result found"
+                                                className="max-w-[145px]"
+                                            />
                                             <p className="text-[rgb(33,43,54)] text-sm font-normal whitespace-nowrap">
-                                                No invoices found
+                                                No booking found
                                             </p>
                                         </div>
                                     </td>
@@ -327,12 +348,10 @@ export const Invoices = () => {
                         ) : (
                             <>
                                 <tbody>
-                                    {displayedInvoices.map((invoice) => (
-                                        <InvoiceRow
-                                            key={invoice.id}
-                                            invoice={invoice}
-                                            // handleFormatDate={handleFormatDate}
-                                            handleDeleteInvoice={handleDeleteInvoice}
+                                    {displayedBookings.map((booking) => (
+                                        <TableRow
+                                            key={booking.id}
+                                            booking={booking}
                                         />
                                     ))}
                                 </tbody>
@@ -345,5 +364,5 @@ export const Invoices = () => {
                 </div>
             </div>
         </div>
-    );
+    )
 }

@@ -25,6 +25,7 @@ import {
   Login, Register, ForgetPassword, VerifyEmail, Overview,
   Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications
 } from './Pages';
+import { All, Cancelled, Installments, Paid, Review, Booking } from "./Pages/TravelBookinngs"
 
 function App() {
   const dispatch = useDispatch()
@@ -244,6 +245,53 @@ function App() {
           element={
             <DasboardLayout>
               <VisaApplications />
+            </DasboardLayout>
+          }
+        /> <Route
+          path="/travel-bookings"
+          element={
+            <DasboardLayout>
+              <All />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/travel-bookings/paid"
+          element={
+            <DasboardLayout>
+              <Paid />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/travel-bookings/installments"
+          element={
+            <DasboardLayout>
+              <Installments />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/travel-bookings/review"
+          element={
+            <DasboardLayout>
+              <Review />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/travel-bookings/cancelled"
+          element={
+            <DasboardLayout>
+              <Cancelled />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/travel-bookings/:id"
+          element={
+            <DasboardLayout>
+              <Booking />
             </DasboardLayout>
           }
         />

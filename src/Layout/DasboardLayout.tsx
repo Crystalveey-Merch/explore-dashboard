@@ -15,7 +15,7 @@ export const DasboardLayout = ({ children }: { children: ReactNode }) => {
                         <Header />
                     </div>
 
-                    <div className='flex-grow h-max'>
+                    <div className='flex-grow h-max font-public-sans'>
                         {children}
                     </div>
                 </div>

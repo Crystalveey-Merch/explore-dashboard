@@ -64,3 +64,8 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+
+.css-3bmhjh-MuiPaper-root-MuiPopover-paper {
+  left: unset !important;
+ right: 140px !important;
+}
