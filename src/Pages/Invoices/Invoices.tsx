@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 // import { NavLink } from "react-router-dom";
+import TablePagination from '@mui/material/TablePagination';
 import { collection, getDocs, deleteDoc, doc, db } from '../../Config/firebase';
 import { toast } from "react-toastify";
 // import moment from "moment";
@@ -87,7 +88,7 @@ export const Invoices = () => {
             // clear only status filter from active filter
             setActiveFilter(activeFilter.filter((filter) => filter.type !== "status"));
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status, invoices]);
 
     // sort 
@@ -118,7 +119,18 @@ export const Invoices = () => {
     }, [sort, activeTab, displayedInvoices]);
 
 
+    // pagination 
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
 
+    const handleChangePage = (_event: any, newPage: any) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: any) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
 
 
@@ -327,7 +339,7 @@ export const Invoices = () => {
                         ) : (
                             <>
                                 <tbody>
-                                    {displayedInvoices.map((invoice) => (
+                                    {displayedInvoices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((invoice) => (
                                         <InvoiceRow
                                             key={invoice.id}
                                             invoice={invoice}
@@ -340,8 +352,17 @@ export const Invoices = () => {
                         )}
                     </table>
                 </div>
-                <div className="p-5">
-
+                <div className="p-2">
+                    <TablePagination
+                        component="div"
+                        count={displayedInvoices.length}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        rowsPerPageOptions={[5, 10, 25]}
+                        className="flex justify-end"
+                    />
                 </div>
             </div>
         </div>

@@ -1,16 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { collection, getDocs, db, } from '../../Config/firebase';
-import { handleFormatDate, handleFormatTime } from "../../Hooks"
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { collection, getDocs, db, doc, updateDoc } from '../../Config/firebase';
+import { handleFormatDate, handleFormatTime, ConfirmModal } from "../../Hooks"
 import { StatusDropDown } from "../../Components";
 import printSVG from "../../assets/SVG/Dashboard/Action/print.svg";
+import travelImage from "../../assets/Images/Dashboard/travel-location.png"
+import handleFormattedDateRange from "../../Hooks/handleFormattedDateRange";
 
 
 
 export const Booking = () => {
     const [booking, setBooking] = useState<any>(null);
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchBooking = async () => {
@@ -29,16 +34,54 @@ export const Booking = () => {
         fetchBooking();
     }, [id]);
 
+
+    // modal state
+    const [open, setOpen] = useState(false);
+    const [pickedStatus, setPickedStatus] = useState<any>("");
+    const [text, setText] = useState("");
+    const title = "Are you sure";
+
+    // status change function
+    const handleChangeStatus = async () => {
+        // if pickedStatus is paid, pending, and refunded. set status to pickedStatus else if pickedStatus is cancelled set isCancelled to true  and set status to ""
+        const bookingRef = doc(db, "transactions", booking.id);
+
+        const status = ["paid", "pending", "refunded"].includes(pickedStatus) ? pickedStatus : "";
+        const isCancelled = pickedStatus === "cancelled" ? true : false;
+
+
+        await updateDoc(bookingRef, {
+            status: status,
+            isCancelled: isCancelled,
+        });
+
+        // update booking state
+        setBooking({
+            ...booking,
+            status: status,
+            isCancelled: isCancelled,
+        });
+
+        // close modal
+        setOpen(false);
+        // show toast
+        toast.success(`Booking status changed to ${pickedStatus}`);
+        console.log(pickedStatus);
+    }
+
+
     return (
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 xl:w-[calc(100vw-100px)] lg:gap-16 md:gap-12 sm:w-[100vw] sm:gap-9">
             <div className="flex justify-between">
                 <div className="flex gap-4">
-                    <Link to="/travel-bookings" className="w-9 h-9 flex items-center justify-center text-[rgb(99,115,129)] text-sm font-medium rounded-full transition-colors duration-200 ease-out hover:bg-gray-100">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="w-9 h-9 flex items-center justify-center text-[rgb(99,115,129)] text-sm font-medium rounded-full transition-colors duration-200 ease-out hover:bg-gray-100">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                         </svg>
 
-                    </Link>
+                    </button>
                     <div className="flex flex-col gap-1">
                         <div className="flex gap-2 items-center">
                             <h2 className="text-[rgb(33,43,54)] text-2xl font-bold">
@@ -90,6 +133,9 @@ export const Booking = () => {
                         </p>
                         <StatusDropDown
                             booking={booking}
+                            setText={setText}
+                            setOpen={setOpen}
+                            setPickedStatus={setPickedStatus}
                         />
                     </div>
 
@@ -102,7 +148,7 @@ export const Booking = () => {
                 </div>
             </div>
             <div className="grid grid-cols-3 grid-flow-row gap-12">
-                <div className="p-6 col-span-2"
+                <div className="p-6 col-span-2 flex flex-col"
                     style={{
                         backgroundColor: "rgb(255, 255, 255)",
                         color: "rgb(33, 43, 54)",
@@ -110,15 +156,121 @@ export const Booking = () => {
                         boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px",
                         borderRadius: "16px",
                     }}
-                ></div>
-                <div className="p-6" style={{
+                >
+                    <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
+                        Details
+                    </h4>
+                    <div className="flex justify-between py-6 border-b-2 border-dashed border-[rgb(244,246,248)]">
+                        <div className="flex gap-2 items-center">
+                            <img
+                                src={booking?.moreData ? booking.moreData.images.imageOne : travelImage}
+                                alt="travelPackage"
+                                className="w-14 h-14 rounded-md object-cover"
+                            />
+                            <div className="flex flex-col gap-1">
+                                <p className="text-[rgb(33,43,54)] text-base font-semibold">
+                                    {booking?.title}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                    {handleFormattedDateRange(booking?.moreData.startDate, booking?.moreData.endDate)}
+                                </p>
+                            </div>
+                        </div>
+                        <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
+                            {booking?.moreData?.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                        </h4>
+                    </div>
+                    <div className="flex justify-between py-6 border-b-2 border-dashed border-[rgb(244,246,248)]">
+                        <h5 className="text-[rgb(33,43,54)] text-base font-semibold">
+                            Travellers
+                        </h5>
+                        <p className="text-[rgb(99,115,129)] text-sm font-medium">
+                            {booking?.travellers} x  {booking?.moreData?.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                        </p>
+                        <h5 className="text-[rgb(33,43,54)] text-base font-semibold">
+                            {(booking?.travellers * booking?.moreData?.price).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                        </h5>
+                    </div>
+                    <div className="flex flex-col gap-4 justify-end items-end py-6">
+                        <div className="flex">
+                            <h5 className="text-[rgb(99,115,129)] text-sm font-normal">
+                                Subtotal
+                            </h5>
+                            <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-sm font-semibold">
+                                {(booking?.travellers * booking?.moreData?.price).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                            </h5>
+                        </div>
+                        <div className="flex">
+                            <h5 className="text-[rgb(99,115,129)] text-sm font-normal">
+                                Discount
+                            </h5>
+                            <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-sm font-semibold">
+                                0
+                            </h5>
+                        </div>
+                        {/* <div className="flex">
+                            <h5 className="text-[rgb(99,115,129)] text-sm font-normal">
+                                Tax
+                            </h5>
+                            <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-sm font-semibold">
+                                0
+                            </h5>
+                        </div> */}
+                        <div className="flex">
+                            <h5 className="text-[rgb(33,43,54)] text-base font-semibold">
+                                Total
+                            </h5>
+                            <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-base font-semibold">
+                                {(booking?.travellers * booking?.moreData?.price).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div className="p-6 h-max" style={{
                     backgroundColor: "rgb(255, 255, 255)",
                     color: "rgb(33, 43, 54)",
                     transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
                     boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px",
                     borderRadius: "16px",
-                }}></div>
+                }}>
+                    <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
+                        Customer Info
+                    </h4>
+                    <div className="py-6 flex flex-col gap-4">
+                        <div className="flex gap-4 items-center">
+                            <div className="w-12 h-12 rounded-full bg-[#276c79a8] text-white text-lg flex items-center justify-center">
+                                {booking?.name[0]}
+                            </div>
+                            <div className="flex flex-col gapp-1">
+                                <p className="text-[rgb(33,43,54)] text-sm font-semibold text-ellipsis">
+                                    {booking?.name}
+                                </p>
+                                <a
+                                    href={`mailto:${booking?.email}`}
+                                    className="text-[rgb(33,43,54)] text-sm font-semibold transition-colors duration-200 ease-out hover:text-[rgb(17,141,87)]">
+                                    {booking?.email}
+                                </a>
+                            </div>
+                        </div>
+                        <div className="flex gap-2.5 justify-">
+                            <p className="text-[rgb(99,115,129)] text-sm font-medium">
+                                Phone Number:
+                            </p>
+                            <a href={`tel:${booking?.phoneNumber}`}
+                                className="text-[rgb(33,43,54)] text-sm font-semibold transition-colors duration-200 ease-out hover:text-[rgb(17,141,87)] hover:underline">
+                                {booking?.phoneNumber}
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <ConfirmModal
+                open={open}
+                setOpen={setOpen}
+                title={title}
+                text={text}
+                handleClick={handleChangeStatus}
+            />
         </div>
     )
 }

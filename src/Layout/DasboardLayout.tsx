@@ -11,7 +11,7 @@ export const DasboardLayout = ({ children }: { children: ReactNode }) => {
             <div className='flex flex-grow overflow-auto'>
                 {/* flex-grow or flex-1 */}
                 <div className='flex-grow border-r border-r-gray-300 min-h-screen h-max flex flex-col'>
-                    <div className='sticky top-0 z-40'>
+                    <div className='sticky top-0 z-10'>
                         <Header />
                     </div>
 

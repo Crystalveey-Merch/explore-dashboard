@@ -36,7 +36,7 @@ body {
   font-family: "Public Sans", sans-serif;
 }
 
-@media screen and (max-width: 639px) {
+@media screen and (max-width: 1279px) {
   .bar-links {
     position: fixed;
     top: 0;

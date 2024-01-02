@@ -563,13 +563,15 @@ export const AddTravelPackage = () => {
                     </div>
                 </div>
                 <div className="flex justify-end gap-4">
-                    <button className={`bg-blue-500 text-white px-4 py-2 rounded-md w-max ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                    <button className={`bg-[rgba(0,109,156,0.86)] text-white text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-[#006d9c] ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                         type="submit"
                         disabled={loading}
                         onClick={addTravelPackage}>
                         {loading ? "Adding..." : "Add"}
                     </button>
-                    <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md w-max" type="button">Cancel</button>
+                    <button
+                        className="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-gray-200"
+                        type="button">Cancel</button>
                 </div>
             </form>
         </div>

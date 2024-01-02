@@ -20,7 +20,7 @@ export const ActionComp = ({ showActions, handleDelete, viewRoute, id, toggleAct
 
             {showActions && (
                 <div
-                    className={` ${showActions ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-95 delay-200"} absolute top-0 right-7 z-50 w-36 p-2 bg-white rounded-md flex flex-col gap-1 bg-gradient-to-bl from-purple-50 via-white to-green-50 transform transition-transform duration-500 ease-out`}
+                    className={` ${showActions ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-95 delay-200"} absolute top-0 right-7 z-50 w-36 p-2 rounded-md flex flex-col gap-1 bg-gradient-to-bl from-purple-50 via-white to-green-50 transform transition-transform duration-500 ease-out`}
                     style={{ boxShadow: "rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) -20px 20px 40px -4px" }}
                 >
                     <Link

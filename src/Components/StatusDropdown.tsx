@@ -4,13 +4,27 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Fragment } from 'react'
 
 const statusOptions = [
-    { name: 'Paid', value: "paid"},
-    { name: 'In Review', value: "pending"},
-    {name: "Cancelled", value: "cancelled"},
-    {name: "Refunded", value: "refunded"}
+    { name: 'Paid', value: "paid" },
+    { name: 'In Review', value: "pending" },
+    { name: "Cancelled", value: "cancelled" },
+    { name: "Refunded", value: "refunded" }
 ]
 
-export const StatusDropDown = ({ booking }: any) => {
+export const StatusDropDown = ({ booking, setText, setOpen, setPickedStatus }: any) => {
+
+    const handleClick = ({ status }: any) => {
+        if (booking?.status === status) {
+            return
+        } else if (booking?.isCancelled && status === "cancelled") {
+            return
+        } 
+        setOpen(true);
+        setPickedStatus(status);
+        // setText({`you want to change the status of this booking to ${status}?)`});
+        setText(`you want to change the status of this booking to "${status}" ?`);
+    }
+
+
     return (
         <div className="max-w-sm">
             <Popover className="relative">
@@ -63,15 +77,21 @@ export const StatusDropDown = ({ booking }: any) => {
                             leaveFrom="opacity-100 translate-y-0"
                             leaveTo="opacity-0 translate-y-1"
                         >
-                            <Popover.Panel className="absolute left-1/2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
-                                <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5">
-                                    <div className="relative grid gap-8 bg-white p-7 lg:grid-cols-2">
+                            <Popover.Panel className="absolute left-1/2 z-10 mt-3 w36 -translate-x-1/2 transform px-4 sm:px-0">
+                                <div className="overflow-hidden min-w-[140px] rounded-lg shadow-lg ring-1 ring-black/5"
+                                    style={{ boxShadow: "rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) -20px 20px 40px -4px" }}
+                                >
+                                    <div className="relative grid gap-1 bg-white p-1 lg:grid-cols-2 bg-gradient-to-bl from-purple-50 via-white to-green-50 transform transition-transform duration-500 ease-out"
+                                    >
                                         {statusOptions.map((item) => (
                                             <button
-                                            key={item.value}
-                                            className={`-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 ${booking?.status === item.value ? "bg-gray-50" : (booking?.isCancelled && item.value === "cancelled") ? "bg-gray-50" : ""}`}
-                                          >
-                                               <p className='capitalize'>
+                                                key={item.value}
+                                                onClick={() => {
+                                                    handleClick({ status: item.value })
+                                                }}
+                                                className={`-m3 flex items-center rounded-md p-2 transition duration-150 ease-in-out hover:bg-gray-100 ${booking?.status === item.value ? "bg-[rgba(145,158,171,0.16)] font-bold" : (booking?.isCancelled && item.value === "cancelled") ? "bg-[rgba(145,158,171,0.16)] font-bold" : "font-normal"}`}
+                                            >
+                                                <p className='capitalize text-sm text-[rgb(33,43,54)]'>
                                                     {item.name}
                                                 </p>
                                             </button>

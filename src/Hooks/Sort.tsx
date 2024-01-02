@@ -6,7 +6,7 @@ export const Sort = ({ sort, activeTab, handleSortChange, tab, label }: any) => 
         className="flex items-center gap-1"
         onClick={() => handleSortChange(sort === "asc" ? "desc" : "asc", tab)}
       >
-        <p className="uppercase">{label}</p>
+        <p className="uppercase whitespace-nowrap">{label}</p>
         <div className="flex flex-col gap-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"

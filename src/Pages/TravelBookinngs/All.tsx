@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
+import TablePagination from '@mui/material/TablePagination';
 import { collection, getDocs, db } from '../../Config/firebase';
 import { TableRow } from "../../Components/TravelBookings";
 import { Sort } from "../../Hooks";
@@ -114,6 +115,19 @@ export const All = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sort, activeTab]);
 
+    // pagination 
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    const handleChangePage = (_event: any, newPage: any) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: any) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
 
     if (loading) {
         return (
@@ -124,7 +138,7 @@ export const All = () => {
     }
 
     return (
-        <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 xl:w-[calc(100vw-100px)] lg:gap-16 md:gap-12 sm:w-[100vw] sm:gap-9">
+        <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-12 sm:px-4 sm:gap-9">
             <div className="flex flex-col gap-2">
                 <h2 className="text-2xl font-semibold text-[#1C1C1C]">
                     All Travel Bookings
@@ -148,11 +162,15 @@ export const All = () => {
                 </div>
             </div>
             <div
-                className="w-full rounded-2xl flex flex-col mb-10"
+                className="w-full rounded-2xl flex flex-col mb-10 2xl:w-[calc(100vw-21rem)] xl:w-[calc(100vw-3rem)] sm:w-[calc(100vw-2rem)]"
                 style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
             >
-                <div className="px-4 flex gap-10 md:overflow-y-hidden md:overflow-x-scroll md:gap-6"
-                    style={{ boxShadow: "rgba(145, 158, 171, 0.08) 0px -2px 0px 0px inset" }}
+                <div className="px-4 flex gap-10 overflow-y-hidden md overflow-xscrol md:gap-6"
+                    // hide scrollbar
+                    style={{
+                        boxShadow: "rgba(145, 158, 171, 0.08) 0px -2px 0px 0px inset",
+                        // scrollbar
+                    }}
                 >
                     <button
                         onClick={() => setStatus("all")}
@@ -258,7 +276,7 @@ export const All = () => {
                         </div>
                     )}
                 </div>
-                <div className="relative xl:overflow-y-hidden xl:overflow-x-scroll sm:rounded-lg">
+                <div className="relative overflow-y-hidden 2xl:overflow-x-scroll sm:rounded-lg">
                     <table className="w-full text-sm text-left text-gray-500">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
@@ -348,7 +366,7 @@ export const All = () => {
                         ) : (
                             <>
                                 <tbody>
-                                    {displayedBookings.map((booking) => (
+                                    {displayedBookings.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((booking) => (
                                         <TableRow
                                             key={booking.id}
                                             booking={booking}
@@ -359,8 +377,17 @@ export const All = () => {
                         )}
                     </table>
                 </div>
-                <div className="p-5">
-
+                <div className="p-2">
+                    <TablePagination
+                        component="div"
+                        count={displayedBookings.length}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        rowsPerPageOptions={[5, 10, 25]}
+                        className="flex justify-end"
+                    />
                 </div>
             </div>
         </div>

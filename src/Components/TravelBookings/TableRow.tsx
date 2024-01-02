@@ -29,15 +29,17 @@ export const TableRow = ({ booking }: any) => {
                     <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
                 </div>
             </td>
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex gap-2 items-center mx-6">
-                <img
-                    src={booking.moreData ? booking.moreData.images.imageOne : travelImage}
-                    alt="travelPackage"
-                    className="w-14 h-14 rounded-md object-cover"
-                />
-                <p >
-                    {booking.title}
-                </p>
+            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                <div className="flex gap-2 items-center min-w-[max-content]">
+                    <img
+                        src={booking.moreData ? booking.moreData.images.imageOne : travelImage}
+                        alt="travelPackage"
+                        className="w-14 h-14 rounded-md object-cover"
+                    />
+                    <p >
+                        {booking.title}
+                    </p>
+                </div>
             </th>
             <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap xl:px-3">
                 <div className="flex flex-col gap-0.5">
@@ -97,7 +99,7 @@ export const TableRow = ({ booking }: any) => {
                     )}
                 </div>
             </td>
-            <td className="flex items-center px-6 py-4 space-x-3 xl:px-3"
+            <td className="px-6 py-4 space-x-3 xl:px-3"
             >
                 <Action
                     viewRoute={viewRoute}

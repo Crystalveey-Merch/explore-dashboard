@@ -25,13 +25,13 @@ export const Header = () => {
     }
 
     return (
-        <div className="bg-white z-40 h-20 px-6 border-b border-gray-300  justify-between flex items-center md:px-3 sm:px-2">
+        <div className="bg-white h-20 px-6 border-b border-gray-300 justify-between flex items-center md:px-3 sm:px-2">
             <div className="flex items-center gap-3 sm:gap-1">
                 <button
                     id="menu-btn"
                     onClick={handleMenu}
                     className={`hamburger  ${state ? "open" : ""
-                        } hidden sm:flex focus:outline-none z-30 `}
+                        } hidden xl:flex focus:outline-none z-30 `}
                 >
                     <svg fill="none" stroke="currentColor" 
                     className='h-7 w-7'
