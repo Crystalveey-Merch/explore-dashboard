@@ -5,7 +5,7 @@ import Collapsible from "react-collapsible";
 import { collection, getDocs, db } from '../Config/firebase';
 import { useDispatch, } from 'react-redux';
 import { toggleMenu } from '../Config/rightBarToggleSlice';
-import firstPageIcon from '../assets/Images/Dashboard/first-page.png'
+//import firstPageIcon from '../assets/Images/Dashboard/first-page.png'
 import LogoSmall from "../../public/20231116_210104-removebg-preview.png"
 import PlusSVG from "../assets/SVG/Dashboard/plus.svg"
 import barChartSVG from "../assets/SVG/Dashboard/bar-chart-square.svg"
@@ -13,6 +13,7 @@ import invoiceSVG from "../assets/SVG/Dashboard/invoice-dollar.svg"
 import activitySVG from "../assets/SVG/Dashboard/outdoor-trip.svg"
 import travelPackageSVG from "../assets/SVG/Dashboard/tour.svg"
 import bookingsSVG from "../assets/SVG/Dashboard/ticket.svg"
+import activitiesSVG from "../assets/SVG/Dashboard/square-person-confined-solid.svg"
 import flightSVG from "../assets/SVG/Dashboard/flight-takeoff.svg"
 import hotelSVG from "../assets/SVG/Dashboard/hotel.svg"
 import visaSVG from "../assets/SVG/Dashboard/passport.svg"
@@ -124,7 +125,7 @@ export const SideBar = () => {
                                     Bookings
                                 </span>
                             </h4>
-                            {/* Activity Booking */}
+                            {/* Travel Booking */}
                             <div className="xl:px-1">
                                 <Collapsible
                                     trigger={
@@ -255,6 +256,139 @@ export const SideBar = () => {
                                     </ul>
                                 </Collapsible>
                             </div>
+                            {/* Travel Booking End */}
+                            {/* Activities Booking */}
+                            <div className="xl:px-1">
+                                <Collapsible
+                                    trigger={
+                                        <button
+                                            className={`flex justify-between w-full h-10 mb-1 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer`}
+                                            onClick={() => (
+                                                setActivitiesBookingDropdown(!activitiesBookingDropdown),
+                                                setActivityDropdown(false),
+                                                setTravelPackageDropdown(false),
+                                                setTravelBookingDropdown(false),
+                                                setBookingDropdown(false)
+                                            )}
+                                        >
+                                            <div className="flex gap-3.5 items-center">
+                                                <img src={activitiesSVG} alt="activities" className="w-6 h-6" />
+                                                <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname.includes("/activities-bookings") ? "text-white" : "text-white"}`}>
+                                                    Activities Bookings
+                                                </h4>
+                                            </div>
+                                            <svg
+                                                className={`w-4 h-4 transform transition-transform duration-500 ${activitiesBookingDropdown ? "rotate-180" : ""}`}
+                                                aria-hidden="true"
+                                                fill="none"
+                                                stroke="#ffffff"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M19 9l-7 7-7-7"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                    }
+                                    open={activitiesBookingDropdown}
+                                    transitionTime={300}
+                                    easing="ease-in-out"
+                                >
+                                    <ul
+                                        className={`pl-1 flex flex-col gap-1.5 w-full transition-all duration-500 ease-in-out `}
+                                    >
+                                        {/* All Activities Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/activities-bookings" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/activities-bookings" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/activities-bookings" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> All </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {activityBookings.length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* All Activities Bookings End */}
+                                        {/* Pending Activities Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/activities-bookings/pending" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/activities-bookings/pending" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/activities-bookings/pending" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> In Review </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-semibold">
+                                                        {activityBookings.filter((booking: { status: string }) => booking.status === "pending").length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Pending Activities Bookings End */}
+                                        {/* Paid Activities Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/activities-bookings/paid" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/activities-bookings/paid" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/activities-bookings/paid" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Paid </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {activityBookings.filter((booking: { status: string }) => booking.status === "paid").length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Paid Activities Bookings End */}
+                                        {/* Cancelled Activities Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/activities-bookings/cancelled" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/activities-bookings/cancelled" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/activities-bookings/cancelled" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Cancelled </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {activityBookings.filter((booking: { isCancelled: boolean }) => booking?.isCancelled === true).length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Cancelled Activities Bookings End */}
+                                        {/* Refunded Activities Bookings*/}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/activities-bookings/refunded" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/activities-bookings/refunded" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/activities-bookings/refunded" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Refunded </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {activityBookings.filter((booking: { status: string }) => booking.status === "refunded").length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Refunded Activities Bookings End */}
+                                        {/* Installment Activities Bookings*/}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/activities-bookings/installment" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/activities-bookings/installment" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/activities-bookings/installment" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Installment </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {activityBookings.filter((booking: { installment: boolean }) => booking.installment === true).length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Installment Activities Bookings End */}
+                                    </ul>
+                                </Collapsible>
+                            </div>
+                            {/* Activities Booking End */}
                         </div>
                         {/* Bookings End */}
                         {/* Managementg */}

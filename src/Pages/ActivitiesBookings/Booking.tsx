@@ -3,15 +3,14 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { collection, getDocs, db, doc, updateDoc } from '../../Config/firebase';
-import { handleFormatDate, handleFormatTime, ConfirmModal } from "../../Hooks"
+import { handleFormatDate, handleFormatTime, ConfirmModal, handleFormatDate2 } from "../../Hooks"
 import { StatusDropDown } from "../../Components";
 import printSVG from "../../assets/SVG/Dashboard/Action/print.svg";
 import travelImage from "../../assets/Images/Dashboard/travel-location.png"
-import handleFormattedDateRange from "../../Hooks/handleFormattedDateRange";
 
 
 
-export const Booking = () => {
+export const BookingActivities = () => {
     const [booking, setBooking] = useState<any>(null);
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -163,7 +162,7 @@ export const Booking = () => {
                     <div className="flex justify-between py-6 border-b-2 border-dashed border-[rgb(244,246,248)]">
                         <div className="flex gap-2 items-center">
                             <img
-                                src={booking?.moreData ? booking.moreData.images.imageOne : travelImage}
+                                src={booking?.moreData ? booking?.moreData.imageOne : travelImage}
                                 alt="travelPackage"
                                 className="w-14 h-14 rounded-md object-cover"
                             />
@@ -172,7 +171,7 @@ export const Booking = () => {
                                     {booking?.title}
                                 </p>
                                 <p className="text-sm text-gray-500">
-                                    {handleFormattedDateRange(booking?.moreData.startDate, booking?.moreData.endDate)}
+                                    {handleFormatDate2(booking?.date)}
                                 </p>
                             </div>
                         </div>

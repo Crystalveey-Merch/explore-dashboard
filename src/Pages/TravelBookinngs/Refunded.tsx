@@ -10,7 +10,7 @@ import { SearchInput } from "../../Components";
 
 
 
-export const Paid = () => {
+export const Refunded = () => {
     const [travelBookings, setTravelBookings] = useState<any[]>([])
     const [displayedBookings, setDisplayedBookings] = useState<any[]>([])
     const [bookingsFiltered, setBookingsFiltered] = useState<any[]>([])
@@ -38,8 +38,8 @@ export const Paid = () => {
                     ...doc.data(),
                 });
             });
-            // set bookings of type "Promoted Travel Package" and status "paid"
-            setTravelBookings(bookings.filter((booking: { type: string, status: string }) => booking.type === "Promoted Travel Package" && booking.status === "paid"));
+            // set bookings of type "Promoted Travel Package" and status === "refunded"
+            setTravelBookings(bookings.filter((booking: { type: string, status: string }) => booking.type === "Promoted Travel Package" && booking.status === "refunded"));
             setLoading(false);
         }
         fetchTravelBookings()
@@ -224,7 +224,7 @@ export const Paid = () => {
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-12 sm:px-4 sm:gap-9">
             <div className="flex flex-col gap-2">
                 <h2 className="text-2xl font-semibold text-[#1C1C1C]">
-                   Paid Travel Bookings
+                   Refunded Travel Bookings
                 </h2>
                 <div className="flex gap-2.5 items-center">
                     <Link to="/" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
@@ -240,7 +240,7 @@ export const Paid = () => {
                     <span className="h-1 w-1 rounded-full bg-[rgb(99,115,129)]">
                     </span>
                     <span className="text-[rgb(99,115,129)] text-sm font-medium">
-                        Paid
+                        Refunded
                     </span>
                 </div>
             </div>

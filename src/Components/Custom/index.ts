@@ -1,4 +1,5 @@
 export * from "./Input"
+export * from "./SearchInput"
 export * from "./BlueButton"
 export * from "./WhiteButton"
 export * from "./ActionComp"

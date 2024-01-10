@@ -67,5 +67,26 @@ body {
 
 .css-3bmhjh-MuiPaper-root-MuiPopover-paper {
   left: unset !important;
- right: 140px !important;
+  right: 140px !important;
+}
+
+@media screen and (max-width: 1279px) {
+  .css-3bmhjh-MuiPaper-root-MuiPopover-paper {
+    left: unset !important;
+    right: 90px !important;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .css-3bmhjh-MuiPaper-root-MuiPopover-paper {
+    left: unset !important;
+    right: 70px !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .css-3bmhjh-MuiPaper-root-MuiPopover-paper {
+    left: unset !important;
+    right: 60px !important;
+  }
 }

@@ -25,7 +25,8 @@ import {
   Login, Register, ForgetPassword, VerifyEmail, Overview,
   Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications
 } from './Pages';
-import { All, Cancelled, Installments, Paid, Review, Booking } from "./Pages/TravelBookinngs"
+import { All, Cancelled, Installments, Paid, Review, Refunded, Booking } from "./Pages/TravelBookinngs"
+import { AllActivities, CancelledActivities, InstallmentActivities, PaidActivities, ReviewActivities, RefundedActivities, BookingActivities } from "./Pages/ActivitiesBookings"
 
 function App() {
   const dispatch = useDispatch()
@@ -272,10 +273,18 @@ function App() {
           }
         />
         <Route
-          path="/travel-bookings/review"
+          path="/travel-bookings/pending"
           element={
             <DasboardLayout>
               <Review />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/travel-bookings/refunded"
+          element={
+            <DasboardLayout>
+              <Refunded />
             </DasboardLayout>
           }
         />
@@ -295,6 +304,63 @@ function App() {
             </DasboardLayout>
           }
         />
+        <Route
+          path="/activities-bookings"
+          element={
+            <DasboardLayout>
+              <AllActivities />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/activities-bookings/paid"
+          element={
+            <DasboardLayout>
+              <PaidActivities />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/activities-bookings/installments"
+          element={
+            <DasboardLayout>
+              <InstallmentActivities />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/activities-bookings/pending"
+          element={
+            <DasboardLayout>
+              <ReviewActivities />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/activities-bookings/refunded"
+          element={
+            <DasboardLayout>
+              <RefundedActivities />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/activities-bookings/cancelled"
+          element={
+            <DasboardLayout>
+              <CancelledActivities />
+            </DasboardLayout>
+          }
+        />
+        <Route
+          path="/activities-bookings/:id"
+          element={
+            <DasboardLayout>
+              <BookingActivities />
+            </DasboardLayout>
+          }
+        />
+         
       </Routes>
       <ToastContainer />
     </div>

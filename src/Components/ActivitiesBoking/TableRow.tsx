@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, SetStateAction } from "react";
-import { Action } from "."
+import { Action } from "../TravelBookings";
 import { handleFormatDate2 } from "../../Hooks"
 import travelImage from "../../assets/Images/Dashboard/travel-location.png"
 
 
 export const TableRow = ({ booking }: any) => {
-    const viewRoute = `/travel-bookings/${booking.id}`;
+    const viewRoute = `/activities-bookings/${booking.id}`;
 
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -32,7 +32,7 @@ export const TableRow = ({ booking }: any) => {
             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                 <div className="flex gap-2 items-center min-w-[max-content]">
                     <img
-                        src={booking.moreData ? booking.moreData.images.imageOne : travelImage}
+                        src={booking.moreData ? booking.moreData.imageOne : travelImage}
                         alt="travelPackage"
                         className="w-14 h-14 rounded-md object-cover"
                     />
@@ -57,7 +57,7 @@ export const TableRow = ({ booking }: any) => {
             <td className="px-6 py-4 xl:px-3">
                 <div className="flex flex-col gap-1 items-start">
                     <p className="text-[rgb(33,43,54)] text-sm font-normal whitespace-nowrap">
-                        {handleFormatDate2(booking.moreData.startDate)}
+                        {handleFormatDate2(booking.date)}
                     </p>
                 </div>
             </td>

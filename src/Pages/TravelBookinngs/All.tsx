@@ -6,11 +6,13 @@ import { collection, getDocs, db } from '../../Config/firebase';
 import { TableRow } from "../../Components/TravelBookings";
 import { Sort } from "../../Hooks";
 import noResultImg from "../../assets/Images/Dashboard/no-results.png"
+import { SearchInput } from "../../Components";
 
 
 export const All = () => {
     const [travelBookings, setTravelBookings] = useState<any[]>([])
     const [displayedBookings, setDisplayedBookings] = useState<any[]>([])
+    const [bookingsFiltered, setBookingsFiltered] = useState<any[]>([])
     // show filter
     const [activeFilter, setActiveFilter] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -44,24 +46,60 @@ export const All = () => {
 
     const [status, setStatus] = useState<string>("all");
 
+    // search filter, search by name, email, booking id
+    const [search, setSearch] = useState<string>("");
+    const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [searchActive, setSearchActive] = useState<boolean>(false);
+
     // display bookings based on status
     useEffect(() => {
         if (status === "all") {
-            setDisplayedBookings(travelBookings);
+            if (!searchActive) {
+                setDisplayedBookings(travelBookings);
+                setBookingsFiltered(travelBookings);
+            } else {
+                setDisplayedBookings(searchResults);
+            }
         } else if (status === "paid") {
-            setDisplayedBookings(travelBookings.filter((booking) => booking.status === "paid"));
+            if (!searchActive) {
+                setDisplayedBookings(travelBookings.filter((booking) => booking.status === "paid"));
+                setBookingsFiltered(travelBookings.filter((booking) => booking.status === "paid"));
+            } else {
+                setDisplayedBookings(searchResults.filter((booking) => booking.status === "paid"));
+            }
         } else if (status === "installment") {
-            setDisplayedBookings(travelBookings.filter((booking) => booking.installment === true));
+            if (!searchActive) {
+                setDisplayedBookings(travelBookings.filter((booking) => booking.installment === true));
+                setBookingsFiltered(travelBookings.filter((booking) => booking.installment === true));
+            } else {
+                setDisplayedBookings(searchResults.filter((booking) => booking.installment === true));
+            }
         } else if (status === "pending") {
-            setDisplayedBookings(travelBookings.filter((booking) => booking.status === "pending"));
+            if (!searchActive) {
+                setDisplayedBookings(travelBookings.filter((booking) => booking.status === "pending"));
+                setBookingsFiltered(travelBookings.filter((booking) => booking.status === "pending"));
+            } else {
+                setDisplayedBookings(searchResults.filter((booking) => booking.status === "pending"));
+            }
         } else if (status === "cancelled") {
-            setDisplayedBookings(travelBookings.filter((booking) => (booking.isCancelled === true)));
+            if (!searchActive) {
+                setDisplayedBookings(travelBookings.filter((booking) => (booking.isCancelled === true)));
+                setBookingsFiltered(travelBookings.filter((booking) => (booking.isCancelled === true)));
+            } else {
+                setDisplayedBookings(searchResults.filter((booking) => (booking.isCancelled === true)));
+            }
         } else if (status === "refunded") {
-            setDisplayedBookings(travelBookings.filter((booking) => (booking.status === "refunded")));
+            if (!searchActive) {
+                setDisplayedBookings(travelBookings.filter((booking) => (booking.status === "refunded")));
+                setBookingsFiltered(travelBookings.filter((booking) => (booking.status === "refunded")));
+            } else {
+                setDisplayedBookings(searchResults.filter((booking) => (booking.status === "refunded")));
+            }
         } else {
-            setDisplayedBookings(travelBookings);
+            // setDisplayedBookings(travelBookings);
+            // setBookingsFiltered(travelBookings);
         }
-    }, [status, travelBookings]);
+    }, [status, travelBookings, searchActive, searchResults]);
 
 
     // set active filter
@@ -70,11 +108,55 @@ export const All = () => {
             // clear only status filter from active filter
             setActiveFilter(activeFilter.filter((filter) => filter.type !== "status"));
         } else {
-            // set active filter with type status and value based on status
-            setActiveFilter([{ type: "status", value: status }]);
+            // set active filter by adding to it's array of objects with type status and value based on status
+            setActiveFilter([{ type: "status", value: status }, ...activeFilter.filter((filter) => filter.type !== "status")]);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status]);
+
+
+    useEffect(() => {
+        if (searchActive) {
+            setDisplayedBookings(searchResults);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchActive, searchResults]);
+
+    // search filter
+    useEffect(() => {
+        if (search.length > 0) {
+            setSearchResults(bookingsFiltered.filter((booking) => booking.name.toLowerCase().includes(search.toLowerCase()) || booking.email.toLowerCase().includes(search.toLowerCase()) || booking.id.toLowerCase().includes(search.toLowerCase())));
+            setSearchActive(true);
+            // set active filter by adding to it's array of objects with type keywords and value based on search
+            setActiveFilter([{ type: "keywords", value: search }, ...activeFilter.filter((filter) => filter.type !== "keywords")]);
+        } else {
+            setSearchActive(false);
+            setSearchResults([]);
+            setActiveFilter(activeFilter.filter((filter) => filter.type !== "keywords"));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [search]);
+
+    // clear all filter
+    const clearFilter = () => {
+        setStatus("all");
+        setSearch("");
+        setSearchActive(false);
+        setSearchResults([]);
+        setActiveFilter([]);
+    };
+
+    // clear filter by type
+    const clearFilterByType = (type: string) => {
+        if (type === "status") {
+            setStatus("all");
+        } else if (type === "keywords") {
+            setSearch("");
+            setSearchActive(false);
+            setSearchResults([]);
+        }
+    };
+
 
     // format date to string
     const formatDateToString = (dateString: string): number => new Date(dateString).getTime();
@@ -229,15 +311,21 @@ export const All = () => {
                         </p>
                     </button>
                 </div>
+                {/* filter by search */}
+                <div className="flex justify-end pt-5 px-4">
+                    <SearchInput search={search} setSearch={setSearch} />
+                </div>
                 <div className="p-5 flex flex-col gap-3">
-                    <p className="text-sm font-bold text-[rgb(99,115,129)]">
-                        {displayedBookings.length}
-                        <span className="text-[rgb(145,158,171)] font-medium ml-0.5">
-                            results found
-                        </span>
-                    </p>
+                    {activeFilter.length > 0 &&
+                        <p className="text-sm font-bold text-[rgb(99,115,129)]">
+                            {displayedBookings.length}
+                            <span className="text-[rgb(145,158,171)] font-medium ml-0.5">
+                                results found
+                            </span>
+                        </p>
+                    }
                     {activeFilter.length > 0 && (
-                        <div className="flex gap-2 items-center">
+                        <div className="flex flex-wrap gap-2 items-center">
                             {activeFilter.map((filter) => (
                                 <div className="p-1.5 flex gap-2 items-center border border-dotted border-gray-300 rounded-md">
                                     <p className="text-sm font-semibold text-[rgb(33,43,54)] capitalize">
@@ -248,11 +336,7 @@ export const All = () => {
                                             {filter.value}
                                         </p>
                                         <button
-                                            onClick={() => {
-                                                if (filter.type === "status") {
-                                                    setStatus("all");
-                                                }
-                                            }}
+                                            onClick={() => clearFilterByType(filter.type)}
                                             className="text-[rgb(255,255,255)]">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path opacity="1" fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" /></svg>
                                         </button>
@@ -260,11 +344,7 @@ export const All = () => {
                                 </div>
                             ))}
                             <button
-                                onClick={() => {
-                                    setStatus("all");
-                                    // clear active filter
-                                    setActiveFilter([]);
-                                }}
+                                onClick={() => clearFilter()}
                                 className="text-[rgb(255,86,48)] py-1.5 px-2 flex gap-2 items-center rounded-lg transition duration-300 ease-in-out hover:bg-red-50">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />

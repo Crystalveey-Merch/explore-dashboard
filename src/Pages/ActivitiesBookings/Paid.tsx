@@ -3,15 +3,14 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 import TablePagination from '@mui/material/TablePagination';
 import { collection, getDocs, db } from '../../Config/firebase';
-import { TableRow } from "../../Components/TravelBookings";
+import { TableRow } from "../../Components/ActivitiesBoking";
 import { Sort } from "../../Hooks";
 import noResultImg from "../../assets/Images/Dashboard/no-results.png"
 import { SearchInput } from "../../Components";
 
 
-
-export const Paid = () => {
-    const [travelBookings, setTravelBookings] = useState<any[]>([])
+export const PaidActivities = () => {
+    const [activitiesBookings, setActivitiesBookings] = useState<any[]>([])
     const [displayedBookings, setDisplayedBookings] = useState<any[]>([])
     const [bookingsFiltered, setBookingsFiltered] = useState<any[]>([])
     // show filter
@@ -38,8 +37,8 @@ export const Paid = () => {
                     ...doc.data(),
                 });
             });
-            // set bookings of type "Promoted Travel Package" and status "paid"
-            setTravelBookings(bookings.filter((booking: { type: string, status: string }) => booking.type === "Promoted Travel Package" && booking.status === "paid"));
+            // set bookings of type "Exciting Activities" to state
+            setActivitiesBookings(bookings.filter((booking: { type: string, status: string }) => booking.type === "Exciting Activities" && booking.status === "paid"));
             setLoading(false);
         }
         fetchTravelBookings()
@@ -56,51 +55,51 @@ export const Paid = () => {
     useEffect(() => {
         if (status === "all") {
             if (!searchActive) {
-                setDisplayedBookings(travelBookings);
-                setBookingsFiltered(travelBookings);
+                setDisplayedBookings(activitiesBookings);
+                setBookingsFiltered(activitiesBookings);
             } else {
                 setDisplayedBookings(searchResults);
             }
         } else if (status === "paid") {
             if (!searchActive) {
-                setDisplayedBookings(travelBookings.filter((booking) => booking.status === "paid"));
-                setBookingsFiltered(travelBookings.filter((booking) => booking.status === "paid"));
+                setDisplayedBookings(activitiesBookings.filter((booking) => booking.status === "paid"));
+                setBookingsFiltered(activitiesBookings.filter((booking) => booking.status === "paid"));
             } else {
                 setDisplayedBookings(searchResults.filter((booking) => booking.status === "paid"));
             }
         } else if (status === "installment") {
             if (!searchActive) {
-                setDisplayedBookings(travelBookings.filter((booking) => booking.installment === true));
-                setBookingsFiltered(travelBookings.filter((booking) => booking.installment === true));
+                setDisplayedBookings(activitiesBookings.filter((booking) => booking.installment === true));
+                setBookingsFiltered(activitiesBookings.filter((booking) => booking.installment === true));
             } else {
                 setDisplayedBookings(searchResults.filter((booking) => booking.installment === true));
             }
         } else if (status === "pending") {
             if (!searchActive) {
-                setDisplayedBookings(travelBookings.filter((booking) => booking.status === "pending"));
-                setBookingsFiltered(travelBookings.filter((booking) => booking.status === "pending"));
+                setDisplayedBookings(activitiesBookings.filter((booking) => booking.status === "pending"));
+                setBookingsFiltered(activitiesBookings.filter((booking) => booking.status === "pending"));
             } else {
                 setDisplayedBookings(searchResults.filter((booking) => booking.status === "pending"));
             }
         } else if (status === "cancelled") {
             if (!searchActive) {
-                setDisplayedBookings(travelBookings.filter((booking) => (booking.isCancelled === true)));
-                setBookingsFiltered(travelBookings.filter((booking) => (booking.isCancelled === true)));
+                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.isCancelled === true)));
+                setBookingsFiltered(activitiesBookings.filter((booking) => (booking.isCancelled === true)));
             } else {
                 setDisplayedBookings(searchResults.filter((booking) => (booking.isCancelled === true)));
             }
         } else if (status === "refunded") {
             if (!searchActive) {
-                setDisplayedBookings(travelBookings.filter((booking) => (booking.status === "refunded")));
-                setBookingsFiltered(travelBookings.filter((booking) => (booking.status === "refunded")));
+                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.status === "refunded")));
+                setBookingsFiltered(activitiesBookings.filter((booking) => (booking.status === "refunded")));
             } else {
                 setDisplayedBookings(searchResults.filter((booking) => (booking.status === "refunded")));
             }
         } else {
-            // setDisplayedBookings(travelBookings);
-            // setBookingsFiltered(travelBookings);
+            // setDisplayedBookings(activitiesBookings);
+            // setBookingsFiltered(activitiesBookings);
         }
-    }, [status, travelBookings, searchActive, searchResults]);
+    }, [status, activitiesBookings, searchActive, searchResults]);
 
 
     // set active filter
@@ -181,9 +180,9 @@ export const Paid = () => {
         } else if (sort === "desc" && activeTab === "travellers") {
             setDisplayedBookings([...displayedBookings].sort((a, b) => b.travellers - a.travellers));
         } else if (sort === "asc" && activeTab === "checkInDate") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(a.moreData.startDate) - formatDateToString(b.moreData.startDate)));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(a.date) - formatDateToString(b.date)));
         } else if (sort === "desc" && activeTab === "checkInDate") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(b.moreData.startDate) - formatDateToString(a.moreData.startDate)));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(b.date) - formatDateToString(a.date)));
         } else if (sort === "asc" && activeTab === "bookingId") {
             setDisplayedBookings([...displayedBookings].sort((a, b) => a.id.localeCompare(b.id)));
         } else if (sort === "desc" && activeTab === "bookingId") {
@@ -224,7 +223,7 @@ export const Paid = () => {
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-12 sm:px-4 sm:gap-9">
             <div className="flex flex-col gap-2">
                 <h2 className="text-2xl font-semibold text-[#1C1C1C]">
-                   Paid Travel Bookings
+                    Paid Activities Bookings
                 </h2>
                 <div className="flex gap-2.5 items-center">
                     <Link to="/" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
@@ -233,8 +232,8 @@ export const Paid = () => {
                     {/* a dot */}
                     <span className="h-1 w-1 rounded-full bg-[rgb(99,115,129)]">
                     </span>
-                    <Link to="/travel-bookings" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
-                        Travel Bookings
+                    <Link to="/activities-bookings" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
+                        Activities Bookings
                     </Link>
                     {/* a dot */}
                     <span className="h-1 w-1 rounded-full bg-[rgb(99,115,129)]">
@@ -262,7 +261,7 @@ export const Paid = () => {
                             All
                         </p>
                         <p className={`h-6 w-6 bg-black text-white rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out`}>
-                            {travelBookings.length}
+                            {activitiesBookings.length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("pending")}
@@ -271,7 +270,7 @@ export const Paid = () => {
                             In Review
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "pending" ? "bg-orange-800 text-[#ffffff]" : "bg-orange-200 text-orange-800"}`}>
-                            {travelBookings.filter((invoice) => invoice.status === "pending").length}
+                            {activitiesBookings.filter((invoice) => invoice.status === "pending").length}
                         </p>
                     </button>
                     <button
@@ -281,7 +280,7 @@ export const Paid = () => {
                             Paid
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "paid" ? "bg-[rgb(17,141,87)] text-[#ffffff]" : "bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)]"}`}>
-                            {travelBookings.filter((invoice) => invoice.status === "paid").length}
+                            {activitiesBookings.filter((invoice) => invoice.status === "paid").length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("installment")}
@@ -290,7 +289,7 @@ export const Paid = () => {
                             Installment
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "installment" ? "bg-purple-800 text-[#ffffff]" : "bg-purple-200 text-purple-800"}`}>
-                            {travelBookings.filter((invoice) => invoice.installment === true).length}
+                            {activitiesBookings.filter((invoice) => invoice.installment === true).length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("cancelled")}
@@ -299,7 +298,7 @@ export const Paid = () => {
                             Cancelled
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "cancelled" ? "bg-red-700 text-[#ffffff]" : "bg-red-200 text-red-700"}`}>
-                            {travelBookings.filter((invoice) => invoice.isCancelled === true).length}
+                            {activitiesBookings.filter((invoice) => invoice.isCancelled === true).length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("refunded")}
@@ -308,7 +307,7 @@ export const Paid = () => {
                             Refunded
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "refunded" ? "bg-stone-700 text-[#ffffff]" : "bg-stone-200 text-stone-700"}`}>
-                            {travelBookings.filter((invoice) => invoice.status === "refunded").length}
+                            {activitiesBookings.filter((invoice) => invoice.status === "refunded").length}
                         </p>
                     </button>
                 </div>
