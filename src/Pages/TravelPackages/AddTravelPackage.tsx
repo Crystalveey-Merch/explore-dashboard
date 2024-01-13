@@ -455,7 +455,7 @@ export const AddTravelPackage = () => {
                                 onChange={handlePriceChange}
                                 className={"w-full"} required />
                         </label>
-                        <div className="flex flex-col gap-2 w-full">
+                        <div className="flex flex-col gap-2 w-full sm:col-span-2">
                             <p className="text-sm font-medium text-gray-700">
                                 Inclusions (Add at least one)
                             </p>
@@ -523,7 +523,7 @@ export const AddTravelPackage = () => {
                                             <p className="text-sm font-medium text-gray-700">Activity</p>
                                             <div className="flex flex-wrap gap-4">
                                                 {city.activities.map((activity, activityIndex) => (
-                                                    <div className='flex gap-2 items-center'>
+                                                    <div className='flex gap-2 items-center sm:w-full'>
                                                         <Input
                                                             key={activityIndex}
                                                             type="text"
@@ -535,6 +535,7 @@ export const AddTravelPackage = () => {
                                                                 updatedCities[cityIndex].activities[activityIndex] = e.target.value;
                                                                 setVisitingCities(updatedCities);
                                                             }}
+                                                            className="sm:w-full"
                                                         />
                                                         {activityIndex > 0 && (
                                                             <BlueButton

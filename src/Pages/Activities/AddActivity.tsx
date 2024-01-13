@@ -576,7 +576,7 @@ export const AddActivity = () => {
                         </label>
                     </div>
                     <div className="flex flex-col p-4 gap-4 w-full">
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center sm:flex-wrap sm:gap-2">
                             <p className="text-sm font-medium text-gray-700">
                                 What To Expect
                             </p>

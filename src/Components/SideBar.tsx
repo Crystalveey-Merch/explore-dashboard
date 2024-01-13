@@ -67,7 +67,7 @@ export const SideBar = () => {
 
     return (
         <div className="bar-links xl:z-10" onClick={handleMenu}>
-            <div className="h-screen font-public-sans bg[#00afef] w-[268px] flex flex-col justify-between border-r border-gray-300 2xl:w-[250px] md:px2 xl:absolute xl:bg-white sm:w-[230px]" onClick={(e) => e.stopPropagation()}>
+            <div className="h-screen font-public-sans bg[#00afef] w-[268px] flex flex-col justify-between border-r border-gray-300 2xl:w-[250px] md:px2 xl:absolute xl:bg-white sm:w-[240px]" onClick={(e) => e.stopPropagation()}>
                 <div className="flex flex-col gap10 h-full">
                     <div className="py-[5px] px-3.5 flex justify-between items-center">
                         <NavLink to="/">
@@ -398,17 +398,6 @@ export const SideBar = () => {
                                     Management
                                 </span>
                             </h4>
-                            <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
-                                <NavLink
-                                    to="/invoices"
-                                    className={`flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 cursor-pointer ${location.pathname === "/invoices" ? "bg-gray-500" : ""}`}
-                                >
-                                    <img src={invoiceSVG} alt="activity" className="w-6 h-6" />
-                                    <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/invoices" ? "text-white" : "text-white"}`}>
-                                        Invoices
-                                    </h4>
-                                </NavLink>
-                            </div>
                             <div className="xl:px-1">
                                 <Collapsible
                                     trigger={
@@ -602,6 +591,17 @@ export const SideBar = () => {
                                         </li>
                                     </ul>
                                 </Collapsible>
+                            </div>
+                            <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
+                                <NavLink
+                                    to="/invoices"
+                                    className={`flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 cursor-pointer ${location.pathname === "/invoices" ? "bg-gray-500" : ""}`}
+                                >
+                                    <img src={invoiceSVG} alt="activity" className="w-6 h-6" />
+                                    <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/invoices" ? "text-white" : "text-white"}`}>
+                                        Invoices
+                                    </h4>
+                                </NavLink>
                             </div>
                         </div>
                     </div>
