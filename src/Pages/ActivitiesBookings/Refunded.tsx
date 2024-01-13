@@ -114,7 +114,6 @@ export const RefundedActivities = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status]);
 
-
     useEffect(() => {
         if (searchActive) {
             setDisplayedBookings(searchResults);
