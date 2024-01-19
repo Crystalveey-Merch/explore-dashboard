@@ -22,42 +22,52 @@ export const AddActivity = () => {
         {
             id: 1,
             name: "Guided City Tours",
-            description: "Explore landmarks and cultural attractions with experienced guides.",
+            description: "Explore landmarks with guides.",
         },
         {
             id: 2,
-            name: "Outdoor Adventures",
-            description: "Thrilling zip-lining, biking, and hiking in breathtaking natural settings.",
+            name: "Andrenaline Adventures",
+            description: "Thrilling zip-lining, biking, and hiking.",
         },
         {
             id: 3,
             name: "Nature & Wildlife Safaris",
-            description: "Capture moments with a variety of animals in their natural habitats.",
+            description: "Capture moments with animals.",
         },
         {
             id: 4,
             name: "Beach Relaxation",
-            description: "Enjoy water activities or simply relax on the beach, soaking up the sun and sea.",
+            description: "Enjoy water activities or relaxation.",
         },
         {
             id: 5,
             name: "Museums and Galleries",
-            description: "Immerse yourself in culture, history, and the arts at museums and galleries.",
+            description: "Immerse yourself in culture and history.",
         },
         {
             id: 6,
             name: "Food & Culinary Tours",
-            description: "Savor regional cuisine through food excursions, tastings, and restaurant visits.",
+            description: "Savor regional cuisine through tastings.",
         },
         {
             id: 7,
             name: "Theme Parks and Entertainment",
-            description: "Experience exhilarating rides, shows, and entertainment at theme parks.",
+            description: "Experience rides and shows.",
         },
         {
             id: 8,
             name: "Wellness Retreats",
-            description: "Rejuvenate with spa services, yoga retreats, and wellness pursuits in tranquil settings.",
+            description: "Rejuvenate with spa and yoga services.",
+        },
+        {
+            id: 9,
+            name: "Arts & DIY",
+            description: "Learn a new skill or craft",
+        },
+        {
+            id: 10,
+            name: "Entertainment & Nightlife",
+            description: "Enjoy live music, dancing, and nightlife.",
         }
     ];
 
