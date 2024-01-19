@@ -19,28 +19,46 @@ import { BlueButton } from '../../Components';
 
 export const AddActivity = () => {
     const catogories = [
-        { id: 1, name: "Arts And Crafts", description: "Discover the rich cultural heritage of Nigeria through historical artifacts and art." },
-        { id: 2, name: "Social Dancing", description: "Experience the rhythm of Latin music with a salsa night at Havana Club." },
-        { id: 3, name: "Beach And Water", description: "Unwind and soak up the sun on the beautiful beaches of Lagos." },
-        { id: 4, name: "SPA", description: "Indulge in a relaxing spa experience and rejuvenate your mind, body, and soul." },
-        { id: 5, name: "Indoor Sports", description: "Enjoy indoor sports and activities with friends and family." },
-        { id: 6, name: "Shopping", description: "Shopping" },
+        {
+            id: 1,
+            name: "Guided City Tours",
+            description: "Explore landmarks and cultural attractions with experienced guides.",
+        },
+        {
+            id: 2,
+            name: "Outdoor Adventures",
+            description: "Thrilling zip-lining, biking, and hiking in breathtaking natural settings.",
+        },
+        {
+            id: 3,
+            name: "Nature & Wildlife Safaris",
+            description: "Capture moments with a variety of animals in their natural habitats.",
+        },
+        {
+            id: 4,
+            name: "Beach Relaxation",
+            description: "Enjoy water activities or simply relax on the beach, soaking up the sun and sea.",
+        },
+        {
+            id: 5,
+            name: "Museums and Galleries",
+            description: "Immerse yourself in culture, history, and the arts at museums and galleries.",
+        },
+        {
+            id: 6,
+            name: "Food & Culinary Tours",
+            description: "Savor regional cuisine through food excursions, tastings, and restaurant visits.",
+        },
         {
             id: 7,
-            name: "Adrenaline",
-            description: "Experience the thrill of rock climbing and other exciting activities in Nigeria."
+            name: "Theme Parks and Entertainment",
+            description: "Experience exhilarating rides, shows, and entertainment at theme parks.",
         },
-        { id: 8, name: "Food And Wine Tasting", description: "Food And Wine Tasting" },
-        { id: 9, name: "History", description: "History" },
-        { id: 10, name: "Architecture", description: "Architecture" },
-        { id: 11, name: "Sports", description: "Sports" },
-        { id: 12, name: "Transportation", description: "Transportation" },
-        { id: 13, name: "Health", description: "Health" },
-        { id: 14, name: "Business", description: "Business" },
-        { id: 15, name: "Education", description: "Education" },
-        { id: 16, name: "Entertainment", description: "Entertainment" },
-        { id: 17, name: "Nightlife", description: "Nightlife" },
-        { id: 18, name: "Others", description: "Others" },
+        {
+            id: 8,
+            name: "Wellness Retreats",
+            description: "Rejuvenate with spa services, yoga retreats, and wellness pursuits in tranquil settings.",
+        }
     ];
 
     const countries = ["Nigeria", "Kenya", "Ghana", "Mauritius", "Rwanda", "South Africa", "Lebanon"];
