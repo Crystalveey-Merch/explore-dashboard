@@ -15,64 +15,10 @@ import Input from "../../Components/Custom/Input"
 import imagePictureSVG from "../../assets/SVG/Dashboard/image-picture.svg"
 import downloadCloudSVG from "../../assets/SVG/Dashboard/download-cloud.svg"
 import { BlueButton } from '../../Components';
+import {categories, countries} from '../../data/data'
 
 
 export const AddActivity = () => {
-    const catogories = [
-        {
-            id: 1,
-            name: "Guided City Tours",
-            description: "Explore landmarks with guides.",
-        },
-        {
-            id: 2,
-            name: "Andrenaline Adventures",
-            description: "Thrilling zip-lining, biking, and hiking.",
-        },
-        {
-            id: 3,
-            name: "Nature & Wildlife Safaris",
-            description: "Capture moments with animals.",
-        },
-        {
-            id: 4,
-            name: "Beach Relaxation",
-            description: "Enjoy water activities or relaxation.",
-        },
-        {
-            id: 5,
-            name: "Museums and Galleries",
-            description: "Immerse yourself in culture and history.",
-        },
-        {
-            id: 6,
-            name: "Food & Culinary Tours",
-            description: "Savor regional cuisine through tastings.",
-        },
-        {
-            id: 7,
-            name: "Theme Parks and Entertainment",
-            description: "Experience rides and shows.",
-        },
-        {
-            id: 8,
-            name: "Wellness Retreats",
-            description: "Rejuvenate with spa and yoga services.",
-        },
-        {
-            id: 9,
-            name: "Arts & DIY",
-            description: "Learn a new skill or craft",
-        },
-        {
-            id: 10,
-            name: "Entertainment & Nightlife",
-            description: "Enjoy live music, dancing, and nightlife.",
-        }
-    ];
-
-    const countries = ["Nigeria", "Kenya", "Ghana", "Mauritius", "Rwanda", "South Africa", "Lebanon"];
-
 
     const navigate = useNavigate()
 
@@ -348,7 +294,7 @@ export const AddActivity = () => {
                                     className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out w-full"
                                 >
                                     <option value="">--Select Category--</option>
-                                    {catogories.map((category) => (
+                                    {categories.map((category) => (
                                         <option key={category.id} value={category.name}>{category.name}</option>
                                     ))}
                                 </select>
