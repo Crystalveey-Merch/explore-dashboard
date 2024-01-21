@@ -10,12 +10,12 @@ export const AuthLayout = ({ children }: { children: ReactNode }) => {
             <div className='w-[43.19%] relative flex lg:hidden'>
                 <div className='z-10 px-9 bg-black bg-opacity-50 w-full h-full flex flex-col gap-6 justify-center items-center'>
                     <h3 className='text-white text-center text-5xl font-bold'
-                    style={{lineHeight: '3.5rem'}}
+                        style={{ lineHeight: '3.5rem' }}
                     >
-                        Explore Crystalveey
+                        Crystalveey
                     </h3>
                     <p className='text-white text-center text-2xl font-medium leading-normal xl:text-xl'>
-                    Your Gateway to Unforgettable Experiences
+                        Explore the intersection of philanthropy, style, adventure, and expert advice at Crystalveey.
                     </p>
                 </div>
                 <img src={authBgImg} alt="a woman writing" className='z-0 absolute top-0 left-0 w-full h-full' />

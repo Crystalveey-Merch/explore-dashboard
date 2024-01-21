@@ -1,2 +1,3 @@
 export * from "./AuthLayout";
-export * from "./DasboardLayout"
+export * from "./AtelierDashboardLayout"
+export * from "./ExploreDasboardLayout"

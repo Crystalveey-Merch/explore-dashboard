@@ -20,15 +20,21 @@ import {
 } from "./Config/firebase";
 import { collection, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 import './App.css'
-import { AuthLayout, DasboardLayout } from './Layout';
+import { AuthLayout, AtelierDashboardLayout, ExploreDasboardLayout } from './Layout';
 import {
-  Login, Register, ForgetPassword, VerifyEmail, Overview,
-  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications
+  Login, Register, ChooseBrand, ForgetPassword, VerifyEmail, NotFound, PrivateRoutes
 } from './Pages';
-import { All, Cancelled, Installments, Paid, Review, Refunded, Booking } from "./Pages/TravelBookinngs"
-import { AllActivities, CancelledActivities, InstallmentActivities, PaidActivities, ReviewActivities, RefundedActivities, BookingActivities } from "./Pages/ActivitiesBookings"
+import {
+  Overview,
+  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications
+} from "./Pages"
+import { AtelierOverview } from './Pages/Atelier';
+import { All, Cancelled, Installments, Paid, Review, Refunded, Booking } from "./Pages/Explore/TravelBookinngs"
+import { AllActivities, CancelledActivities, InstallmentActivities, PaidActivities, ReviewActivities, RefundedActivities, BookingActivities } from "./Pages/Explore/ActivitiesBookings"
+
 
 function App() {
+  // const navigate = useNavigate()
   const dispatch = useDispatch()
 
   onAuthStateChanged(auth, async (userAuth) => {
@@ -114,14 +120,6 @@ function App() {
     <div>
       <Routes>
         <Route
-          path="/"
-          element={
-            <DasboardLayout>
-              <Overview />
-            </DasboardLayout>
-          }
-        />
-        <Route
           path="/login"
           element={
             <AuthLayout>
@@ -134,6 +132,14 @@ function App() {
           element={
             <AuthLayout>
               <Register />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <AuthLayout>
+              <ChooseBrand />
             </AuthLayout>
           }
         />
@@ -153,215 +159,248 @@ function App() {
             </AuthLayout>
           }
         />
-        <Route
-          path="/invoices"
-          element={
-            <DasboardLayout>
-              <Invoices />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/invoices/edit/:id"
-          element={
-            <DasboardLayout>
-              <EditInvoice />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/invoices/:id"
-          element={
-            <DasboardLayout>
-              <Invoice />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path='/activities'
-          element={
-            <DasboardLayout>
-              <Activities />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/activities/add"
-          element={
-            <DasboardLayout>
-              <AddActivity />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/activities/edit/:id"
-          element={
-            <DasboardLayout>
-              <EditActivity />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/travel-packages"
-          element={
-            <DasboardLayout>
-              <TravelPackages />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/travel-packages/add"
-          element={
-            <DasboardLayout>
-              <AddTravelPackage />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/travel-packages/edit/:id"
-          element={
-            <DasboardLayout>
-              <EditTravelPackage />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/flight-bookings"
-          element={
-            <DasboardLayout>
-              <FlightBookings />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/hotel-reservations"
-          element={
-            <DasboardLayout>
-              <HotelReservations />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/visa-applications"
-          element={
-            <DasboardLayout>
-              <VisaApplications />
-            </DasboardLayout>
-          }
-        /> <Route
-          path="/travel-bookings"
-          element={
-            <DasboardLayout>
-              <All />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/travel-bookings/paid"
-          element={
-            <DasboardLayout>
-              <Paid />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/travel-bookings/installments"
-          element={
-            <DasboardLayout>
-              <Installments />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/travel-bookings/pending"
-          element={
-            <DasboardLayout>
-              <Review />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/travel-bookings/refunded"
-          element={
-            <DasboardLayout>
-              <Refunded />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/travel-bookings/cancelled"
-          element={
-            <DasboardLayout>
-              <Cancelled />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/travel-bookings/:id"
-          element={
-            <DasboardLayout>
-              <Booking />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/activities-bookings"
-          element={
-            <DasboardLayout>
-              <AllActivities />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/activities-bookings/paid"
-          element={
-            <DasboardLayout>
-              <PaidActivities />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/activities-bookings/installments"
-          element={
-            <DasboardLayout>
-              <InstallmentActivities />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/activities-bookings/pending"
-          element={
-            <DasboardLayout>
-              <ReviewActivities />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/activities-bookings/refunded"
-          element={
-            <DasboardLayout>
-              <RefundedActivities />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/activities-bookings/cancelled"
-          element={
-            <DasboardLayout>
-              <CancelledActivities />
-            </DasboardLayout>
-          }
-        />
-        <Route
-          path="/activities-bookings/:id"
-          element={
-            <DasboardLayout>
-              <BookingActivities />
-            </DasboardLayout>
-          }
-        />
-         
+        <Route path="*" element={<NotFound />} />
+
+        {/* <ExploreRoutes /> */}
+
+        <Route element={<PrivateRoutes />}>
+          <Route
+            path="/explore"
+            element={
+              <ExploreDasboardLayout>
+                <Overview />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/invoices"
+            element={
+              <ExploreDasboardLayout>
+                <Invoices />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/invoices/edit/:id"
+            element={
+              <ExploreDasboardLayout>
+                <EditInvoice />
+              </ExploreDasboardLayout>
+            }
+          />
+
+          <Route
+            path="/explore/invoices/:id"
+            element={
+              <ExploreDasboardLayout>
+                <Invoice />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/activities"
+            element={
+              <ExploreDasboardLayout>
+                <Activities />
+              </ExploreDasboardLayout>
+            }
+          />
+
+          <Route
+            path="/explore/activities/add"
+            element={
+              <ExploreDasboardLayout>
+                <AddActivity />
+              </ExploreDasboardLayout>
+            }
+          />
+
+          <Route
+            path="/explore/activities/edit/:id"
+            element={
+              <ExploreDasboardLayout>
+                <EditActivity />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/travel-packages"
+            element={
+              <ExploreDasboardLayout>
+                <TravelPackages />
+              </ExploreDasboardLayout>
+            }
+          />
+
+          <Route
+            path="/explore/travel-packages/add"
+            element={
+              <ExploreDasboardLayout>
+                <AddTravelPackage />
+              </ExploreDasboardLayout>
+            }
+          />
+
+          <Route
+            path="/explore/travel-packages/edit/:id"
+            element={
+              <ExploreDasboardLayout>
+                <EditTravelPackage />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/flight-bookings"
+            element={
+              <ExploreDasboardLayout>
+                <FlightBookings />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/hotel-reservations"
+            element={
+              <ExploreDasboardLayout>
+                <HotelReservations />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/visa-applications"
+            element={
+              <ExploreDasboardLayout>
+                <VisaApplications />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/travel-bookings"
+            element={
+              <ExploreDasboardLayout>
+                <All />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/travel-bookings/paid"
+            element={
+              <ExploreDasboardLayout>
+                <Paid />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/travel-bookings/installments"
+            element={
+              <ExploreDasboardLayout>
+                <Installments />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/travel-bookings/pending"
+            element={
+              <ExploreDasboardLayout>
+                <Review />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/travel-bookings/refunded"
+            element={
+              <ExploreDasboardLayout>
+                <Refunded />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/travel-bookings/cancelled"
+            element={
+              <ExploreDasboardLayout>
+                <Cancelled />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/travel-bookings/:id"
+            element={
+              <ExploreDasboardLayout>
+                <Booking />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/activities-bookings"
+            element={
+              <ExploreDasboardLayout>
+                <AllActivities />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/activities-bookings/paid"
+            element={
+              <ExploreDasboardLayout>
+                <PaidActivities />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/activities-bookings/installments"
+            element={
+              <ExploreDasboardLayout>
+                <InstallmentActivities />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/activities-bookings/pending"
+            element={
+              <ExploreDasboardLayout>
+                <ReviewActivities />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/activities-bookings/refunded"
+            element={
+              <ExploreDasboardLayout>
+                <RefundedActivities />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/activities-bookings/cancelled"
+            element={
+              <ExploreDasboardLayout>
+                <CancelledActivities />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/activities-bookings/:id"
+            element={
+              <ExploreDasboardLayout>
+                <BookingActivities />
+              </ExploreDasboardLayout>
+            }
+          />
+        </Route>
+        {/* explore routes end */}
+        {/* atelier routes */}
+        <Route element={<PrivateRoutes />}>
+          <Route
+            path="/atelier"
+            element={
+              <AtelierDashboardLayout>
+                <AtelierOverview />
+              </AtelierDashboardLayout>
+            }
+          />
+        </Route>
+        {/* atelier routes end */}
       </Routes>
+
       <ToastContainer />
     </div>
   )
