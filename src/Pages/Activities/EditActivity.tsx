@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
     serverTimestamp,
     updateDoc,
-    // setDoc,
     doc,
     collection,
     getDocs,

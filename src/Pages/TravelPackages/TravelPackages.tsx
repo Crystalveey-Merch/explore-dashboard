@@ -1,17 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom"
+import TablePagination from '@mui/material/TablePagination';
 import { collection, getDocs, deleteDoc, doc, db } from '../../Config/firebase';
 import { toast } from "react-toastify";
 import handleFormattedDateRange from "../../Hooks/handleFormattedDateRange";
-import { BlueButton } from "../../Components"
+import { BlueButton, SearchInput } from "../../Components"
 import PlusSVG from "../../assets/SVG/Dashboard/plus.svg"
+import { Sort } from "../../Hooks";
+import noResultImg from "../../assets/Images/Dashboard/no-results.png"
 
 
 
 export const TravelPackages = () => {
     const [travelPackages, setTravelPackages] = useState<any[]>([]);
+    const [displayedTravelPackages, setDisplayedTravelPackages] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+
+    const [sort, setSort] = useState("");
+    const [activeTab, setActiveTab] = useState("");
+
+    const handleSortChange = (value: string, tab: string) => {
+        setSort(value);
+        setActiveTab(tab);
+    };
 
     useEffect(() => {
         const fetchTravelPackages = async () => {
@@ -23,6 +35,7 @@ export const TravelPackages = () => {
                     ...doc.data()
                 }));
                 setTravelPackages(packagedata);
+                setDisplayedTravelPackages(packagedata);
                 setLoading(false);
             } catch (error) {
                 console.log(error);
@@ -52,6 +65,56 @@ export const TravelPackages = () => {
         }
     }
 
+
+    // format date to string
+    const formatDateToString = (dateString: string): number => new Date(dateString).getTime();
+
+
+    // sort 
+    useEffect(() => {
+        if (sort === "asc" && activeTab === "packageName") {
+            setDisplayedTravelPackages([...displayedTravelPackages].sort((a, b) => a.title.localeCompare(b.title)));
+        } else if (sort === "desc" && activeTab === "packageName") {
+            setDisplayedTravelPackages([...displayedTravelPackages].sort((a, b) => b.title.localeCompare(a.title)));
+        } else if (sort === "asc" && activeTab === "date") {
+            setDisplayedTravelPackages([...displayedTravelPackages].sort((a, b) => formatDateToString(a.startDate) - formatDateToString(b.startDate)));
+        } else if (sort === "desc" && activeTab === "date") {
+            setDisplayedTravelPackages([...displayedTravelPackages].sort((a, b) => formatDateToString(b.startDate) - formatDateToString(a.startDate)));
+        } else if (sort === "asc" && activeTab === "price") {
+            setDisplayedTravelPackages([...displayedTravelPackages].sort((a, b) => a.price - b.price));
+        } else if (sort === "desc" && activeTab === "price") {
+            setDisplayedTravelPackages([...displayedTravelPackages].sort((a, b) => b.price - a.price));
+        } else if (sort === "asc" && activeTab === "duration") {
+            setDisplayedTravelPackages([...displayedTravelPackages].sort((a, b) => a.duration - b.duration));
+        } else if (sort === "desc" && activeTab === "duration") {
+            setDisplayedTravelPackages([...displayedTravelPackages].sort((a, b) => b.duration - a.duration));
+        } else {
+            setDisplayedTravelPackages(travelPackages);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sort, activeTab]);
+
+    // search
+    const [search, setSearch] = useState<string>("");
+    // search by name and category
+    useEffect(() => {
+        setDisplayedTravelPackages(travelPackages.filter((travelPackage) => travelPackage.title.toLowerCase().includes(search.toLowerCase())));
+    }, [search, travelPackages]);
+
+    // pagination 
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    const handleChangePage = (_event: any, newPage: any) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: any) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center w-full h-screen">
@@ -68,7 +131,7 @@ export const TravelPackages = () => {
                 </h1>
                 <NavLink to="/travel-packages/add">
                     <BlueButton
-                    className="lg:py-1.5"
+                        className="lg:py-1.5"
                         label={
                             <div className="flex items-center gap-2">
                                 <img src={PlusSVG} alt="plus" className="w-4 h-4 lg:w-3.5 lg:h-3.5" />
@@ -149,70 +212,138 @@ export const TravelPackages = () => {
                     ))}
                 </table >
             </div > */}
+            <div
+                className="w-full rounded-2xl flex flex-col gap-4"
+                style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
+            >
+                <div className="flex justify-end pt-5 px-4">
+                    <SearchInput search={search} setSearch={setSearch} />
+                </div>
+                <div className="relative w-full lg:overflow-x-scroll xl:overflow-y-hidden shadow-md xl:rounded-lg">
+                    <table className="w-full text-sm text-left text-gray-500">
+                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
 
-            <div className="relative w-full lg:overflow-x-scroll xl:overflow-y-hidden shadow-md xl:rounded-lg">
-                <table className="w-full text-sm text-left text-gray-500">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                        <tr>
-
-                            <th scope="col" className="px-6 py-3">
-                                Package name
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Date
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Available
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Price
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Duration
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Action
-                            </th>
-                        </tr>
-                    </thead>
-                    {travelPackages.map((travelPackage, index) => (
-                        <tbody key={index} >
-                            <tr className="bg-white border-b hover:bg-gray-50 ">
-
-                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex gap-2 items-center mx-6">
-                                    <img
-                                        src={travelPackage.images.imageOne}
-                                        alt="travelPackage"
-                                        className="w-14 h-14 rounded-md object-cover"
+                                <th scope="col" className="px-6 py-3">
+                                    <Sort
+                                        sort={sort}
+                                        activeTab={activeTab}
+                                        handleSortChange={handleSortChange}
+                                        tab="packageName"
+                                        label="Package name"
                                     />
-                                    <p >
-                                        {travelPackage.title}
-                                    </p>
                                 </th>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    {handleFormattedDateRange(travelPackage.startDate, travelPackage.endDate)}
-                                </td>
-                                <td className="px-6 py-4">
-                                    Yes
-                                </td>
-                                <td className="px-6 py-4">
-                                    {travelPackage.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
-                                </td>
-                                <td className="px-6 py-4">
-                                    {travelPackage.duration} days
-                                </td>
-                                <td className="flex items-center px-6 py-4 space-x-3">
-
-                                    <NavLink to={`/travel-packages/edit/${travelPackage.id}`} className="font-medium my-auto text-blue-600 dark:text-blue-500 hover:underline">Edit</NavLink>
-                                    <button
-                                        onClick={() => handleDelete(travelPackage.id, travelPackage.title)} className="font-medium my-auto text-red-600 dark:text-red-500 hover:underline">Remove</button>
-                                </td>
+                                <th scope="col" className="px-6 py-3">
+                                    <Sort
+                                        sort={sort}
+                                        activeTab={activeTab}
+                                        handleSortChange={handleSortChange}
+                                        tab="date"
+                                        label="Date"
+                                    />
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    <Sort
+                                        sort={sort}
+                                        activeTab={activeTab}
+                                        handleSortChange={handleSortChange}
+                                        tab="available"
+                                        label="Available"
+                                    />
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    <Sort
+                                        sort={sort}
+                                        activeTab={activeTab}
+                                        handleSortChange={handleSortChange}
+                                        tab="price"
+                                        label="Price"
+                                    />
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    <Sort
+                                        sort={sort}
+                                        activeTab={activeTab}
+                                        handleSortChange={handleSortChange}
+                                        tab="duration"
+                                        label="Duration"
+                                    />
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Action
+                                </th>
                             </tr>
-                        </tbody>
-                    ))}
-                </table>
-            </div>
+                        </thead>
+                        {displayedTravelPackages.length === 0 ? (
+                            <tbody className="bg-white border-b border-gray-200">
+                                <tr className="bg-white border-b">
+                                    <td className="px-6 py-6" colSpan={6}>
+                                        <div className="flex flex-col gap-1 items-center">
+                                            <img
+                                                src={noResultImg}
+                                                alt="No result found"
+                                                className="max-w-[145px]"
+                                            />
+                                            <p className="text-[rgb(33,43,54)] text-sm font-normal whitespace-nowrap">
+                                                No result found
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        ) : (
+                            <>
+                                {displayedTravelPackages.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((travelPackage) => (
+                                    <tbody key={travelPackage.id} >
+                                        <tr className="bg-white border-b hover:bg-gray-50 ">
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex gap-2 items-center mx-6">
+                                                <img
+                                                    src={travelPackage.images.imageOne}
+                                                    alt="travelPackage"
+                                                    className="w-14 h-14 rounded-md object-cover"
+                                                />
+                                                <p >
+                                                    {travelPackage.title}
+                                                </p>
+                                            </th>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                {handleFormattedDateRange(travelPackage.startDate, travelPackage.endDate)}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                Yes
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {travelPackage.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {travelPackage.duration} days
+                                            </td>
+                                            <td className="flex items-center px-6 py-4 space-x-3">
 
+                                                <NavLink to={`/travel-packages/edit/${travelPackage.id}`} className="font-medium my-auto text-blue-600 dark:text-blue-500 hover:underline">Edit</NavLink>
+                                                <button
+                                                    onClick={() => handleDelete(travelPackage.id, travelPackage.title)} className="font-medium my-auto text-red-600 dark:text-red-500 hover:underline">Remove</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                ))}
+                            </>
+                        )}
+                    </table>
+                </div>
+                <div className="p-2">
+                    <TablePagination
+                        component="div"
+                        count={displayedTravelPackages.length}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        rowsPerPageOptions={[5, 10, 25]}
+                        className="flex justify-end"
+                    />
+                </div>
+            </div>
         </div >
     )
 }
