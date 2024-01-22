@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Key, SetStateAction, useState } from "react";
+import { SetStateAction, useState } from "react";
 import { db } from "../../../Config/AtelierFirebase/auth";
 import { toast } from "react-toastify";
 import { storage } from "../../../Config/AtelierFirebase/auth";
@@ -699,7 +699,7 @@ export const UploadProductForm = () => {
                 <div key={index} className="">
                   {file instanceof Blob && file.type?.includes("image") && (
                     <img
-                      src={URL.createObjectURL(file)}
+                      src={URL.createObjectURL(new File([file], "image.png"))}
                       alt="preview"
                       style={{
                         width: "100px",
@@ -714,6 +714,7 @@ export const UploadProductForm = () => {
                   </div>
                 </div>
               ))}
+
           </div>
           {progress &&
             Object.keys(progress).map((key, index) => (
