@@ -1,4 +1,5 @@
 import { ReactNode } from "react"
+import SideBar from "../Components/Atelier/SideBar"
 // import { useNavigate } from "react-router-dom"
 // import { getKey } from "../Components/KeyFunctions"
 
@@ -14,9 +15,8 @@ export const AtelierDashboardLayout = ({ children }: { children: ReactNode }) =>
 
     return (
         <div className='flex h-screen overflow-hidden'>
-            <h1>
-                This is the Atelier Dashboard Layout
-            </h1>
+            <SideBar/>
+           
             <div className='flex flex-grow overflow-auto'>
                 {children}
             </div>
