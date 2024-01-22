@@ -38,6 +38,7 @@ import RefurblishAndSell from './Components/Atelier/RefurblishAndSell';
 import Orders from './Components/Atelier/Orders';
 import UntagSell from './Components/Atelier/UntaggSell';
 import CustonMade from './Components/Atelier/CustomMade';
+import Users from './Components/Atelier/Users';
 
 
 function App() {
@@ -471,6 +472,16 @@ function App() {
             }
         
           />
+            <Route
+            path="/atelier/users"
+            element={
+              <AtelierDashboardLayout>
+                <Users />
+              </AtelierDashboardLayout>
+            }
+        
+          />
+          
         </Route>
         
 

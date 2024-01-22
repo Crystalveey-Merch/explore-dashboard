@@ -46,7 +46,7 @@ const SideBar = () => {
     const closeDrawer = () => setIsDrawerOpen(false);
   return (
     <div className="flex  relative ">
-    <Card className="h-screen w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5  bg-blue-gray-100 border static sm:hidden ">
+    <Card className="h-screen w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5  bg-blue-100 border static sm:hidden ">
       <div className="mb-2 p-4">
         <Typography variant="h5" color="blue-gray">
           Atelier Dash
@@ -124,6 +124,14 @@ const SideBar = () => {
               <Cog6ToothIcon className="h-5 w-5" />
             </ListItemPrefix>
             Custom Made
+          </ListItem>
+        </NavLink>
+        <NavLink to="/atelier/Users">
+          <ListItem>
+            <ListItemPrefix>
+              <Cog6ToothIcon className="h-5 w-5" />
+            </ListItemPrefix>
+            Users
           </ListItem>
         </NavLink>
 
