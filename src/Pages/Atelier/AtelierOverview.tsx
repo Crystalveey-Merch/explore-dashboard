@@ -5,7 +5,7 @@ import { logout, selectUser } from "../../Config/userSlice"
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 import { auth } from "../../Config/firebase";
-
+import SideBar from "../../Components/Atelier/SideBar";
 export const AtelierOverview = () => {
     const navigate = useNavigate()
     const user = useSelector(selectUser)
@@ -36,11 +36,8 @@ export const AtelierOverview = () => {
 
     return (
         <div className="min-h-screen py-10 flex flex-col gap-14 justify-center items-center text-center">
-            <h1 className="text-5xl font-bold sm:text-3xl">
-                This is the Dashboard Overview Page
-            </h1>
             <h2 className="text-2xl font-medium text-gray-400 md:text-xl">
-                Welcome {user?.displayName}
+                Welcome {user?.displayName} to Atelier Admin Block
             </h2>
             <button onClick={SignOut} className="p-6 text-black font-bold text-base md:font-semibold border-2 border-black rounded-xl transition duration-300 hover:bg-black hover:text-white">
                 Logout

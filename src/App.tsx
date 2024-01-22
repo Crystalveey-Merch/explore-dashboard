@@ -31,6 +31,14 @@ import {
 import { AtelierOverview } from './Pages/Atelier';
 import { All, Cancelled, Installments, Paid, Review, Refunded, Booking } from "./Pages/Explore/TravelBookinngs"
 import { AllActivities, CancelledActivities, InstallmentActivities, PaidActivities, ReviewActivities, RefundedActivities, BookingActivities } from "./Pages/Explore/ActivitiesBookings"
+import { UploadProductForm } from './Components/Atelier/UploadProduct/UploadProductForm';
+import { AllProducts } from './Components/Atelier/AllProducts';
+import { Refurblish } from './Components/Atelier/Refurblish';
+import RefurblishAndSell from './Components/Atelier/RefurblishAndSell';
+import Orders from './Components/Atelier/Orders';
+import UntagSell from './Components/Atelier/UntaggSell';
+import CustonMade from './Components/Atelier/CustomMade';
+import Users from './Components/Atelier/Users';
 
 
 function App() {
@@ -397,7 +405,86 @@ function App() {
               </AtelierDashboardLayout>
             }
           />
+          <Route
+            path="/atelier/upload-product"
+            element={
+              <AtelierDashboardLayout>
+                <UploadProductForm />
+              </AtelierDashboardLayout>
+            }
+          />
+            <Route
+            path="/atelier/all-products"
+            element={
+              <AtelierDashboardLayout>
+                <AllProducts />
+              </AtelierDashboardLayout>
+            }
+          />
+           <Route
+            path="/atelier/uploadproduct/:id"
+            element={
+              <AtelierDashboardLayout>
+                <UploadProductForm />
+              </AtelierDashboardLayout>
+            }
+          />
+          <Route
+            path="/atelier/refurblish"
+            element={
+              <AtelierDashboardLayout>
+                <Refurblish />
+              </AtelierDashboardLayout>
+            }
+          />
+          <Route
+            path="/atelier/refurblish-and-sell"
+            element={
+              <AtelierDashboardLayout>
+                <RefurblishAndSell />
+              </AtelierDashboardLayout>
+            }
+          />
+          <Route
+            path="/atelier/orders"
+            element={
+              <AtelierDashboardLayout>
+                <Orders />
+              </AtelierDashboardLayout>
+            }
+            
+          />
+           <Route
+            path="/atelier/untag-sell"
+            element={
+              <AtelierDashboardLayout>
+                <UntagSell />
+              </AtelierDashboardLayout>
+            }
+        
+          />
+            <Route
+            path="/atelier/custom-made"
+            element={
+              <AtelierDashboardLayout>
+                <CustonMade />
+              </AtelierDashboardLayout>
+            }
+        
+          />
+            <Route
+            path="/atelier/users"
+            element={
+              <AtelierDashboardLayout>
+                <Users />
+              </AtelierDashboardLayout>
+            }
+        
+          />
+          
         </Route>
+        
+
         {/* atelier routes end */}
       </Routes>
 
