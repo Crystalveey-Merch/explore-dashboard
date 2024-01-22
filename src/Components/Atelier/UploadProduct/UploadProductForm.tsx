@@ -694,26 +694,26 @@ export const UploadProductForm = () => {
             </label>
           </div>
           <div className="flex gap-4 my-4">
-            {files &&
-              files.map((file: Blob | MediaSource, index: number | undefined) => (
-                <div key={index} className="">
-                  {file instanceof Blob && file.type?.includes("image") && (
-                    <img
-                      src={URL.createObjectURL(new File([file], "image.png"))}
-                      alt="preview"
-                      style={{
-                        width: "100px",
-                        height: "100px",
-                        objectFit: "cover",
-                      }}
-                      className="rounded-full"
-                    />
-                  )}
-                  <div onClick={() => onRemove(file)} className="text-red-500">
-                    Remove
-                  </div>
+          {files &&
+            files.map((file: any, index: any) => (
+              <div key={index} className="">
+                {file.type?.includes("image") && (
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt="preview"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      objectFit: "cover",
+                    }}
+                    className="rounded-full"
+                  />
+                )}
+                <div onClick={() => onRemove(file)} className="text-red-500">
+                  Remove
                 </div>
-              ))}
+              </div>
+            ))}
 
           </div>
           {progress &&
