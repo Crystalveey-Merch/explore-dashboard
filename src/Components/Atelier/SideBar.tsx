@@ -17,6 +17,7 @@ import {
   Cog6ToothIcon,
   InboxIcon,
   PowerIcon,
+  PlusIcon,
 } from "@heroicons/react/24/solid";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
@@ -62,8 +63,8 @@ const SideBar = () => {
         <List placeholder={undefined}>
           <NavLink to="/atelier/upload-product">
             <ListItem placeholder={undefined} className="text-sky-800">
-              <ListItemPrefix placeholder={undefined} children={undefined}>
-
+              <ListItemPrefix placeholder={undefined}>
+                <PlusIcon className="h-5 w-5" />
               </ListItemPrefix>
               Upload Product
             </ListItem>
@@ -168,8 +169,8 @@ const SideBar = () => {
             <List placeholder={undefined}>
               <NavLink to="/atelier/upload-product">
                 <ListItem className="text-sky-800" placeholder={undefined}>
-                  <ListItemPrefix placeholder={undefined} children={undefined}>
-
+                  <ListItemPrefix placeholder={undefined}>
+                    <PlusIcon className="h-5 w-5" />
                   </ListItemPrefix>
                   Upload Product
                 </ListItem>

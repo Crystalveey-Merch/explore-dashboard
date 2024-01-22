@@ -36,7 +36,7 @@ type FormData = {
 
 export const UploadProductForm = () => {
   const { id } = useParams();
-  const [imageUrl, setImageUrl] = useState([] as any);
+  // const [imageUrl, setImageUrl] = useState([] as any);
 
   const [fabricType, setFabricType] = useState([]);
   // const [images, setImages] = useState([]);
@@ -121,17 +121,17 @@ export const UploadProductForm = () => {
       setSelectedSize(data.size);
       setDescription(data.description);
       setFabricType(data.fabricType);
-      setImageUrl(data.imgSrc);
+      // setImageUrl(data.imgSrc);
       console.log(data);
     }
   };
 
 
-  useEffect(() => {
-    if (downloadURL) {
-      setImageUrl((prevState: any) => [...prevState, downloadURL]);
-    }
-  }, [downloadURL]);
+  // useEffect(() => {
+  //   if (downloadURL) {
+  //     setImageUrl((prevState: any) => [...prevState, downloadURL]);
+  //   }
+  // }, [downloadURL]);
 
 
   // const handleTags = (fabricType = []) => {
@@ -695,7 +695,7 @@ export const UploadProductForm = () => {
           </div>
           <div className="flex gap-4 my-4">
             {files &&
-              files.map((file: Blob | MediaSource, index: Key | null | undefined) => (
+              files.map((file: Blob | MediaSource, index: number | undefined) => (
                 <div key={index} className="">
                   {file instanceof Blob && file.type?.includes("image") && (
                     <img
