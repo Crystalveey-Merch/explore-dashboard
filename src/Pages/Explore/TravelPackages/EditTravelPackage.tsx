@@ -299,7 +299,7 @@ export const EditTravelPackage = () => {
             setImageOneUrl("")
             setImageTwoUrl("")
             toast.success("Travel Package updated successfully")
-            navigate('/travel-packages/')
+            navigate('/explore/travel-packages/')
             setLoading(false)
         } catch (error) {
             console.error("Error updating travel package: ", error);

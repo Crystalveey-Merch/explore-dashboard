@@ -379,7 +379,7 @@ export const Activities = () => {
                                                         </td>
                                                         <td className="flex items-center px-6 py-4 space-x-3">
                                                             <NavLink
-                                                                to={`/activities/edit/${activity.id}`}
+                                                                to={`/explore/activities/edit/${activity.id}`}
                                                                 className="font-medium my-auto text-blue-600 dark:text-blue-500 hover:underline">Edit</NavLink>
                                                             <button
                                                                 onClick={() => handleDelete(activity.id, activity.name)}

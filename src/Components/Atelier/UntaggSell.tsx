@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useEffect, useState } from "react";
-import { collection, getDocs, doc, deleteDoc,   updateDoc,
+import { collection, getDocs, doc, deleteDoc,   updateDoc, DocumentData,
 } from "firebase/firestore";
 import { db } from "../../Config/AtelierFirebase/auth";
 // import { useParams } from 'react-router';
-import { NavLink } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
+// import { NavLink } from "react-router-dom";
+// import { onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
@@ -14,12 +15,14 @@ import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 
 const UntagSell = () => {
-  const [sell, setSell] = useState([]);
+  const [sell, setSell] = useState([]) as any;
   const [search, setSearch] = useState("");
   const [productsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [prodictId, setSellId] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState('');
+  // const [prodictId, setSellId] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState(
+    {} as { id: string; status: string }
+  );
 
   useEffect(() => {
     // setLoading(true);
@@ -27,8 +30,8 @@ const UntagSell = () => {
       try {
         // setLoading(true);
         const querySnapshot = await getDocs(collection(db, "sell"));
-        const productsData = [];
-        const productsIds = [];
+        const productsData: DocumentData[] = [];
+        const productsIds: React.SetStateAction<string> | string[] = [];
         const tags = [];
         const categories = [];
 
@@ -51,9 +54,12 @@ const UntagSell = () => {
           })
         );
         const status = productsData.map((product) => product.status);
-        setSelectedStatus(status);
+        setSelectedStatus({
+          id: status[0].id,
+          status: status[0].status,
+        });
         // Set the productsId state with the collected sell IDs
-        setSellId(productsIds);
+        // setSellId(productsIds);
         setSell([...productsData]);
       } catch (error) {
         console.error("Error fetching productss:", error);
@@ -69,7 +75,7 @@ const UntagSell = () => {
       return sell; // Return all users when search input is empty
     } else {
       return sell.filter(
-        (sell) =>
+        (sell: { phoneNo: string; category: string; }) =>
           (sell.phoneNo &&
             sell.phoneNo.toLowerCase().includes(search.toLowerCase())) ||
           (sell.category &&
@@ -82,14 +88,14 @@ const UntagSell = () => {
   const indexOfFirstPage = indexOfLastPage - productsPerPage;
   const currentSell = handleSearch().slice(indexOfFirstPage, indexOfLastPage);
 
-  const handleDelete = async (productId) => {
+  const handleDelete = async (productId: string) => {
     if (window.confirm("Are you sure you want to delete the user post?")) {
       try {
         // Delete the document from Firestore
         await deleteDoc(doc(db, "sell", productId));
 
         // Update the state after successful deletion
-        const updatedSell = sell.filter((product) => product.id !== productId);
+        const updatedSell = sell.filter((product: { id: any; }) => product.id !== productId);
         setSell(updatedSell);
 
         toast.success("Post deleted successfully");
@@ -100,7 +106,7 @@ const UntagSell = () => {
     }
   };
   console.log(sell);
-  const handleStatusSelect = (e, id) => {
+  const handleStatusSelect = (e: React.ChangeEvent<HTMLSelectElement>, id: any) => {
     // Get the selected status from the dropdown
     const status = e.target.value;
     setSelectedStatus({ id, status });
@@ -159,7 +165,7 @@ const UntagSell = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="relative overflow-scroll shadow-md sm:rounded-lg m-8 sm:w-screen  m-auto  ">
+        <div className="relative overflow-scroll shadow-md sm:rounded-lg m8 sm:w-screen  m-auto  ">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
             <thead className="text-xs text-gray-300 uppercase bg-gray-800 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -197,7 +203,7 @@ const UntagSell = () => {
                 </th>
               </tr>
             </thead>
-            {currentSell?.map((products) => (
+            {currentSell?.map((products: any) => (
               <tbody key={products.id}>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <td
@@ -225,8 +231,8 @@ const UntagSell = () => {
                   <td className="px-6 py-4">{products.itemQuantity}</td>
                   <td className="px-6 py-4">{products.itemPrice}</td>
                   <td className="px-6 py-4">
-                    {products.images.map((img) => (
-                      <Zoom key={products.id} className="flex">
+                    {products.images.map((img: string | undefined) => (
+                      <Zoom key={products.id} classDialog="flex">
                         <img src={img} width={40}></img>
                       </Zoom>
                     ))}
@@ -286,7 +292,7 @@ const UntagSell = () => {
         <Pagination
           count={Math.ceil(handleSearch().length / productsPerPage)}
           page={currentPage}
-          onChange={(event, page) => setCurrentPage(page)}
+          onChange={(_event, page) => setCurrentPage(page)}
           hidePrevButton={currentPage === 1}
         />
       </div>

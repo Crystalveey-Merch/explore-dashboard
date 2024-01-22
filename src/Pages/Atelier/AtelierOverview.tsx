@@ -5,7 +5,7 @@ import { logout, selectUser } from "../../Config/userSlice"
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 import { auth } from "../../Config/firebase";
-import SideBar from "../../Components/Atelier/SideBar";
+// import SideBar from "../../Components/Atelier/SideBar";
 export const AtelierOverview = () => {
     const navigate = useNavigate()
     const user = useSelector(selectUser)

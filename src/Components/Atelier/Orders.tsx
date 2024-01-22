@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useEffect, useState } from "react";
 import {
@@ -6,34 +7,37 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  DocumentData,
 } from "firebase/firestore";
 import { db } from "../../Config/AtelierFirebase/auth";
 // import { useParams } from 'react-router';
-import { NavLink } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
+// import { NavLink } from "react-router-dom";
+// import { onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-toastify";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWarning } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { Pagination } from "@mui/material";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 
 const Orders = () => {
-  const [order, setOrder] = useState([]);
+  const [order, setOrder] = useState([] as any);
   const [search, setSearch] = useState("");
   const [productsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [prodictId, setOrderId] = useState("");
-  const [open, setOpen] = React.useState(false);
-  const [selectedStatus, setSelectedStatus] = useState('');
+  // const [prodictId, setOrderId] = useState("");
+  // const [open, setOpen] = React.useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(
+    {} as { id: string; status: string }
+  );
 
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
   useEffect(() => {
     // setLoading(true);
@@ -41,11 +45,11 @@ const Orders = () => {
       try {
         // setLoading(true);
         const querySnapshot = await getDocs(collection(db, "orders"));
-        const productsData = [];
-        const productsIds = [];
+        const productsData: DocumentData[] = []
+        const productsIds = [] as any;
         const tags = [];
         const categories = [];
-       const productsData2=[]
+        // const productsData2 = []
 
         // Parallelize fetching data
         await Promise.all(
@@ -68,13 +72,16 @@ const Orders = () => {
             }
           })
         );
-       
+
 
         const status = productsData.map((product) => product.status);
-        setSelectedStatus(status);
-console.log(selectedStatus)
+        setSelectedStatus({
+          id: status[0].id,
+          status: status[0].status,
+        });
+        console.log(selectedStatus)
         // Set the productsId state with the collected order IDs
-        setOrderId(productsIds);
+        // setOrderId(productsIds);
         setOrder([...productsData]);
       } catch (error) {
         console.error("Error fetching productss:", error);
@@ -91,7 +98,7 @@ console.log(selectedStatus)
       return order; // Return all users when search input is empty
     } else {
       return order.filter(
-        (order) =>
+        (order: { id: string; billingData: { email: string; }; paymentReference: string; orderDetails: { name: string; }; }) =>
           (order.id && order.id.toLowerCase().includes(search.toLowerCase())) ||
           (order.billingData.email &&
             order.billingData.email
@@ -116,14 +123,14 @@ console.log(selectedStatus)
     indexOfLastPage
   );
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete the oredr?")) {
       try {
         // Delete the document from Firestore
         await deleteDoc(doc(db, "orders", id));
 
         // Update the state after successful deletion
-        const updatedCustonMade = order.filter((product) => product.id !== id);
+        const updatedCustonMade = order.filter((product: { id: string; }) => product.id !== id);
         setOrder(updatedCustonMade);
 
         toast.success("Post deleted successfully");
@@ -134,7 +141,7 @@ console.log(selectedStatus)
     }
   };
 
-const handleStatusSelect = (e, id) => {
+  const handleStatusSelect = (e: React.ChangeEvent<HTMLSelectElement>, id: any) => {
     // Get the selected status from the dropdown
     const status = e.target.value;
     setSelectedStatus({ id, status });
@@ -202,7 +209,7 @@ const handleStatusSelect = (e, id) => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="relative overflow-scroll shadow-md sm:rounded-lg m-8 sm:w-screen  m-auto  ">
+        <div className="relative overflow-scroll shadow-md sm:rounded-lg m8 sm:w-screen  m-auto  ">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
             <thead className="text-xs text-gray-300 uppercase bg-gray-800 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -239,7 +246,7 @@ const handleStatusSelect = (e, id) => {
                 </th>
               </tr>
             </thead>
-            {currentCustonMade?.map((products) => (
+            {currentCustonMade?.map((products: any) => (
               <tbody key={products.id}>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <td
@@ -264,7 +271,7 @@ const handleStatusSelect = (e, id) => {
                     <button
                       className="btn bg-sky-800 text-white capitalize text-xs"
                       onClick={() =>
-                        document.getElementById(`my_modal_${products.id}`).showModal()
+                        (document.getElementById(`my_modal_${products.id}`) as HTMLDialogElement)?.showModal()
                       }
                     >
                       View Order
@@ -275,15 +282,15 @@ const handleStatusSelect = (e, id) => {
                     <button
                       className=" btn bg-yellow-400 text-black capitalize text-xs"
                       onClick={() =>
-                        document.getElementById(`my_modal_2${products.id}`).showModal()
+                        (document.getElementById(`my_modal_2${products.id}`) as HTMLDialogElement)?.showModal()
                       }
                     >
                       Billing Address
                     </button>
                   </td>
                   <td className="px-6 py-4">
-                  <select id="select" value={products.status}  onChange={(e) => handleStatusSelect(e, products.id) }>  
-                   <option value="In Review" >
+                    <select id="select" value={products.status} onChange={(e) => handleStatusSelect(e, products.id)}>
+                      <option value="In Review" >
                         In Review
                       </option>
                       <option value="On Transit" >
@@ -299,10 +306,10 @@ const handleStatusSelect = (e, id) => {
                     <button onClick={() => handleDelete(products.id)}>
                       Delete
                     </button>
-                  </td> 
+                  </td>
                 </tr>
 
-                <dialog id={`my_modal_${products.id}`}  className="modal">
+                <dialog id={`my_modal_${products.id}`} className="modal">
                   <div className="modal-box text-left">
                     <form method="dialog">
                       {/* if there is a button in form, it will close the modal */}
@@ -314,32 +321,32 @@ const handleStatusSelect = (e, id) => {
                       {" "}
                       Order Details
                     </p>
-                    {products.orderDetails.map((cart) => (
+                    {products.orderDetails.map((cart: any) => (
                       <div className=" rounded-xl border shadow-md p-3 flex m-2" key={cart.id}>
-                      <div>
-                      <Zoom>
-                      <img src={cart.src} width={50}></img>
-                      </Zoom></div>
-                      <div>
-                      <p className="text-xl Aceh" key={cart.id}>
-                      {" "}
-                       {cart.name}
-                    </p>
-                    <h3 className=" text-xl  ">
-                      Color: {cart.color}
-                    </h3>
-                    <h3 className=" text-xl  ">
-                      Price: N {cart.price}
-                    </h3>
-                    <h3 className=" text-xl  ">
-                      Size: {cart.size}
-                    </h3>
-                    </div>
-                    </div>
+                        <div>
+                          <Zoom>
+                            <img src={cart.src} width={50}></img>
+                          </Zoom></div>
+                        <div>
+                          <p className="text-xl Aceh" key={cart.id}>
+                            {" "}
+                            {cart.name}
+                          </p>
+                          <h3 className=" text-xl  ">
+                            Color: {cart.color}
+                          </h3>
+                          <h3 className=" text-xl  ">
+                            Price: N {cart.price}
+                          </h3>
+                          <h3 className=" text-xl  ">
+                            Size: {cart.size}
+                          </h3>
+                        </div>
+                      </div>
                     ))}
-                   
-                
-                                 
+
+
+
                   </div>
                 </dialog>
                 <dialog id={`my_modal_2${products.id}`} className="modal">
@@ -438,7 +445,7 @@ const handleStatusSelect = (e, id) => {
                       <p className="text-lg">
                         {" "}
                         Name:   {products.billingData.firstName}{" "}
-                    {products.billingData.lastName}
+                        {products.billingData.lastName}
                       </p>
 
                       <p className="text-lg">
@@ -453,7 +460,7 @@ const handleStatusSelect = (e, id) => {
                         {" "}
                         Email: {products.deliveryForm.email}
                       </p>
-                    
+
                     </div>
                   </div>
                 </dialog>
@@ -464,7 +471,7 @@ const handleStatusSelect = (e, id) => {
         <Pagination
           count={Math.ceil(handleSearch().length / productsPerPage)}
           page={currentPage}
-          onChange={(event, page) => setCurrentPage(page)}
+          onChange={(_event, page) => setCurrentPage(page)}
           hidePrevButton={currentPage === 1}
         />
       </div>

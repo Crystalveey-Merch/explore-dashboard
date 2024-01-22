@@ -1,17 +1,19 @@
-import { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { SetStateAction, useEffect, useState } from "react";
 import { db } from "../../Config/AtelierFirebase/auth";
-import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc, DocumentData } from "firebase/firestore";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { Pagination } from "@mui/material";
+import { toast } from "react-toastify";
 
 export const AllProducts = () => {
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState([] as any);
     const [search, setSearch] = useState("");
     const [productsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
-    const [prodictId, setProductsId] = useState("");
+    // const [prodictId, setProductsId] = useState("");
 
     useEffect(() => {
         // setLoading(true);
@@ -19,8 +21,8 @@ export const AllProducts = () => {
           try {
             // setLoading(true);
             const querySnapshot = await getDocs(collection(db, "products"));
-            const productsData = [];
-            const productsIds = [];
+            const productsData: DocumentData[] = [];
+            const productsIds: SetStateAction<string> | string[] = [];
             const tags = [];
             const categories = [];
     
@@ -44,7 +46,7 @@ export const AllProducts = () => {
             );
     
             // Set the productsId state with the collected products IDs
-            setProductsId(productsIds);
+            // setProductsId(productsIds);
             setProducts([...productsData]);
           } catch (error) {
             console.error("Error fetching productss:", error);
@@ -61,7 +63,7 @@ export const AllProducts = () => {
           return products; // Return all users when search input is empty
         } else {
           return products.filter(
-            (products) =>
+            (products: { name: string; collection: string; category: string; }) =>
               (products.name &&
                 products.name.toLowerCase().includes(search.toLowerCase())) ||
               (products.collection &&
@@ -77,7 +79,7 @@ export const AllProducts = () => {
     indexOfFirstPage,
     indexOfLastPage
   );
-  const handleDelete = async (productId) => {
+  const handleDelete = async (productId: string) => {
     if (window.confirm("Are you sure you want to delete the user post?")) {
       try {
         // Delete the document from Firestore
@@ -85,7 +87,7 @@ export const AllProducts = () => {
 
         // Update the state after successful deletion
         const updatedProducts = products.filter(
-          (product) => product.id !== productId
+          (product: { id: any; }) => product.id !== productId
         );
         setProducts(updatedProducts);
 
@@ -162,7 +164,7 @@ export const AllProducts = () => {
                 </th>
               </tr>
             </thead>
-            {currentProducts?.map((products) => (
+            {currentProducts?.map((products : any) => (
               <tbody key={products.id}>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td
@@ -181,7 +183,7 @@ export const AllProducts = () => {
 
                   
                   <td className="px-6 py-4 text-right">
-                    <button onClick={() => handleDelete(products.id,  products, setProducts)}>
+                    <button onClick={() => handleDelete(products.id)}>
                       Delete
                     </button>
                   </td>
@@ -228,7 +230,7 @@ export const AllProducts = () => {
           <Pagination
             count={Math.ceil(handleSearch().length / productsPerPage)}
             page={currentPage}
-            onChange={(event, page) => setCurrentPage(page)}
+            onChange={(_event, page) => setCurrentPage(page)}
             hidePrevButton={currentPage === 1}
           />
           </div>
