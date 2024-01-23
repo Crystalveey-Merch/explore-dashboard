@@ -1,30 +1,32 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import {
-  addDoc,
+  // addDoc,
   collection,
   getDocs,
   doc,
   deleteDoc,
+  DocumentData,
 } from "firebase/firestore";
-import { deleteUser as deleteAuthUser } from "firebase/auth";
+// import { deleteUser as deleteAuthUser } from "firebase/auth";
 
-import { db } from "../../Config/AtelierFirebase/auth";
-import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBiohazard,
-  faInfo,
-  faWarning,
-} from "@fortawesome/free-solid-svg-icons";
+import {  db } from "../../Config/AtelierFirebase/auth";
+// import { NavLink } from "react-router-dom";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import {
+//   faBiohazard,
+//   faInfo,
+//   faWarning,
+// } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { Pagination } from "@mui/material";
 
 const Users = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([] as any);
   const [search, setSearch] = useState("");
   const [productsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postPerPage] = useState(10);
+  // const [postPerPage] = useState(10);
 
   useEffect(() => {
     // setLoading(true);
@@ -32,7 +34,7 @@ const Users = () => {
       try {
         // setLoading(true);
         const querySnapshot = await getDocs(collection(db, "users"));
-        const postData = [];
+        const postData: DocumentData[] = [];
 
         // Parallelize fetching data
         await Promise.all(
@@ -57,7 +59,7 @@ const Users = () => {
     fetchPosts();
   }, []);
 
-  const deleteUser = async (user) => {
+  const deleteUser = async (user: { name: any; id: string; }) => {
     if (
       window.confirm(
         `Are you sure you want to delete '${user.name}'?. This user will no longer have  access to Atelier `
@@ -65,11 +67,11 @@ const Users = () => {
     ) {
       try {
         // Delete the document from Firestore
-        await auth().deleteUser(user.id);
+        // await auth().deleteUser(user.id);
         await deleteDoc(doc(db, "users", user.id));
         toast.success("User deleted successfully");
         // Update the state after successful deletion
-        const updatedUsers = users.filter((user) => user.user.id !== user.id);
+        const updatedUsers = users.filter((user: any) => user.user.id !== user.id);
         setUsers(updatedUsers);
 
         toast.success("User deleted successfully");
@@ -86,7 +88,7 @@ const Users = () => {
       return users; // Return all users when search input is empty
     } else {
       return users.filter(
-        (user) =>
+        (user: any) =>
           user.name && user.name.toLowerCase().includes(search.toLowerCase()) ||
           user.email && user.email.toLowerCase().includes(search.toLowerCase())
       );
@@ -147,7 +149,7 @@ const Users = () => {
 
             </tr>
           </thead>
-          {currentUsers?.map((user) => (
+          {currentUsers?.map((user: any) => (
             <tbody key={user.id}>
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
               
@@ -175,7 +177,7 @@ const Users = () => {
         <Pagination
             count={Math.ceil(handleSearch().length / productsPerPage)}
             page={currentPage}
-            onChange={(event, page) => setCurrentPage(page)}
+            onChange={(_event, page) => setCurrentPage(page)}
             hidePrevButton={currentPage === 1}
           />
       </div>

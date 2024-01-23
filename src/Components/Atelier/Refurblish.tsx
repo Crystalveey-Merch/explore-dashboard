@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc, DocumentData } from "firebase/firestore";
 import { db } from "../../Config/AtelierFirebase/auth";
 // import { useParams } from 'react-router';
-import { NavLink } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
+// import { NavLink } from "react-router-dom";
+// import { onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
@@ -12,19 +13,19 @@ import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 
 export const Refurblish = () => {
-    const [refurblish, setRefurblish] = useState([]);
+    const [refurblish, setRefurblish] = useState([] as any);
     const [search, setSearch] = useState("");
     const [productsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
-    const [prodictId, setRefurblishId] = useState("");
+    // const [prodictId, setRefurblishId] = useState("");
     useEffect(() => {
         // setLoading(true);
         const fetchRefurblish = async () => {
           try {
             // setLoading(true);
             const querySnapshot = await getDocs(collection(db, "refurblish"));
-            const productsData = [];
-            const productsIds = [];
+            const productsData: DocumentData[] = [];
+            const productsIds = [] as any;
             const tags = [];
             const categories = [];
     
@@ -48,7 +49,7 @@ export const Refurblish = () => {
             );
     
             // Set the productsId state with the collected refurblish IDs
-            setRefurblishId(productsIds);
+            // setRefurblishId(productsIds);
             setRefurblish([...productsData]);
           } catch (error) {
             console.error("Error fetching productss:", error);
@@ -64,7 +65,7 @@ export const Refurblish = () => {
           return refurblish; // Return all users when search input is empty
         } else {
           return refurblish.filter(
-            (refurblish) =>
+            (refurblish: any) =>
               (refurblish.name &&
                 refurblish.name.toLowerCase().includes(search.toLowerCase())) ||
               (refurblish.collection &&
@@ -82,7 +83,7 @@ export const Refurblish = () => {
         indexOfLastPage
       );
     
-      const handleDelete = async (productId) => {
+      const handleDelete = async (productId: string) => {
         if (window.confirm("Are you sure you want to delete the user post?")) {
           try {
             // Delete the document from Firestore
@@ -90,7 +91,7 @@ export const Refurblish = () => {
     
             // Update the state after successful deletion
             const updatedRefurblish = refurblish.filter(
-              (product) => product.id !== productId
+              (product: any) => product.id !== productId
             );
             setRefurblish(updatedRefurblish);
     
@@ -133,7 +134,7 @@ export const Refurblish = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="relative overflow-scroll shadow-md sm:rounded-lg w-screen m-8 sm:w-screen  m-auto  ">
+        <div className="relative overflow-scroll shadow-md sm:rounded-lg w-screen m8 sm:w-screen  m-auto  ">
          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
             <thead className="text-xs text-gray-300 uppercase bg-gray-800 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -177,7 +178,7 @@ export const Refurblish = () => {
                 </th>
               </tr>
             </thead>
-            {currentRefurblish?.map((products) => (
+            {currentRefurblish?.map((products: any) => (
               <tbody key={products.id}>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td
@@ -207,8 +208,8 @@ export const Refurblish = () => {
                   <td className="px-6 py-4">{products.itemType}</td>
                   <td className="px-6 py-4">{products.itemIssues}</td>
                   <td className="px-6 py-4">{products.accountDetails}</td>
-                  <td className="px-6 py-4">{products.images.map((img) =>(
-                    <Zoom  key={products.id} className="flex"><img src={img} width={40}></img></Zoom>
+                  <td className="px-6 py-4">{products.images.map((img: string | undefined) =>(
+                    <Zoom  key={products.id} classDialog="flex"><img src={img} width={40}></img></Zoom>
                   ))}</td>  
 
                   <td className="px-6 py-4 text-right">
@@ -255,7 +256,7 @@ export const Refurblish = () => {
          <Pagination
             count={Math.ceil(handleSearch().length / productsPerPage)}
             page={currentPage}
-            onChange={(event, page) => setCurrentPage(page)}
+            onChange={(_event, page) => setCurrentPage(page)}
             hidePrevButton={currentPage === 1}
           />
       </div></div>  )

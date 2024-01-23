@@ -231,7 +231,7 @@ export const AddTravelPackage = () => {
             setImageOneUrl("")
             setImageTwoUrl("")
             toast.success("Travel Package added successfully")
-            navigate('/travel-packages/')
+            navigate('/explore/travel-packages/')
             setLoading(false)
         } catch (error) {
             console.error("Error adding travel package: ", error);
