@@ -51,6 +51,6 @@ export const categories = [
     }
 ];
 
-export const countries = ["Nigeria", "Kenya", "Ghana", "Mauritius", "Rwanda", "South Africa", "Lebanon"];
+export const countries = ["Nigeria", "Kenya", "Ghana", "Mauritius", "Rwanda", "South Africa", "Lebanon", "Tanzania"];
 
 
