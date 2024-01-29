@@ -94,9 +94,9 @@ export const Invoices = () => {
     // sort 
     useEffect(() => {
         if (sort === "asc" && activeTab === "customer") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => a.name[0].localeCompare(b.name[0])));
+            setDisplayedInvoices([...displayedInvoices].sort((a, b) => a.customer.name[0].localeCompare(b.customer.name[0])));
         } else if (sort === "desc" && activeTab === "customer") {
-            setDisplayedInvoices([...displayedInvoices].sort((a, b) => b.name[0].localeCompare(a.name[0])));
+            setDisplayedInvoices([...displayedInvoices].sort((a, b) => b.customer.name[0].localeCompare(a.customer.name[0])));
         } else if (sort === "asc" && activeTab === "created") {
             setDisplayedInvoices([...displayedInvoices].sort((a, b) => a.dateCreated - b.dateCreated));
         } else if (sort === "desc" && activeTab === "created") {

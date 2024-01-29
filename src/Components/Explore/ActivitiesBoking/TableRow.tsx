@@ -44,10 +44,10 @@ export const TableRow = ({ booking }: any) => {
             <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap xl:px-3">
                 <div className="flex flex-col gap-0.5">
                     <p className="text-sm font-medium text-ellipsis">
-                        {booking.name}
+                        {booking.customer.name}
                     </p>
                     <p className="text-[rgb(99,115,129)] text-xs font-normal">
-                        {booking.email}
+                        {booking.customer.email}
                     </p>
                 </div>
             </td>

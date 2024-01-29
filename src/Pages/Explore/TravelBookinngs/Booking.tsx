@@ -239,16 +239,16 @@ export const Booking = () => {
                     <div className="py-6 flex flex-col gap-4">
                         <div className="flex gap-4 items-center">
                             <div className="w-12 h-12 rounded-full bg-[#276c79a8] text-white text-lg flex items-center justify-center">
-                                {booking?.name[0]}
+                                {booking?.customer.name[0]}
                             </div>
                             <div className="flex flex-col gapp-1">
                                 <p className="text-[rgb(33,43,54)] text-sm font-semibold text-ellipsis">
-                                    {booking?.name}
+                                    {booking?.customer.name}
                                 </p>
                                 <a
                                     href={`mailto:${booking?.email}`}
                                     className="text-[rgb(33,43,54)] text-sm font-semibold transition-colors duration-200 ease-out hover:text-[rgb(17,141,87)]">
-                                    {booking?.email}
+                                    {booking?.customer.email}
                                 </a>
                             </div>
                         </div>

@@ -125,7 +125,7 @@ export const ReviewActivities = () => {
     // search filter
     useEffect(() => {
         if (search.length > 0) {
-            setSearchResults(bookingsFiltered.filter((booking) => booking.name.toLowerCase().includes(search.toLowerCase()) || booking.email.toLowerCase().includes(search.toLowerCase()) || booking.id.toLowerCase().includes(search.toLowerCase())));
+            setSearchResults(bookingsFiltered.filter((booking) => booking.customer.name.toLowerCase().includes(search.toLowerCase()) || booking.customer.email.toLowerCase().includes(search.toLowerCase()) || booking.id.toLowerCase().includes(search.toLowerCase())));
             setSearchActive(true);
             // set active filter by adding to it's array of objects with type keywords and value based on search
             setActiveFilter([{ type: "keywords", value: search }, ...activeFilter.filter((filter) => filter.type !== "keywords")]);
@@ -164,9 +164,9 @@ export const ReviewActivities = () => {
     // sort 
     useEffect(() => {
         if (sort === "asc" && activeTab === "customer") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => a.name[0].localeCompare(b.name[0])));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => a.customer.name[0].localeCompare(b.customer.name[0])));
         } else if (sort === "desc" && activeTab === "customer") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => b.name[0].localeCompare(a.name[0])));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => b.customer.name[0].localeCompare(a.customer.name[0])));
         } else if (sort === "asc" && activeTab === "package") {
             setDisplayedBookings([...displayedBookings].sort((a, b) => a.title.localeCompare(b.title)));
         } else if (sort === "desc" && activeTab === "package") {
@@ -196,7 +196,6 @@ export const ReviewActivities = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sort, activeTab]);
-
     // pagination 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);

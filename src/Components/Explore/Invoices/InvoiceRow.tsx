@@ -43,10 +43,10 @@ export const InvoiceRow = ({ invoice, handleDeleteInvoice }: { invoice: any, han
             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap xl:px-3">
                 <div className="flex gap-4 items-center">
                     <div className="w-10 h-10 rounded-full bg-[#276c79a8] text-white text-lg flex items-center justify-center">
-                        {/* {invoice?.name[0] ? invoice?.name[0].toUpperCase() : "N/A"} */}
+                        {invoice?.customer?.name?.charAt(0)}
                     </div>
                     <p className="text-sm font-medium text-ellipsis">
-                        {invoice?.name}
+                        {invoice?.customer?.name}
                     </p>
                 </div>
             </th>
