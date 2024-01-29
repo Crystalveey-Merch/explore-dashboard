@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { NavLink } from "react-router-dom"
 import Collapsible from "react-collapsible";
-import { collection, getDocs, db } from '../../Config/firebase';
 import { useDispatch, } from 'react-redux';
 import { toggleMenu } from '../../Config/rightBarToggleSlice';
 //import firstPageIcon from '../assets/Images/Dashboard/first-page.png'
@@ -20,7 +19,8 @@ import visaSVG from "../../assets/SVG/Dashboard/passport.svg"
 import routeSVG from "../../assets/SVG/Dashboard/route-solid.svg"
 
 
-export const SideBar = () => {
+export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: any[], activityBookings: any[] }) => {
+
     const dispatch = useDispatch();
     const [activityDropdown, setActivityDropdown] = useState<boolean>(false);
     const [travelPackageDropdown, setTravelPackageDropdown] = useState<boolean>(false);
@@ -42,28 +42,6 @@ export const SideBar = () => {
         });
         dispatch(toggleMenu())
     }
-
-    const [travelBookings, setTravelBookings] = useState<any[]>([])
-    const [activityBookings, setActivityBookings] = useState<any[]>([])
-
-    useEffect(() => {
-        const fetchTravelBookings = async () => {
-            const bookingsRef = collection(db, "transactions");
-            const bookingsSnapshot = await getDocs(bookingsRef);
-            const bookings: any[] = [];
-            bookingsSnapshot.forEach((doc: { id: any; data: () => any; }) => {
-                bookings.push({
-                    id: doc.id,
-                    ...doc.data(),
-                });
-            });
-            // set bookings of type "Promoted Travel Package" to state
-            setTravelBookings(bookings.filter((booking: { type: string }) => booking.type === "Promoted Travel Package"));
-            // set bookings of type "Activity" to state
-            setActivityBookings(bookings.filter((booking: { type: string }) => booking.type === "Exciting Activities"));
-        }
-        fetchTravelBookings()
-    }, [])
 
     return (
         <div className="bar-links xl:z-10" onClick={handleMenu}>
