@@ -53,7 +53,7 @@ export const FlightBookings = () => {
 
 
     return (
-        <div className="px-10 py-14 flex flex-col gap-10 xl:px-6 xl:w-[calc(100vw-100px)] lg:gap-16 md:gap-12 sm:w-[100vw] sm:gap-9">
+        <div className="mx-10 py-14 flex flex-col gap-10 xl:mx-6 xl:w-[calc(100vw-3rem)] lg:gap-16 md:gap-12  sm:mx-4 sm:gap-9">
             <div className="flex justify-between items-center sm:flex-col sm:items-start sm:gap-3">
                 <h1 className="text-[28px] font-public-sans font-bold text-black xl:text-2xl lg:text-xl">
                     Flight Bookings

@@ -122,7 +122,7 @@ export const Overview = () => {
     }
 
     return (
-        <div className="px-10 py-14 font-public-sans flex flex-col gap-5 xl:px-6 xl:w-[calc(100vw-100px)] sm:w-[100vw]">
+        <div className="px-10 py-14 font-public-sans flex flex-col gap-5 xl:px-6 sm:w-[100vw]">
             <div className="flex justify-between items-center gap-5 lg:flex-col sm:gap-4">
                 <div className="rounded-2xl bg-white w-full py-4 pr-6 pl-4 flex gap-6 justify-between"
                     style={{

@@ -18,8 +18,8 @@ export const Login = () => {
 
     useEffect(() => {
         if (user) {
-            navigate("/")
-        }
+            navigate(-1)
+        } 
     }, [user, navigate])
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
