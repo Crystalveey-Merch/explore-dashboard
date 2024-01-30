@@ -68,15 +68,15 @@ export const BookingActivities = () => {
         console.log(pickedStatus);
     }
 
-    const handleConfirm = ({ status }: any) => {
-        if (booking?.status === status) {
-            return
-        }
-        setOpen(true);
-        setPickedStatus(status);
-        // setText({`you want to change the status of this booking to ${status}?)`});
-        setText(`you want to ${status} this booking ?`);
-    }
+    // const handleConfirm = ({ status }: any) => {
+    //     if (booking?.status === status) {
+    //         return
+    //     }
+    //     setOpen(true);
+    //     setPickedStatus(status);
+    //     // setText({`you want to change the status of this booking to ${status}?)`});
+    //     setText(`you want to ${status} this booking ?`);
+    // }
 
     return (
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-6 sm:w-[100vw] sm:gap-9">
