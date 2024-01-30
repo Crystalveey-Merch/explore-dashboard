@@ -10,12 +10,13 @@ import {
 } from "firebase/firestore";
 import moment from 'moment';
 import { toast } from 'react-toastify'
+import FormControlLabel from "@mui/material/FormControlLabel";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { db, storage } from '../../../Config/firebase';
 import Input from "../../../Components/Explore/Custom/Input"
 import imagePictureSVG from "../../../assets/SVG/Dashboard/image-picture.svg"
 import downloadCloudSVG from "../../../assets/SVG/Dashboard/download-cloud.svg"
-import { BlueButton } from '../../../Components';
+import { BlueButton, IOSSwitch } from '../../../Components';
 
 
 export const EditTravelPackage = () => {
@@ -49,6 +50,9 @@ export const EditTravelPackage = () => {
     const [isImageTwoChanged, setIsImageTwoChanged] = useState(false)
 
     const [loading, setLoading] = useState(false)
+    const [isActive, setIsActive] = useState<boolean>()
+    const [waiting, setWaiting] = useState<boolean>()
+    const [maxBookings, setMaxBookings] = useState<number | string>("")
     const [title, setTitle] = useState<string>("")
     const [startDate, setStartDate] = useState<string>("")
     const [endDate, setEndDate] = useState<string>("")
@@ -103,7 +107,12 @@ export const EditTravelPackage = () => {
         setVisitingCities(updatedCities);
     };
 
-
+    const handleMaxBookingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value
+        if (value === "" || /^[0-9\b]+$/.test(value)) {
+            setMaxBookings(value)
+        }
+    }
 
     //add rules for handlePriceChange to accept only numbers and empty string
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,6 +190,9 @@ export const EditTravelPackage = () => {
     useEffect(() => {
         const travelPackage = travelPackages.find((travelPackage) => travelPackage.id === id)
         if (travelPackage) {
+            setIsActive(travelPackage.isActive)
+            setWaiting(travelPackage.isWaitList)
+            setMaxBookings(travelPackage.maxBookings)
             setTravelPackage(travelPackage)
             setTitle(travelPackage.title)
             setStartDate(travelPackage.startDate)
@@ -228,39 +240,65 @@ export const EditTravelPackage = () => {
             })
         );
 
-        if (imageOneUrl === "") {
-            toast.error("Please upload image one");
+        if (title.trim() === "") {
+            toast.error("Please add title");
             setLoading(false)
             return
         }
 
-        if (
-            title.trim() === "" ||
-            startDate.trim() === "" ||
-            endDate.trim() === "" ||
-            duration.trim() === "" ||
-            price === "" ||
-            inclusions.length === 0 ||
-            visitingCities.length === 0 ||
-            imageOneUrl.trim() === ""
-            //imageTwoUrl.trim() === ""
-        ) {
-            toast.error("Please fill all fields");
-            setLoading(false);
-            return;
+        if (startDate.trim() === "") {
+            toast.error("Please add start date");
+            setLoading(false)
+            return
         }
 
-        if (startDate > endDate) {
-            toast.error("Start date should be less than end date");
-            setLoading(false);
-            return;
+        if (endDate.trim() === "") {
+            toast.error("Please add end date");
+            setLoading(false)
+            return
         }
 
+        if (imageOneUrl === "") {
+            toast.error("Please upload at least image one");
+            setLoading(false)
+            return
+        }
 
-        if (moment(startDate).isBefore(moment().format('YYYY-MM-DD'))) {
-            toast.error("Start date should be greater than today");
-            setLoading(false);
-            return;
+        // if (imageOneUrl === "") {
+        //     toast.error("Please upload image one");
+        //     setLoading(false)
+        //     return
+        // }
+
+        if (!waiting) {
+            if (
+                title.trim() === "" ||
+                startDate.trim() === "" ||
+                endDate.trim() === "" ||
+                duration.trim() === "" ||
+                price === "" ||
+                inclusions.length === 0 ||
+                visitingCities.length === 0 ||
+                imageOneUrl.trim() === ""
+                //imageTwoUrl.trim() === ""
+            ) {
+                toast.error("Please fill all fields");
+                setLoading(false);
+                return;
+            }
+
+            if (startDate > endDate) {
+                toast.error("Start date should be less than end date");
+                setLoading(false);
+                return;
+            }
+
+
+            if (moment(startDate).isBefore(moment().format('YYYY-MM-DD'))) {
+                toast.error("Start date should be greater than today");
+                setLoading(false);
+                return;
+            }
         }
 
 
@@ -269,6 +307,9 @@ export const EditTravelPackage = () => {
 
         try {
             await updateDoc(travelPackageRef, {
+                isActive,
+                isWaitList: waiting,
+                maxBookings: Number(maxBookings),
                 title,
                 startDate,
                 endDate,
@@ -285,6 +326,9 @@ export const EditTravelPackage = () => {
                 },
                 updatedAt: timestamp,
             });
+            setIsActive(false)
+            setWaiting(false)
+            setMaxBookings("15")
             setTitle("")
             setStartDate("")
             setEndDate("")
@@ -326,7 +370,59 @@ export const EditTravelPackage = () => {
             </div>
 
             <form className="w-full min-h-[400px] flex flex-col gap-10">
-
+                <div className="flex flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
+                    <div className="p-3 border-b border-gray-200">
+                        <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
+                            Package  Settings
+                        </h3>
+                    </div>
+                    <div className="p-4 flex gap-10 xl:gap-5 lg:flex-col">
+                        <div className="w-full flex justify-between items-center border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 placeholder:text-gray-900 placeholder:opacity-60 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out">
+                            <div className="flex gap-1 items-center">
+                                <p>
+                                    Set Active
+                                </p>
+                            </div>
+                            <FormControlLabel
+                                control={
+                                    <IOSSwitch
+                                        checked={isActive}
+                                        onChange={() => setIsActive(!isActive)}
+                                        name="isActive"
+                                        className='w-max'
+                                    />
+                                }
+                                label=""
+                            />
+                        </div>
+                        <div className="w-full flex justify-between items-center border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 placeholder:text-gray-900 placeholder:opacity-60 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out">
+                            <div className="flex gap-1 items-center">
+                                <p>
+                                    Enable Waitlist
+                                </p>
+                            </div>
+                            <FormControlLabel
+                                control={
+                                    <IOSSwitch
+                                        checked={waiting}
+                                        onChange={() => setWaiting(!waiting)}
+                                        name="waitlist"
+                                        className='w-max'
+                                    />
+                                }
+                                label=""
+                            />
+                        </div>
+                        <label htmlFor="maxBookings" className="flex flex-col gap-1.5 w-full">
+                            <p className="text-sm font-medium text-gray-700">
+                                Max Bookings
+                            </p>
+                            <Input placeholder="e.g 15"
+                                name={"maxBookings"} type={"text"} value={maxBookings}
+                                onChange={handleMaxBookingChange} className={"w-full"} required />
+                        </label>
+                    </div>
+                </div>
                 <div className="flex gap-10 xl:gap-5 lg:flex-col">
                     <div className="flex flex-1 flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                         <div className="p-3 border-b border-gray-200">
