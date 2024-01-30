@@ -50,8 +50,8 @@ export const EditTravelPackage = () => {
     const [isImageTwoChanged, setIsImageTwoChanged] = useState(false)
 
     const [loading, setLoading] = useState(false)
-    const [isActive, setIsActive] = useState<boolean>()
-    const [waiting, setWaiting] = useState<boolean>()
+    const [isActive, setIsActive] = useState<boolean>(true)
+    const [waiting, setWaiting] = useState<boolean>(false)
     const [maxBookings, setMaxBookings] = useState<number | string>("")
     const [title, setTitle] = useState<string>("")
     const [startDate, setStartDate] = useState<string>("")
