@@ -68,6 +68,15 @@ export const BookingActivities = () => {
         console.log(pickedStatus);
     }
 
+    const handleConfirm = ({ status }: any) => {
+        if (booking?.status === status) {
+            return
+        }
+        setOpen(true);
+        setPickedStatus(status);
+        // setText({`you want to change the status of this booking to ${status}?)`});
+        setText(`you want to ${status} this booking ?`);
+    }
 
     return (
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-6 sm:w-[100vw] sm:gap-9">
@@ -238,16 +247,16 @@ export const BookingActivities = () => {
                     <div className="py-6 flex flex-col gap-4">
                         <div className="flex gap-4 items-center">
                             <div className="w-12 h-12 rounded-full bg-[#276c79a8] text-white text-lg flex items-center justify-center">
-                                {booking?.name[0]}
+                                {booking?.customer.name[0]}
                             </div>
                             <div className="flex flex-col gapp-1">
                                 <p className="text-[rgb(33,43,54)] text-sm font-semibold text-ellipsis">
-                                    {booking?.name}
+                                    {booking?.customer.name}
                                 </p>
                                 <a
-                                    href={`mailto:${booking?.email}`}
+                                    href={`mailto:${booking?.customer.email}`}
                                     className="text-[rgb(33,43,54)] text-sm font-semibold transition-colors duration-200 ease-out hover:text-[rgb(17,141,87)]">
-                                    {booking?.email}
+                                    {booking?.customer.email}
                                 </a>
                             </div>
                         </div>
@@ -255,9 +264,9 @@ export const BookingActivities = () => {
                             <p className="text-[rgb(99,115,129)] text-sm font-medium">
                                 Phone Number:
                             </p>
-                            <a href={`tel:${booking?.phoneNumber}`}
+                            <a href={`tel:${booking?.customer.phoneNumber}`}
                                 className="text-[rgb(33,43,54)] text-sm font-semibold transition-colors duration-200 ease-out hover:text-[rgb(17,141,87)] hover:underline">
-                                {booking?.phoneNumber}
+                                {booking?.customer.phoneNumber}
                             </a>
                         </div>
                     </div>

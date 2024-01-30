@@ -69,6 +69,16 @@ export const Booking = () => {
         console.log(pickedStatus);
     }
 
+    const handleConfirm = ({ status }: any) => {
+        if (booking?.status === status) {
+            return
+        }
+        setOpen(true);
+        setPickedStatus(status);
+        // setText({`you want to change the status of this booking to ${status}?)`});
+        setText(`you want to ${status} this booking ?`);
+    }
+
 
     return (
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-6 sm:w-[100vw] sm:gap-9">
@@ -226,40 +236,68 @@ export const Booking = () => {
                         </div>
                     </div>
                 </div>
-                <div className="p-6 h-max" style={{
-                    backgroundColor: "rgb(255, 255, 255)",
-                    color: "rgb(33, 43, 54)",
-                    transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
-                    boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px",
-                    borderRadius: "16px",
-                }}>
-                    <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
-                        Customer Info
-                    </h4>
-                    <div className="py-6 flex flex-col gap-4">
-                        <div className="flex gap-4 items-center">
-                            <div className="w-12 h-12 rounded-full bg-[#276c79a8] text-white text-lg flex items-center justify-center">
-                                {booking?.customer.name[0]}
+                <div className="flex flex-col gap-8">
+                    <div className="p-6 h-max" style={{
+                        backgroundColor: "rgb(255, 255, 255)",
+                        color: "rgb(33, 43, 54)",
+                        transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+                        boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px",
+                        borderRadius: "16px",
+                    }}>
+                        {booking?.status === "pending" ?
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => handleConfirm({ status: "cancelled" })}
+                                    className="px-6 py-3 rounded-lg bg-red-600 text-white text-sm font-semibold text-center transition duration-300 ease-in-out hover:bg-red-700"
+                                >
+                                    Cancel Booking
+                                </button>
+                                <button
+                                    onClick={() => handleConfirm({ status: "confirmed" })}
+                                    className="px-6 py-3 rounded-lg bg-white text-black border border-gray-300 text-sm font-semibold text-center transition duration-300 ease-in-out hover:bg-gray-100"
+                                > Confirm Booking
+                                </button>
+                            </div> :
+                            <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
+                                Payment Details
+                            </h4>
+                        }
+                    </div>
+                    <div className="p-6 h-max" style={{
+                        backgroundColor: "rgb(255, 255, 255)",
+                        color: "rgb(33, 43, 54)",
+                        transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+                        boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px",
+                        borderRadius: "16px",
+                    }}>
+                        <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
+                            Customer Info
+                        </h4>
+                        <div className="py-6 flex flex-col gap-4">
+                            <div className="flex gap-4 items-center">
+                                <div className="w-12 h-12 rounded-full bg-[#276c79a8] text-white text-lg flex items-center justify-center">
+                                    {booking?.customer.name[0]}
+                                </div>
+                                <div className="flex flex-col gapp-1">
+                                    <p className="text-[rgb(33,43,54)] text-sm font-semibold text-ellipsis">
+                                        {booking?.customer.name}
+                                    </p>
+                                    <a
+                                        href={`mailto:${booking?.customer.email}`}
+                                        className="text-[rgb(33,43,54)] text-sm font-semibold transition-colors duration-200 ease-out hover:text-[rgb(17,141,87)]">
+                                        {booking?.customer.email}
+                                    </a>
+                                </div>
                             </div>
-                            <div className="flex flex-col gapp-1">
-                                <p className="text-[rgb(33,43,54)] text-sm font-semibold text-ellipsis">
-                                    {booking?.customer.name}
+                            <div className="flex gap-2.5 justify-">
+                                <p className="text-[rgb(99,115,129)] text-sm font-medium">
+                                    Phone Number:
                                 </p>
-                                <a
-                                    href={`mailto:${booking?.email}`}
-                                    className="text-[rgb(33,43,54)] text-sm font-semibold transition-colors duration-200 ease-out hover:text-[rgb(17,141,87)]">
-                                    {booking?.customer.email}
+                                <a href={`tel:${booking?.customer.phoneNumber}`}
+                                    className="text-[rgb(33,43,54)] text-sm font-semibold transition-colors duration-200 ease-out hover:text-[rgb(17,141,87)] hover:underline">
+                                    {booking?.customer.phoneNumber}
                                 </a>
                             </div>
-                        </div>
-                        <div className="flex gap-2.5 justify-">
-                            <p className="text-[rgb(99,115,129)] text-sm font-medium">
-                                Phone Number:
-                            </p>
-                            <a href={`tel:${booking?.phoneNumber}`}
-                                className="text-[rgb(33,43,54)] text-sm font-semibold transition-colors duration-200 ease-out hover:text-[rgb(17,141,87)] hover:underline">
-                                {booking?.phoneNumber}
-                            </a>
                         </div>
                     </div>
                 </div>
