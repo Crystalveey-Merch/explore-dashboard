@@ -246,6 +246,12 @@ export const EditTravelPackage = () => {
             return
         }
 
+        if (maxBookings === "") {
+            toast.error("Please add max bookings");
+            setLoading(false)
+            return
+        }
+
         if (startDate.trim() === "") {
             toast.error("Please add start date");
             setLoading(false)
