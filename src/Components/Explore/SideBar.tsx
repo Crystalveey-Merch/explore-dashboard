@@ -11,6 +11,7 @@ import barChartSVG from "../../assets/SVG/Dashboard/bar-chart-square.svg"
 import invoiceSVG from "../../assets/SVG/Dashboard/invoice-dollar.svg"
 import activitySVG from "../../assets/SVG/Dashboard/outdoor-trip.svg"
 import travelPackageSVG from "../../assets/SVG/Dashboard/tour.svg"
+import retreatPackageSVG from "../../assets/SVG/Dashboard/adventure-relaxation-shelter.svg"
 import bookingsSVG from "../../assets/SVG/Dashboard/ticket.svg"
 import activitiesSVG from "../../assets/SVG/Dashboard/square-person-confined-solid.svg"
 import flightSVG from "../../assets/SVG/Dashboard/flight-takeoff.svg"
@@ -24,6 +25,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
     const dispatch = useDispatch();
     const [activityDropdown, setActivityDropdown] = useState<boolean>(false);
     const [travelPackageDropdown, setTravelPackageDropdown] = useState<boolean>(false);
+    const [retreatPackageDropdown, setRetreatPackageDropdown] = useState<boolean>(false);
     const [travelBookingDropdown, setTravelBookingDropdown] = useState<boolean>(false);
     const [activitiesBookingDropdown, setActivitiesBookingDropdown] = useState<boolean>(false);
     const [bookingDropdown, setBookingDropdown] = useState<boolean>(false);
@@ -114,6 +116,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 setTravelBookingDropdown(!travelBookingDropdown),
                                                 setActivityDropdown(false),
                                                 setTravelPackageDropdown(false),
+                                                setRetreatPackageDropdown(false),
                                                 setActivitiesBookingDropdown(false),
                                                 setBookingDropdown(false)
                                             )}
@@ -246,6 +249,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 setActivitiesBookingDropdown(!activitiesBookingDropdown),
                                                 setActivityDropdown(false),
                                                 setTravelPackageDropdown(false),
+                                                setRetreatPackageDropdown(false),
                                                 setTravelBookingDropdown(false),
                                                 setBookingDropdown(false)
                                             )}
@@ -385,6 +389,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                             onClick={() => (
                                                 setActivityDropdown(!activityDropdown),
                                                 setTravelPackageDropdown(false),
+                                                setRetreatPackageDropdown(false),
                                                 setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
                                                 setBookingDropdown(false)
@@ -446,6 +451,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                             onClick={() => (
                                                 setTravelPackageDropdown(!travelPackageDropdown),
                                                 setActivityDropdown(false),
+                                                setRetreatPackageDropdown(false),
                                                 setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
                                                 setBookingDropdown(false)
@@ -507,9 +513,74 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                         <button
                                             className={`flex justify-between w-full h-10 mb-1 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer`}
                                             onClick={() => (
+                                                setRetreatPackageDropdown(!retreatPackageDropdown),
+                                                setActivityDropdown(false),
+                                                setTravelPackageDropdown(false),
+                                                setTravelBookingDropdown(false),
+                                                setActivitiesBookingDropdown(false),
+                                                setBookingDropdown(false)
+                                            )}
+                                        >
+                                            <div className="flex gap-3.5 items-center">
+                                                <img src={retreatPackageSVG} alt="retreat-package" className="w-6 h-6" />
+                                                <h4 className={`font-semibold text-base sm:text-[15px] sm:block ${location.pathname === "/explore/retreat-packages" ? "text-white" : "text-white"}`}>
+                                                    Retreat Packages
+                                                </h4>
+                                            </div>
+                                            <svg
+                                                className={`w-4 h-4 transform transition-transform duration-500 ${retreatPackageDropdown ? "rotate-180" : ""}`}
+                                                aria-hidden="true"
+                                                fill="none"
+                                                stroke="#ffffff"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M19 9l-7 7-7-7"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                    }
+                                    open={retreatPackageDropdown}
+                                    transitionTime={300}
+                                    easing="ease-in-out"
+                                >
+                                    <ul
+                                        className={`pl-1 flex flex-col gap-1.5 w-full transition-all duration-500 ease-in-out`}
+                                    >
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/retreat-packages" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/retreat-packages" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-base sm:text-[15px] ${location.pathname === "/explore/retreat-packages" ? "text-white" : "text-white"}`}>
+                                                    <span className="">
+                                                        All Retreat Packages
+                                                    </span>
+                                                </p>
+                                            </NavLink>
+                                        </li>
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/retreat-packages/add" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/retreat-packages/add" ? "bg-gray-500" : ""}`}>
+                                                <img src={PlusSVG} alt="plus" className="w-4 h-4" />
+                                                <p className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/retreat-packages/add" ? "text-white" : "text-white"}`}>
+                                                    Add Retreat Package
+                                                </p>
+                                            </NavLink>
+                                        </li>
+                                    </ul>
+                                </Collapsible>
+                            </div>
+                            <div className="xl:px-1">
+                                <Collapsible
+                                    trigger={
+                                        <button
+                                            className={`flex justify-between w-full h-10 mb-1 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer`}
+                                            onClick={() => (
                                                 setBookingDropdown(!bookingDropdown),
                                                 setActivityDropdown(false),
                                                 setTravelPackageDropdown(false),
+                                                setRetreatPackageDropdown(false),
                                                 setActivitiesBookingDropdown(false),
                                                 setTravelBookingDropdown(false)
                                             )}

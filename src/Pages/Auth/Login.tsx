@@ -17,9 +17,15 @@ export const Login = () => {
     const [password, setPassword] = useState("")
 
     useEffect(() => {
+        const previousRoute = document.referrer; // Get the previous route
+
         if (user) {
-            navigate(-1)
-        } 
+            if (previousRoute.includes("admin.crystalveey.com")) {
+                navigate(-1)
+            } else {
+                window.location.replace("https://admin.crystalveey.com");
+            }
+        }
     }, [user, navigate])
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {

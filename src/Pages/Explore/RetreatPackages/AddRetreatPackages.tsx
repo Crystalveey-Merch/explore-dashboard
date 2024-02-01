@@ -8,7 +8,7 @@ import {
     addDoc,
     collection,
 } from "firebase/firestore";
-import moment from 'moment';
+// import moment from 'moment';
 import { toast } from 'react-toastify'
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
@@ -19,7 +19,7 @@ import downloadCloudSVG from "../../../assets/SVG/Dashboard/download-cloud.svg"
 import { BlueButton, IOSSwitch } from '../../../Components';
 
 
-export const AddTravelPackage = () => {
+export const AddRetreatPackages = () => {
     const navigate = useNavigate()
 
     const [loading, setLoading] = useState(false)
@@ -27,15 +27,17 @@ export const AddTravelPackage = () => {
     const [waiting, setWaiting] = useState<boolean>(false)
     const [maxBookings, setMaxBookings] = useState<string>("15")
     const [title, setTitle] = useState<string>("")
-    const [startDate, setStartDate] = useState<string>("")
-    const [endDate, setEndDate] = useState<string>("")
+    const [description, setDescription] = useState<string>('')
     const [reviews, setReviews] = useState<any[]>([])
     const [rating, setRating] = useState<number>(0)
+    const [travelling, setTravelling] = useState<number>(0)
     const [duration, setDuration] = useState<string>("")
     const [price, setPrice] = useState<number | string>("")
     //inclusion is array of string
     const [inclusion, setInclusion] = useState<string>("")
     const [inclusions, setInclusions] = useState<string[]>([])
+    const [featureList, setFeatureList] = useState<string>("")
+    const [featureLists, setFeatureLists] = useState<string[]>([])
     const [visitingCities, setVisitingCities] = useState([{ name: '', activities: [''] }]);
 
     const handleAddInclusion = () => {
@@ -49,6 +51,19 @@ export const AddTravelPackage = () => {
         const newInclusions = [...inclusions]
         newInclusions.splice(index, 1)
         setInclusions(newInclusions)
+    }
+
+    const handleAddFeatureList = () => {
+        if (featureList !== "") {
+            setFeatureLists([...featureLists, featureList])
+            setFeatureList("")
+        }
+    }
+
+    const handleRemoveFeatureList = (index: number) => {
+        const newFeatureLists = [...featureLists]
+        newFeatureLists.splice(index, 1)
+        setFeatureLists(newFeatureLists)
     }
 
     const handleAddVisitingCityField = () => {
@@ -91,12 +106,7 @@ export const AddTravelPackage = () => {
 
     //add rules for handleDurationChange to accept max 2 digits  and only numbers and empty string
     const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value
-        if (value === "" || /^[0-9\b]+$/.test(value)) {
-            if (value.length <= 2) {
-                setDuration(value)
-            }
-        }
+        setDuration(e.target.value)
     }
 
 
@@ -156,7 +166,7 @@ export const AddTravelPackage = () => {
 
     const timestamp = serverTimestamp()
 
-    const addTravelPackage = async () => {
+    const addRetreatPackage = async () => {
         setLoading(true)
         // Upload media files and get their download URLs
         const imageDownloadURLs = await Promise.all(
@@ -180,18 +190,6 @@ export const AddTravelPackage = () => {
             return
         }
 
-        if (startDate.trim() === "") {
-            toast.error("Please add start date");
-            setLoading(false)
-            return
-        }
-
-        if (endDate.trim() === "") {
-            toast.error("Please add end date");
-            setLoading(false)
-            return
-        }
-
         if (imageOneUrl === "") {
             toast.error("Please upload at least image one");
             setLoading(false)
@@ -203,8 +201,6 @@ export const AddTravelPackage = () => {
 
             if (
                 title.trim() === "" ||
-                startDate.trim() === "" ||
-                endDate.trim() === "" ||
                 duration.trim() === "" ||
                 price === "" ||
                 inclusions.length === 0 ||
@@ -217,39 +213,28 @@ export const AddTravelPackage = () => {
                 return;
             }
 
-            if (startDate > endDate) {
-                toast.error("Start date should be less than end date");
-                setLoading(false);
-                return;
-            }
-
-
-            if (moment(startDate).isBefore(moment().format('YYYY-MM-DD'))) {
-                toast.error("Start date should be greater than today");
-                setLoading(false);
-                return;
-            }
         }
 
 
-        const travelPackageRef = collection(db, "travelPackages");
+        const retreatPackageRef = collection(db, "retreatPackages");
 
 
         try {
-            await addDoc(travelPackageRef, {
+            await addDoc(retreatPackageRef, {
                 isActive,
                 isWaitList: waiting,
                 maxBookings: Number(maxBookings),
                 title,
-                startDate,
-                endDate,
+                description,
                 duration,
                 reviews,
                 rating,
+                travelling,
                 //convert price to number
                 price: Number(price),
                 inclusions,
                 visitingCities,
+                featureLists,
                 images: {
                     imageOne: imageDownloadURLs[0],
                     imageTwo: imageDownloadURLs[1]
@@ -261,24 +246,25 @@ export const AddTravelPackage = () => {
             setWaiting(false)
             setMaxBookings("15")
             setTitle("")
-            setStartDate("")
-            setEndDate("")
+            setDescription("")
             setDuration("")
             setReviews([]);
             setRating(0);
+            setTravelling(0);
             setPrice("")
             setInclusions([])
             setVisitingCities([{ name: '', activities: [''] }])
+            setFeatureLists([])
             setImageOneFile(null)
             setImageTwoFile(null)
             setImageOneUrl("")
             setImageTwoUrl("")
-            toast.success("Travel Package added successfully")
-            navigate('/explore/travel-packages/')
+            toast.success("Retreat Package added successfully")
+            navigate('/explore/retreat-packages')
             setLoading(false)
         } catch (error) {
-            console.error("Error adding travel package: ", error);
-            toast.error("Error adding travel package")
+            console.error("Error adding retreat package: ", error);
+            toast.error("Error adding retreat package");
             setLoading(false)
         }
     }
@@ -287,9 +273,8 @@ export const AddTravelPackage = () => {
         <div className="px-10 py-11 pb-16 flex flex-col gap-12 xl:px-5 md:gap-8">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800 md:text-xl">
-                    Add Travel Package
+                    Add Retreat Package
                 </h1>
-
             </div>
 
             <form className="w-full min-h-[400px] flex flex-col gap-10">
@@ -350,34 +335,36 @@ export const AddTravelPackage = () => {
                     <div className="flex flex-1 flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                         <div className="p-3 border-b border-gray-200">
                             <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
-                                Package Info
+                                Retreat Package Info
                             </h3>
                         </div>
                         <div className="p-4 flex flex-col gap-8">
-                            <label htmlFor="title" className="flex flex-col gap-1.5 w-full">
+                            <label htmlFor="name" className="flex flex-col gap-1.5 w-full">
                                 <p className="text-sm font-medium text-gray-700">
-                                    Title
+                                    Name
                                 </p>
-                                <Input placeholder="e.g winter in Lebanon" name={"title"} type={"text"} value={title} onChange={(e) => setTitle(e.target.value)} className={"w-full"} required />
+                                <Input placeholder="e.g Lagos weekend getaway" name={"title"} type={"text"} value={title} onChange={(e) => setTitle(e.target.value)} className={"w-full"} required />
                             </label>
-                            <label htmlFor="startDate" className="flex flex-col gap-1.5 w-full">
+                            <label htmlFor="description" className="flex flex-col gap-1.5 w-full">
                                 <p className="text-sm font-medium text-gray-700">
-                                    Start Date
+                                    Description
                                 </p>
-                                <Input placeholder="e.g 2021-08-12" name={"startDate"} type={"date"} value={startDate} onChange={(e) => setStartDate(e.target.value)} className={"w-full"} required />
-                            </label>
-                            <label htmlFor="endDate" className="flex flex-col gap-1.5 w-full">
-                                <p className="text-sm font-medium text-gray-700">
-                                    End Date
-                                </p>
-                                <Input placeholder="e.g 2021-08-12" name={"endDate"} type={"date"} value={endDate} onChange={(e) => setEndDate(e.target.value)} className={"w-full"} required />
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    rows={3}
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    placeholder="enter travel retreat description"
+                                    className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out w-full"
+                                />
                             </label>
                         </div>
                     </div>
                     <div className="flex flex-1 flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                         <div className="p-3 border-b border-gray-200">
                             <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
-                                Package Images
+                                Retreat Package Images
                             </h3>
                         </div>
                         <div className="p-4 flex flex-col gap-4">
@@ -532,7 +519,7 @@ export const AddTravelPackage = () => {
                 <div className="flex flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                     <div className="p-3 border-b border-gray-200">
                         <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
-                            Package  Details
+                            Retreat Package Details
                         </h3>
                     </div>
                     <div className="grid grid-cols-2 grid-flow-row p-4 gap-8">
@@ -540,7 +527,7 @@ export const AddTravelPackage = () => {
                             <p className="text-sm font-medium text-gray-700">
                                 Duration (Days)
                             </p>
-                            <Input placeholder="e.g 5" name={"duration"} type={"text"} value={duration} onChange={handleDurationChange} className={"w-full"} required />
+                            <Input placeholder="e.g full day" name={"duration"} type={"text"} value={duration} onChange={handleDurationChange} className={"w-full"} required />
                         </label>
                         <label htmlFor="price" className="flex flex-col gap-1.5 w-full">
                             <p className="text-sm font-medium text-gray-700">
@@ -550,6 +537,30 @@ export const AddTravelPackage = () => {
                                 onChange={handlePriceChange}
                                 className={"w-full"} required />
                         </label>
+                        <div className="flex flex-col gap-2  w-full sm:col-span-2">
+                            <p className="text-sm font-medium text-gray-700">
+                                Feature List (Add at least one)
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                {featureLists.map((featureList, index) => (
+                                    <div key={index} className="flex items-center gap-2 bg-[#3fc5e7] text-white px-3 py-2 rounded">
+                                        <p className="text-sm font-semibold">{featureList}</p>
+                                        <button className=""
+                                            type="button" onClick={() => handleRemoveFeatureList(index)}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="flex gap-2">
+                                <label htmlFor="featureList" className="w-full">
+                                    <Input placeholder="e.g Flight" name={"featureList"} type={"text"} value={featureList} onChange={(e) => setFeatureList(e.target.value)} className={"w-full flex-grow"} required />
+                                </label>
+                                <button className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
+                                    type="button"
+                                    onClick={handleAddFeatureList}>Add</button>
+                            </div>
+                        </div>
                         <div className="flex flex-col gap-2 w-full sm:col-span-2">
                             <p className="text-sm font-medium text-gray-700">
                                 Inclusions (Add at least one)
@@ -662,8 +673,8 @@ export const AddTravelPackage = () => {
                     <button className={`bg-[rgba(0,109,156,0.86)] text-white text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-[#006d9c] ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                         type="submit"
                         disabled={loading}
-                        onClick={addTravelPackage}>
-                        {loading ? "Adding..." : "Add Travel Package"}
+                        onClick={addRetreatPackage}>
+                        {loading ? "Adding..." : "Add Retreat Package"}
                     </button>
                     <button
                         className="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-gray-200"

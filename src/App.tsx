@@ -26,7 +26,7 @@ import {
 } from './Pages';
 import {
   Overview,
-  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications
+  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, RetreatPackages, AddRetreatPackages, EditRetreatPackages, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications
 } from "./Pages"
 import { AtelierOverview } from './Pages/Atelier';
 import { All, Cancelled, Installments, Paid, Review, Refunded, Booking } from "./Pages/Explore/TravelBookinngs"
@@ -258,6 +258,30 @@ function App() {
             }
           />
           <Route
+            path="/explore/retreat-packages"
+            element={
+              <ExploreDasboardLayout>
+                <RetreatPackages />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/retreat-packages/add"
+            element={
+              <ExploreDasboardLayout>
+                <AddRetreatPackages />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/retreat-packages/edit/:id"
+            element={
+              <ExploreDasboardLayout>
+                <EditRetreatPackages />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
             path="/explore/flight-bookings"
             element={
               <ExploreDasboardLayout>
@@ -413,7 +437,7 @@ function App() {
               </AtelierDashboardLayout>
             }
           />
-            <Route
+          <Route
             path="/atelier/all-products"
             element={
               <AtelierDashboardLayout>
@@ -421,7 +445,7 @@ function App() {
               </AtelierDashboardLayout>
             }
           />
-           <Route
+          <Route
             path="/atelier/uploadproduct/:id"
             element={
               <AtelierDashboardLayout>
@@ -452,38 +476,38 @@ function App() {
                 <Orders />
               </AtelierDashboardLayout>
             }
-            
+
           />
-           <Route
+          <Route
             path="/atelier/untag-sell"
             element={
               <AtelierDashboardLayout>
                 <UntagSell />
               </AtelierDashboardLayout>
             }
-        
+
           />
-            <Route
+          <Route
             path="/atelier/custom-made"
             element={
               <AtelierDashboardLayout>
                 <CustonMade />
               </AtelierDashboardLayout>
             }
-        
+
           />
-            <Route
+          <Route
             path="/atelier/users"
             element={
               <AtelierDashboardLayout>
                 <Users />
               </AtelierDashboardLayout>
             }
-        
+
           />
-          
+
         </Route>
-        
+
 
         {/* atelier routes end */}
       </Routes>
