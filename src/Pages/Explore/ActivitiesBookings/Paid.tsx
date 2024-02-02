@@ -38,7 +38,7 @@ export const PaidActivities = () => {
                 });
             });
             // set bookings of type "Exciting Activities" to state
-            setActivitiesBookings(bookings.filter((booking: { type: string, status: string }) => booking.type === "Exciting Activities" && booking.status === "paid"));
+            setActivitiesBookings(bookings.filter((booking: { type: string, status: string }) => booking.type === "Exciting Activities" && booking.status === "confirmed"));
             setLoading(false);
         }
         fetchTravelBookings()
@@ -60,12 +60,12 @@ export const PaidActivities = () => {
             } else {
                 setDisplayedBookings(searchResults);
             }
-        } else if (status === "paid") {
+        } else if (status === "confirmed") {
             if (!searchActive) {
-                setDisplayedBookings(activitiesBookings.filter((booking) => booking.status === "paid"));
-                setBookingsFiltered(activitiesBookings.filter((booking) => booking.status === "paid"));
+                setDisplayedBookings(activitiesBookings.filter((booking) => booking.status === "confirmed"));
+                setBookingsFiltered(activitiesBookings.filter((booking) => booking.status === "confirmed"));
             } else {
-                setDisplayedBookings(searchResults.filter((booking) => booking.status === "paid"));
+                setDisplayedBookings(searchResults.filter((booking) => booking.status === "confirmed"));
             }
         } else if (status === "installment") {
             if (!searchActive) {
@@ -83,23 +83,24 @@ export const PaidActivities = () => {
             }
         } else if (status === "cancelled") {
             if (!searchActive) {
-                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.isCancelled === true)));
-                setBookingsFiltered(activitiesBookings.filter((booking) => (booking.isCancelled === true)));
+                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.status === "cancelled")));
+                setBookingsFiltered(activitiesBookings.filter((booking) => (booking.status === "cancelled")));
             } else {
-                setDisplayedBookings(searchResults.filter((booking) => (booking.isCancelled === true)));
+                setDisplayedBookings(searchResults.filter((booking) => (booking.status === "cancelled")));
             }
         } else if (status === "refunded") {
             if (!searchActive) {
-                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.status === "refunded")));
+                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.paymentStatus === "refunded")));
                 setBookingsFiltered(activitiesBookings.filter((booking) => (booking.status === "refunded")));
             } else {
-                setDisplayedBookings(searchResults.filter((booking) => (booking.status === "refunded")));
+                setDisplayedBookings(searchResults.filter((booking) => (booking.paymentStatus === "refunded")));
             }
         } else {
             // setDisplayedBookings(activitiesBookings);
             // setBookingsFiltered(activitiesBookings);
         }
     }, [status, activitiesBookings, searchActive, searchResults]);
+
 
 
     // set active filter
@@ -223,7 +224,7 @@ export const PaidActivities = () => {
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-12 sm:px-4 sm:gap-9">
             <div className="flex flex-col gap-2">
                 <h2 className="text-2xl font-semibold text-[#1C1C1C]">
-                    Paid Activities Bookings
+                    Confirmed Activities Bookings
                 </h2>
                 <div className="flex gap-2.5 items-center">
                     <Link to="/" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
@@ -239,7 +240,7 @@ export const PaidActivities = () => {
                     <span className="h-1 w-1 rounded-full bg-[rgb(99,115,129)]">
                     </span>
                     <span className="text-[rgb(99,115,129)] text-sm font-medium">
-                        Paid
+                        Confirmed
                     </span>
                 </div>
             </div>
@@ -274,13 +275,13 @@ export const PaidActivities = () => {
                         </p>
                     </button>
                     <button
-                        onClick={() => setStatus("paid")}
-                        className={`flex gap-2 items-center max-w-[360px] min-w-[max-content] min-h-[48px] pb-1 border-b-2 transition duration-300 ease-in-out  ${status === "paid" ? "border-black" : "border-transparent"}`}>
-                        <p className={`text-sm font-semibold text-[rgb(99,115,129)] transition duration-300 ease-in-out ${status === "paid" ? "text-black" : "text-[rgb(99,115,129)]"}`}>
-                            Paid
+                        onClick={() => setStatus("confirmed")}
+                        className={`flex gap-2 items-center max-w-[360px] min-w-[max-content] min-h-[48px] pb-1 border-b-2 transition duration-300 ease-in-out  ${status === "confirmed" ? "border-black" : "border-transparent"}`}>
+                        <p className={`text-sm font-semibold text-[rgb(99,115,129)] transition duration-300 ease-in-out ${status === "confirmed" ? "text-black" : "text-[rgb(99,115,129)]"}`}>
+                            Confirmed
                         </p>
-                        <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "paid" ? "bg-[rgb(17,141,87)] text-[#ffffff]" : "bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)]"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.status === "paid").length}
+                        <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "confirmed" ? "bg-[rgb(17,141,87)] text-[#ffffff]" : "bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)]"}`}>
+                            {activitiesBookings.filter((invoice) => invoice.status === "confirmed").length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("installment")}
@@ -307,13 +308,13 @@ export const PaidActivities = () => {
                             Refunded
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "refunded" ? "bg-stone-700 text-[#ffffff]" : "bg-stone-200 text-stone-700"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.status === "refunded").length}
+                            {activitiesBookings.filter((invoice) => invoice.paymentStatus === "refunded").length}
                         </p>
                     </button>
                 </div>
                 {/* filter by search */}
                 <div className="flex justify-end pt-5 px-4">
-                    <SearchInput search={search} setSearch={setSearch} />
+                    <SearchInput search={search} setSearch={setSearch} placeholder="Search by name, email, booking ID" />
                 </div>
                 <div className="p-5 flex flex-col gap-3">
                     {activeFilter.length > 0 &&

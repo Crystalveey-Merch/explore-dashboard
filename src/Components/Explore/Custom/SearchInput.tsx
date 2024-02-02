@@ -1,7 +1,7 @@
 import Input from "./Input";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const SearchInput = ({ search, setSearch }: any) => {
+export const SearchInput = ({ search, setSearch, placeholder }: any) => {
     const handleSearchChange = (e: { target: { value: any; }; }) => {
         setSearch(e.target.value);
     };
@@ -16,7 +16,7 @@ export const SearchInput = ({ search, setSearch }: any) => {
                 type="text"
                 name="search"
                 className="block w-full py-[16.5px] pl-10 pr-3.5 border border-gray-300 rounded-md text-sm"
-                placeholder="Search by name, email, booking ID"
+                placeholder={placeholder}
                 value={search}
                 onChange={handleSearchChange}
             />

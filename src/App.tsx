@@ -314,7 +314,7 @@ function App() {
             }
           />
           <Route
-            path="/explore/travel-bookings/paid"
+            path="/explore/travel-bookings/confirmed"
             element={
               <ExploreDasboardLayout>
                 <Paid />
@@ -370,7 +370,7 @@ function App() {
             }
           />
           <Route
-            path="/explore/activities-bookings/paid"
+            path="/explore/activities-bookings/confirmed"
             element={
               <ExploreDasboardLayout>
                 <PaidActivities />

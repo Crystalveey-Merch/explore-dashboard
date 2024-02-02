@@ -69,9 +69,9 @@ export const TableRow = ({ booking }: any) => {
             </td>
             <td className="px-6 py-4 xl:px-3">
                 <div className="flex flex-col text-center">
-                    {booking.status === "paid" && (
+                    {booking.status === "confirmed" && (
                         <p className="h-6 bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)] rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
-                            Paid
+                            Confirmed
                         </p>
                     )}
                     {booking.status === "pending" && (
@@ -84,16 +84,16 @@ export const TableRow = ({ booking }: any) => {
                             Installment
                         </p>
                     )}
-                    {booking.isCancelled && (
+                    {booking.status === "cancelled" && (
                         <p className="h-6 bg-red-200 text-red-700 rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
                             Cancelled
                         </p>
                     )}
-                    {booking.status === "refunded" && (
+                    {/* {booking.paymentStatus === "refunded" && (
                         <p className="h-6 bg-[#276c79a8] text-white rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
                             Refunded
                         </p>
-                    )}
+                    )} */}
                 </div>
             </td>
             <td className="px-6 py-4 space-x-3 xl:px-3"

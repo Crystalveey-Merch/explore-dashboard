@@ -179,15 +179,17 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                             </NavLink>
                                         </li>
                                         {/* Pending Travel Bookings End */}
-                                        {/* Paid Travel Bookings */}
+                                        {/* Confirmed Travel Bookings */}
                                         <li className="bar-item hover:text-gray-400">
-                                            <NavLink to="/explore/travel-bookings/paid" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/travel-bookings/paid" ? "bg-gray-500" : ""}`}>
-                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/travel-bookings/paid" ? "text-white" : "text-white"}`}>
-                                                    <span className=""> Paid </span>
+                                            <NavLink to="/explore/travel-bookings/confirmed" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/travel-bookings/confirmed" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/travel-bookings/confirmed" ? "text-white" : "text-white"}`}>
+                                                    <span className="">
+                                                        Confirmed
+                                                    </span>
                                                 </p>
                                                 <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
                                                     <p className="text-xs text-[#FFFFFF] font-bold">
-                                                        {travelBookings.filter((booking: { status: string }) => booking.status === "paid").length}
+                                                        {travelBookings.filter((booking: { status: string }) => booking.status === "confirmed").length}
                                                     </p>
                                                 </div>
                                             </NavLink>
@@ -201,7 +203,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 </p>
                                                 <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
                                                     <p className="text-xs text-[#FFFFFF] font-bold">
-                                                        {travelBookings.filter((booking: { isCancelled: boolean }) => booking?.isCancelled === true).length}
+                                                        {travelBookings.filter((booking: { status: string }) => booking?.status === "cancelled").length}
                                                     </p>
                                                 </div>
                                             </NavLink>
@@ -215,7 +217,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 </p>
                                                 <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
                                                     <p className="text-xs text-[#FFFFFF] font-bold">
-                                                        {travelBookings.filter((booking: { status: string }) => booking.status === "refunded").length}
+                                                        {travelBookings.filter((booking: { paymentStaus: string }) => booking.paymentStaus === "refunded").length}
                                                     </p>
                                                 </div>
                                             </NavLink>
@@ -312,20 +314,20 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                             </NavLink>
                                         </li>
                                         {/* Pending Activities Bookings End */}
-                                        {/* Paid Activities Bookings */}
+                                        {/* Confirmed Activities Bookings */}
                                         <li className="bar-item hover:text-gray-400">
-                                            <NavLink to="/explore/activities-bookings/paid" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/activities-bookings/paid" ? "bg-gray-500" : ""}`}>
-                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/activities-bookings/paid" ? "text-white" : "text-white"}`}>
-                                                    <span className=""> Paid </span>
+                                            <NavLink to="/explore/activities-bookings/confirmed" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/activities-bookings/confirmed" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/activities-bookings/confirmed" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Confirmed </span>
                                                 </p>
                                                 <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
                                                     <p className="text-xs text-[#FFFFFF] font-bold">
-                                                        {activityBookings.filter((booking: { status: string }) => booking.status === "paid").length}
+                                                        {activityBookings.filter((booking: { status: string }) => booking.status === "confirmed").length}
                                                     </p>
                                                 </div>
                                             </NavLink>
                                         </li>
-                                        {/* Paid Activities Bookings End */}
+                                        {/* Confirmed Activities Bookings End */}
                                         {/* Cancelled Activities Bookings */}
                                         <li className="bar-item hover:text-gray-400">
                                             <NavLink to="/explore/activities-bookings/cancelled" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/activities-bookings/cancelled" ? "bg-gray-500" : ""}`}>
@@ -334,7 +336,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 </p>
                                                 <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
                                                     <p className="text-xs text-[#FFFFFF] font-bold">
-                                                        {activityBookings.filter((booking: { isCancelled: boolean }) => booking?.isCancelled === true).length}
+                                                        {activityBookings.filter((booking: { status: string }) => booking?.status === "cancelled").length}
                                                     </p>
                                                 </div>
                                             </NavLink>
@@ -348,7 +350,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 </p>
                                                 <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
                                                     <p className="text-xs text-[#FFFFFF] font-bold">
-                                                        {activityBookings.filter((booking: { status: string }) => booking.status === "refunded").length}
+                                                        {activityBookings.filter((booking: { paymentStatus: string }) => booking.paymentStatus === "refunded").length}
                                                     </p>
                                                 </div>
                                             </NavLink>

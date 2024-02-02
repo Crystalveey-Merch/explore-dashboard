@@ -38,7 +38,7 @@ export const CancelledActivities = () => {
                 });
             });
             // set bookings of type "Exciting Activities" to state
-            setActivitiesBookings(bookings.filter((booking: { type: string, isCancelled: boolean }) => booking.type === "Exciting Activities" && booking.isCancelled === true));
+            setActivitiesBookings(bookings.filter((booking: { type: string, status: string }) => booking.type === "Exciting Activities" && booking.status === "cancelled"));
             setLoading(false);
         }
         fetchTravelBookings()
@@ -60,12 +60,12 @@ export const CancelledActivities = () => {
             } else {
                 setDisplayedBookings(searchResults);
             }
-        } else if (status === "paid") {
+        } else if (status === "confirmed") {
             if (!searchActive) {
-                setDisplayedBookings(activitiesBookings.filter((booking) => booking.status === "paid"));
-                setBookingsFiltered(activitiesBookings.filter((booking) => booking.status === "paid"));
+                setDisplayedBookings(activitiesBookings.filter((booking) => booking.status === "confirmed"));
+                setBookingsFiltered(activitiesBookings.filter((booking) => booking.status === "confirmed"));
             } else {
-                setDisplayedBookings(searchResults.filter((booking) => booking.status === "paid"));
+                setDisplayedBookings(searchResults.filter((booking) => booking.status === "confirmed"));
             }
         } else if (status === "installment") {
             if (!searchActive) {
@@ -84,16 +84,16 @@ export const CancelledActivities = () => {
         } else if (status === "cancelled") {
             if (!searchActive) {
                 setDisplayedBookings(activitiesBookings.filter((booking) => (booking.isCancelled === true)));
-                setBookingsFiltered(activitiesBookings.filter((booking) => (booking.isCancelled === true)));
+                setBookingsFiltered(activitiesBookings.filter((booking) => (booking.status === "cancelled")));
             } else {
-                setDisplayedBookings(searchResults.filter((booking) => (booking.isCancelled === true)));
+                setDisplayedBookings(searchResults.filter((booking) => (booking.status === "cancelled")));
             }
         } else if (status === "refunded") {
             if (!searchActive) {
-                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.status === "refunded")));
-                setBookingsFiltered(activitiesBookings.filter((booking) => (booking.status === "refunded")));
+                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.paymentStatus === "refunded")));
+                setBookingsFiltered(activitiesBookings.filter((booking) => (booking.paymentStatus === "refunded")));
             } else {
-                setDisplayedBookings(searchResults.filter((booking) => (booking.status === "refunded")));
+                setDisplayedBookings(searchResults.filter((booking) => (booking.paymentStatus === "refunded")));
             }
         } else {
             // setDisplayedBookings(activitiesBookings);
@@ -246,7 +246,7 @@ export const CancelledActivities = () => {
                 className="w-full rounded-2xl flex flex-col mb-10 2xl:w-[calc(100vw-21rem)] xl:w-[calc(100vw-3rem)] sm:w-[calc(100vw-2rem)]"
                 style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
             >
-                <div className="px-4 flex gap-10 overflow-y-hidden md overflow-xscrol md:gap-6"
+               <div className="px-4 flex gap-10 overflow-y-hidden md overflow-xscrol md:gap-6"
                     // hide scrollbar
                     style={{
                         boxShadow: "rgba(145, 158, 171, 0.08) 0px -2px 0px 0px inset",
@@ -273,13 +273,13 @@ export const CancelledActivities = () => {
                         </p>
                     </button>
                     <button
-                        onClick={() => setStatus("paid")}
-                        className={`flex gap-2 items-center max-w-[360px] min-w-[max-content] min-h-[48px] pb-1 border-b-2 transition duration-300 ease-in-out  ${status === "paid" ? "border-black" : "border-transparent"}`}>
-                        <p className={`text-sm font-semibold text-[rgb(99,115,129)] transition duration-300 ease-in-out ${status === "paid" ? "text-black" : "text-[rgb(99,115,129)]"}`}>
-                            Paid
+                        onClick={() => setStatus("confirmed")}
+                        className={`flex gap-2 items-center max-w-[360px] min-w-[max-content] min-h-[48px] pb-1 border-b-2 transition duration-300 ease-in-out  ${status === "confirmed" ? "border-black" : "border-transparent"}`}>
+                        <p className={`text-sm font-semibold text-[rgb(99,115,129)] transition duration-300 ease-in-out ${status === "confirmed" ? "text-black" : "text-[rgb(99,115,129)]"}`}>
+                            Confirmed
                         </p>
-                        <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "paid" ? "bg-[rgb(17,141,87)] text-[#ffffff]" : "bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)]"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.status === "paid").length}
+                        <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "confirmed" ? "bg-[rgb(17,141,87)] text-[#ffffff]" : "bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)]"}`}>
+                            {activitiesBookings.filter((invoice) => invoice.status === "confirmed").length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("installment")}
@@ -306,13 +306,13 @@ export const CancelledActivities = () => {
                             Refunded
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "refunded" ? "bg-stone-700 text-[#ffffff]" : "bg-stone-200 text-stone-700"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.status === "refunded").length}
+                            {activitiesBookings.filter((invoice) => invoice.paymentStatus === "refunded").length}
                         </p>
                     </button>
                 </div>
                 {/* filter by search */}
                 <div className="flex justify-end pt-5 px-4">
-                    <SearchInput search={search} setSearch={setSearch} />
+                    <SearchInput search={search} setSearch={setSearch} placeholder="Search by name, email, booking ID" />
                 </div>
                 <div className="p-5 flex flex-col gap-3">
                     {activeFilter.length > 0 &&

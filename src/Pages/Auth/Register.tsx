@@ -50,6 +50,11 @@ export const Register = () => {
         //     return;
         // }
 
+        // if email does not end with crystalveey.com, do not register
+        if (!email.endsWith("crystalveey.com")) {
+            toast.error("You are not allowed to register")
+            return;
+        }
 
         try {
             const { user } = await createUserWithEmailAndPassword(

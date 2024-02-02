@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+// import { useNavigate } from "react-router-dom"
 import moment from "moment";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../../Config/userSlice"
+// import { useSelector } from "react-redux";
+// import { selectUser } from "../../../Config/userSlice"
 import { collection, getDocs, db } from '../../../Config/firebase';
 import totalSvg from "../../../assets/SVG/Dashboard/Overview/total.svg"
 import canceledSvg from "../../../assets/SVG/Dashboard/Overview/cancelled.svg"
@@ -11,14 +11,14 @@ import soldSvg from "../../../assets/SVG/Dashboard/Overview/sold.svg"
 
 
 export const Overview = () => {
-    const navigate = useNavigate()
-    const user = useSelector(selectUser)
+    // const navigate = useNavigate()
+    // const user = useSelector(selectUser)
 
-    useEffect(() => {
-        if (!user) {
-            navigate("/login")
-        }
-    }, [user, navigate])
+    // useEffect(() => {
+    //     if (!user) {
+    //         navigate("/login")
+    //     }
+    // }, [user, navigate])
 
 
     const [transactions, setTransactions] = useState<any[]>([]);
@@ -194,7 +194,7 @@ export const Overview = () => {
                 >
                     <div className="flex flex-col gap-2">
                         <h4 className="text-[2rem] font-public-sans font-bold text-black xl:text-2xl lg:text-xl">
-                            {transactions.length}
+                            {transactions.filter((transaction) => transaction.paymentStatus === "paid").length}
                         </h4>
                         <p className="text-sm font-medium text-[rgb(99,115,129)]">
                             Sold

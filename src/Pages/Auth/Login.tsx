@@ -17,19 +17,20 @@ export const Login = () => {
     const [password, setPassword] = useState("")
 
     useEffect(() => {
-        if (user) {
-            navigate(-1)
-        }
-        // const previousRoute = document.referrer; // Get the previous route
+        const delay = 4000; // 4 seconds
 
-        // if (user) {
-        //     if (previousRoute.includes("admin.crystalveey.com")) {
-        //         navigate(-1)
-        //     } else {
-        //         window.location.replace("https://admin.crystalveey.com");
-        //     }
-        // }
-    }, [user, navigate])
+        const timerId = setTimeout(() => {
+            if (user) {
+                navigate(-1);
+            }
+        }, delay);
+
+        // Cleanup the timer on component unmount or if the user is already navigated
+        return () => {
+            clearTimeout(timerId);
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
