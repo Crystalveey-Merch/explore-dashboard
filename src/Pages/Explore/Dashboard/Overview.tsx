@@ -460,7 +460,7 @@ export const Overview = () => {
                                 <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
                                 <p className="h-2 bg-[rgb(255,0,0)] rounded absolute top-0 left-0"
                                     style={{
-                                        width: `${{ refundedPercentage }
+                                        width: `${refundedPercentage
                                             }%`
                                     }}></p>
                             </div>

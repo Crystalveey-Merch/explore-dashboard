@@ -4,10 +4,10 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Fragment } from 'react'
 
 const statusOptions = [
-    { name: 'Paid', value: "paid" },
+    { name: 'Confirmed', value: "confirmed" },
     { name: 'In Review', value: "pending" },
     { name: "Cancelled", value: "cancelled" },
-    { name: "Refunded", value: "refunded" }
+    // { name: "Refunded", value: "refunded" }
 ]
 
 export const StatusDropDown = ({ booking, setText, setOpen, setPickedStatus }: any) => {
@@ -15,9 +15,7 @@ export const StatusDropDown = ({ booking, setText, setOpen, setPickedStatus }: a
     const handleClick = ({ status }: any) => {
         if (booking?.status === status) {
             return
-        } else if (booking?.isCancelled && status === "cancelled") {
-            return
-        } 
+        }  
         setOpen(true);
         setPickedStatus(status);
         // setText({`you want to change the status of this booking to ${status}?)`});
@@ -36,9 +34,9 @@ export const StatusDropDown = ({ booking, setText, setOpen, setPickedStatus }: a
                 group inline-flex items-center rounded-md  px-3 py-2 text-sm font-bold border border-[rgba(145,158,171,0.32)] transition duration-200 ease-out hover:bg-[rgba(145,158,171,0.08)] hover:border-[#000000]`}
                         >
                             <p className='capitalize'>
-                                {booking?.status === "paid" && (
+                                {booking?.status === "confirmed" && (
                                     <span>
-                                        Paid
+                                        Confirmed
                                     </span>
                                 )}
                                 {booking?.status === "pending" && (
@@ -51,7 +49,7 @@ export const StatusDropDown = ({ booking, setText, setOpen, setPickedStatus }: a
                         Installment
                     </span>
                 )} */}
-                                {booking?.isCancelled && (
+                                {booking?.status === "cancelled" && (
                                     <span>
                                         Cancelled
                                     </span>
@@ -89,7 +87,7 @@ export const StatusDropDown = ({ booking, setText, setOpen, setPickedStatus }: a
                                                 onClick={() => {
                                                     handleClick({ status: item.value })
                                                 }}
-                                                className={`-m3 flex items-center rounded-md p-2 transition duration-150 ease-in-out hover:bg-gray-100 ${booking?.status === item.value ? "bg-[rgba(145,158,171,0.16)] font-bold" : (booking?.isCancelled && item.value === "cancelled") ? "bg-[rgba(145,158,171,0.16)] font-bold" : "font-normal"}`}
+                                                className={`-m3 flex items-center rounded-md p-2 transition duration-150 ease-in-out hover:bg-gray-100 ${booking?.status === item.value ? "bg-[rgba(145,158,171,0.16)] font-bold" : "font-normal"}`}
                                             >
                                                 <p className='capitalize text-sm text-[rgb(33,43,54)]'>
                                                     {item.name}
