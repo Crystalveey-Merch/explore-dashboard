@@ -45,25 +45,57 @@ export const Overview = () => {
 
     const totalTransactions = transactions.length;
 
-    // pending transactions
-    const pendingTransactionsLength = transactions.filter((transaction) => transaction.status === 'pending').length;
+    const inReviewTransactionsLength = transactions.filter((transaction) => transaction.status === 'pending').length;
 
-    const pendingPercentage = (pendingTransactionsLength / totalTransactions) * 100;
+    const inReviewPercentage = (inReviewTransactionsLength / totalTransactions) * 100;
+
+    // confirmed
+    const confirmedTransactionsLength = transactions.filter((transaction) => transaction.status === 'confirmed').length;
+
+    const confirmedPercentage = (confirmedTransactionsLength / totalTransactions) * 100;
+
+    // cancelled transactions
+    const cancelledTransactionsLength = transactions.filter((transaction) => transaction.status === 'cancelled').length;
+
+    const cancelledPercentage = (cancelledTransactionsLength / totalTransactions) * 100;
+
+    // pending transactions
+    const paymentPendingTransactionsLength = transactions.filter((transaction) => transaction.paymentStatus === 'pending').length;
+
+    const pendingPaymentPercentage = (paymentPendingTransactionsLength / totalTransactions) * 100;
 
     // paid transactions
-    const paidTransactionsLength = transactions.filter((transaction) => transaction.status === 'paid').length;
+    const paidTransactionsLength = transactions.filter((transaction) => transaction.paymentStatus === 'paid').length;
 
     const paidPercentage = (paidTransactionsLength / totalTransactions) * 100;
 
-    // cancelled transactions
-    const cancelledTransactionsLength = transactions.filter((transaction) => transaction.isCancelled === true).length;
+    // Refunded transactions
+    const refundedTransactionsLength = transactions.filter((transaction) => transaction.paymentStatus === 'refunded').length;
 
-    const cancelledPercentage = (cancelledTransactionsLength / totalTransactions) * 100;
+    const refundedPercentage = (refundedTransactionsLength / totalTransactions) * 100;
 
     // installments transactions
     const installmentsTransactionsLength = transactions.filter((transaction) => transaction.installment === true).length;
 
     const installmentsPercentage = (installmentsTransactionsLength / totalTransactions) * 100;
+
+    const completedInstallmentsTransactionsLength = transactions.filter((transaction) => transaction.installment === true && transaction.isInstallmentCompleted === true).length;
+
+    const completedInstallmentsPercentage = (completedInstallmentsTransactionsLength / totalTransactions) * 100;
+
+    const uncompletedInstallmentsTransactionsLength = transactions.filter((transaction) => transaction.installment === true && transaction.isInstallmentCompleted === false).length;
+
+    const uncompletedInstallmentsPercentage = (uncompletedInstallmentsTransactionsLength / totalTransactions) * 100;
+
+    const overdueInstallmentsTransactionsLength = transactions.filter((transaction) => {
+        if (transaction.installment) {
+            const paymentDeadlineMoment = moment(transaction.payDeadline, 'DD MMM YYYY');
+            return paymentDeadlineMoment.isBefore(moment());
+        }
+        return false;
+    }).length;
+
+    const overdueInstallmentsPercentage = (overdueInstallmentsTransactionsLength / totalTransactions) * 100;
 
     // Exciting Activities transactions
     const excitingActivitiesTransactionsLength = transactions.filter((transaction) => transaction.type === 'Exciting Activities').length;
@@ -74,6 +106,11 @@ export const Overview = () => {
     const promotedTravelPackageTransactionsLength = transactions.filter((transaction) => transaction.type === 'Promoted Travel Package').length;
 
     const promotedTravelPackagePercentage = (promotedTravelPackageTransactionsLength / totalTransactions) * 100;
+
+    // Retreats Travel Package transactions
+    const retreatsTravelPackageTransactionsLength = transactions.filter((transaction) => transaction.type === 'Retreats Packages').length;
+
+    const retreatsTravelPackagePercentage = (retreatsTravelPackageTransactionsLength / totalTransactions) * 100;
 
 
     const [paidTransactions, setPaidTransactions] = useState<any[]>([]);
@@ -183,7 +220,7 @@ export const Overview = () => {
                 >
                     <div className="flex flex-col gap-2">
                         <h4 className="text-[2rem] font-public-sans font-bold text-black xl:text-2xl lg:text-xl">
-                            0
+                            {cancelledTransactionsLength}
                         </h4>
                         <p className="text-sm font-medium text-[rgb(99,115,129)]">
                             Cancelled
@@ -203,8 +240,8 @@ export const Overview = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex justify-between items-start gap-5 lg:flex-col sm:gap-4">
-                <div className="p-6 flex flex-col gap-6 sm:p-5" style={{
+            <div className="grid grid-cols-3 grid-flow-row gap-5 lg:grid-cols-2 sm:grid-cols-1 sm:gap-4">
+                <div className="col-span-2 p-6 flex flex-col gap-6 sm:col-span-1 sm:p-5" style={{
                     width: "100%",
                     // height: "400px",
                     borderRadius: "16px",
@@ -241,77 +278,6 @@ export const Overview = () => {
                             <p className="text-sm font-normal text-black sm:text-xs">
                                 {lastMonthTotalIncome > thisMonthTotalIncome ? "less than last month" : "than last month"}
                             </p>
-                        </div>
-                    </div>
-                </div>
-                <div className="rounded-2xl bg-white text-[rgb(33,43,54)] w-full py-4 pr-6 pl-4 flex flex-col justify-between"
-                    style={{
-                        boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px"
-                    }}
-                >
-                    <h5 className="text-lg font-bold">
-                        Booked
-                    </h5>
-                    <div className="flex flex-col gap-6 p-6">
-                        <div className="flex flex-col gap-2">
-                            <div className="flex justify-between items-center">
-                                <p className="uppercase text-xs font-bold">
-                                    Pending
-                                </p>
-                                <p className="">
-                                    {pendingTransactionsLength}
-                                </p>
-                            </div>
-                            <div className="relative w-full">
-                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
-                                <p className="h-2 bg-[rgb(255,171,0)] rounded absolute top-0 left-0"
-                                    style={{ width: `${pendingPercentage}%` }}></p>
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <div className="flex justify-between items-center">
-                                <p className="uppercase text-xs font-bold">
-                                    Paid
-                                </p>
-                                <p className="">
-                                    {paidTransactionsLength}
-                                </p>
-                            </div>
-                            <div className="relative w-full">
-                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
-                                <p className="h-2 bg-[rgb(34,197,94)] rounded absolute top-0 left-0"
-                                    style={{ width: `${paidPercentage}%` }}></p>
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <div className="flex justify-between items-center">
-                                <p className="uppercase text-xs font-bold">
-                                    Cancelled
-                                </p>
-                                <p className="">
-                                    {cancelledTransactionsLength}
-                                </p>
-                            </div>
-                            <div className="relative w-full">
-                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
-                                <p className="h-2 bg-[rgb(255,0,0)] rounded absolute top-0 left-0"
-                                    style={{ width: `${cancelledPercentage}%` }}></p>
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <div className="flex justify-between items-center">
-                                <p className="uppercase text-xs font-bold">
-                                    Installments
-                                </p>
-                                <p className="">
-                                    {installmentsTransactionsLength}
-                                </p>
-                            </div>
-                            <div className="relative w-full">
-                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
-                                <p className="h-2 bg-[rgb(0,171,255)] rounded absolute top-0 left-0"
-                                    style={{ width: `${installmentsPercentage}%` }}></p>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -352,6 +318,223 @@ export const Overview = () => {
                                 <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
                                 <p className="h-2 bg-[rgb(34,197,94)] rounded absolute top-0 left-0"
                                     style={{ width: `${promotedTravelPackagePercentage}%` }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Retreats Travel Package
+                                </p>
+                                <p className="">
+                                    {retreatsTravelPackageTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(255,0,0)] rounded absolute top-0 left-0"
+                                    style={{ width: `${retreatsTravelPackagePercentage}%` }}></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="rounded-2xl bg-white text-[rgb(33,43,54)] w-full py-4 pr-6 pl-4 flex flex-col justify-between"
+                    style={{
+                        boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px"
+                    }}
+                >
+                    <h5 className="text-lg font-bold">
+                        Booking Status
+                    </h5>
+                    <div className="flex flex-col gap-6 p-6">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Bookings in Review
+                                </p>
+                                <p className="">
+                                    {inReviewTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(255,171,0)] rounded absolute top-0 left-0"
+                                    style={{ width: `${inReviewPercentage}%` }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Confirmed
+                                </p>
+                                <p className="">
+                                    {confirmedTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(34,197,94)] rounded absolute top-0 left-0"
+                                    style={{ width: `${confirmedPercentage}%` }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Cancelled
+                                </p>
+                                <p className="">
+                                    {cancelledTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(255,0,0)] rounded absolute top-0 left-0"
+                                    style={{ width: `${cancelledPercentage}%` }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Installments
+                                </p>
+                                <p className="">
+                                    {installmentsTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(0,171,255)] rounded absolute top-0 left-0"
+                                    style={{ width: `${installmentsPercentage}%` }}></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="rounded-2xl bg-white text-[rgb(33,43,54)] w-full py-4 pr-6 pl-4 flex flex-col justify-between"
+                    style={{
+                        boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px"
+                    }}
+                >
+                    <h5 className="text-lg font-bold">
+                        Payment Status
+                    </h5>
+                    <div className="flex flex-col gap-6 p-6">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Payment Pending
+                                </p>
+                                <p className="">
+                                    {paymentPendingTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(255,171,0)] rounded absolute top-0 left-0"
+                                    style={{ width: `${pendingPaymentPercentage}%` }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Paid
+                                </p>
+                                <p className="">
+                                    {paidTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(34,197,94)] rounded absolute top-0 left-0"
+                                    style={{ width: `${paidPercentage}%` }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Refunded
+                                </p>
+                                <p className="">
+                                    {refundedTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(255,0,0)] rounded absolute top-0 left-0"
+                                    style={{
+                                        width: `${{ refundedPercentage }
+                                            }%`
+                                    }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Installments
+                                </p>
+                                <p className="">
+                                    {installmentsTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(0,171,255)] rounded absolute top-0 left-0"
+                                    style={{ width: `${installmentsPercentage}%` }}></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="rounded-2xl bg-white text-[rgb(33,43,54)] w-full py-4 pr-6 pl-4 flex flex-col justify-between"
+                    style={{
+                        boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px"
+                    }}
+                >
+                    <h5 className="text-lg font-bold">
+                        Installments
+                    </h5>
+                    <div className="flex flex-col gap-6 p-6">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Completed
+                                </p>
+                                <p className="">
+                                    {completedInstallmentsTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(34,197,94)] rounded absolute top-0 left-0"
+                                    style={{ width: `${completedInstallmentsPercentage}%` }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Uncompleted
+                                </p>
+                                <p className="">
+                                    {uncompletedInstallmentsTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(255,171,0)] rounded absolute top-0 left-0"
+                                    style={{ width: `${uncompletedInstallmentsPercentage}%` }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Overdue
+                                </p>
+                                <p className="">
+
+                                    {overdueInstallmentsTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(255,0,0)] rounded absolute top-0 left-0"
+                                    style={{ width: `${overdueInstallmentsPercentage}%` }}></p>
                             </div>
                         </div>
                     </div>
