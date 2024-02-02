@@ -117,7 +117,7 @@ export const Overview = () => {
 
     useEffect(() => {
         // if (loading && transactions.length > 0) {
-        const paidTransactions = transactions.filter((transaction) => transaction.status === "paid");
+        const paidTransactions = transactions.filter((transaction) => transaction.paymentStatus === "paid");
         setPaidTransactions(paidTransactions);
         console.log(paidTransactions);
         // } 
