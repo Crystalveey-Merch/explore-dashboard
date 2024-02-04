@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { collection, getDocs, db, doc, updateDoc } from '../../../Config/firebase';
-import { handleFormatDate, handleFormatTime, ConfirmModal, handleFormatDate2 } from "../../../Hooks"
+import { handleFormatDate, handleFormatTime, ConfirmModal, ConfirmPassKeyModal, handleFormatDate2 } from "../../../Hooks"
 import { StatusDropDown } from "../../../Components";
 import printSVG from "../../../assets/SVG/Dashboard/Action/print.svg";
 import travelImage from "../../../assets/Images/Dashboard/travel-location.png"
@@ -33,6 +33,10 @@ export const BookingActivities = () => {
         fetchBooking();
     }, [id]);
 
+    // 
+    const [passKey, setPassKey] = useState("")
+    const [isPassKeyOpen, setIsPassKeyOpen] = useState(false)
+
 
     // modal state
     const [open, setOpen] = useState(false);
@@ -45,28 +49,30 @@ export const BookingActivities = () => {
         // if pickedStatus is paid, pending, and refunded. set status to pickedStatus else if pickedStatus is cancelled set isCancelled to true  and set status to ""
         const bookingRef = doc(db, "transactions", booking.id);
 
-        const status = ["confirmed", "pending", "cancelled"].includes(pickedStatus) ? pickedStatus : "";
 
-        const paymentStatus = ["paid", "pending", "refunded"].includes(pickedStatus) ? pickedStatus : "";
+        const status = ["confirmed", "pending", "cancelled"].includes(pickedStatus) ? pickedStatus : pickedStatus === "refunded" ? "cancelled" : "";
 
+
+        // const paymentStatus = ["paid", "pending", "refunded"].includes(pickedStatus) ? pickedStatus : pickedStatus === "cancelled" ? booking?.paymentStatus : "";
+        const paymentStatus = (pickedStatus === "pending" && booking?.paymentMethod === "bank") ? "pending" : (pickedStatus === "pending" && booking?.paymentMethod === "paystack") ? booking?.paymentStatus : pickedStatus === "confirmed" ? "paid" : pickedStatus === "refunded" ? "refunded" : pickedStatus === "cancelled" ? booking?.paymentStatus : ""
 
         await updateDoc(bookingRef, {
-            status: status,
-            paymentStatus: status === "confirmed" ? "paid" : status === "cancelled" ? "refunded" : paymentStatus,
+            status: status === "refunded" ? "cancelled" : status,
+            paymentStatus: paymentStatus
         });
 
         // update booking state
         setBooking({
             ...booking,
-            status: status,
-            paymentStatus: status === "confirmed" ? "paid" : status === "cancelled" ? "refunded" : paymentStatus,
+            status: status === "refunded" ? "cancelled" : status,
+            paymentStatus: paymentStatus
         });
 
         // close modal
         setOpen(false);
         // show toast
         toast.success(`Booking status changed to ${pickedStatus}`);
-        console.log(pickedStatus);
+        // console.log(pickedStatus);
     }
 
     const handleConfirm = ({ status }: any) => {
@@ -76,8 +82,13 @@ export const BookingActivities = () => {
         setOpen(true);
         setPickedStatus(status);
         // setText({`you want to change the status of this booking to ${status}?)`});
-        setText(`you want to ${status} this booking ?`);
+        setText(`you want to change the status of this booking to ${status}?`);
     }
+
+    const initialPrice = booking?.moreData?.price
+    const priceWithTravelers = booking?.travellers * initialPrice
+    const discoutedAmount = (priceWithTravelers * booking?.discount) / 100
+    const totalAmount = priceWithTravelers - discoutedAmount
 
     return (
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-6 sm:w-[100vw] sm:gap-9">
@@ -138,12 +149,12 @@ export const BookingActivities = () => {
                     <div className="flex flex-row items-end gap-3 md:justify-end">
                         <div className="flex flex-col gap-1">
                             <p className="text-xs font-bold">
-                                Change Status
+                                Force Change Status
                             </p>
                             <StatusDropDown
                                 booking={booking}
                                 setText={setText}
-                                setOpen={setOpen}
+                                setIsPassKeyOpen={setIsPassKeyOpen}
                                 setPickedStatus={setPickedStatus}
                             />
                         </div>
@@ -170,55 +181,88 @@ export const BookingActivities = () => {
                     <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
                         Details
                     </h4>
-                    <div className="flex justify-between py-6 border-b-2 border-dashed border-[rgb(244,246,248)]">
-                        <div className="flex gap-2 items-center sm:flex-col">
-                            <img
-                                src={booking?.moreData ? booking?.moreData.imageOne : travelImage}
-                                alt="travelPackage"
-                                className="w-14 h-14 rounded-md object-cover sm:place-self-start"
-                            />
-                            <div className="flex flex-col gap-1">
-                                <p className="text-[rgb(33,43,54)] text-base font-semibold">
-                                    {booking?.title}
-                                </p>
-                                <p className="text-sm text-gray-500">
-                                    {handleFormatDate2(booking?.date)}
-                                </p>
-                            </div>
-                        </div>
-                        <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
-                            {booking?.moreData?.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
-                        </h4>
-                    </div>
-                    <div className="flex justify-between py-6 border-b-2 border-dashed border-[rgb(244,246,248)] sm:grid sm:grid-cols-2 sm:gap-4">
-                        <h5 className="text-[rgb(33,43,54)] text-base font-semibold">
-                            Travellers
-                        </h5>
-                        <p className="text-[rgb(99,115,129)] text-sm font-medium sm:order-3">
-                            {booking?.travellers} x  {booking?.moreData?.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
-                        </p>
-                        <h5 className="text-[rgb(33,43,54)] text-base font-semibold sm:order-2 sm:text-right">
-                            {(booking?.travellers * booking?.moreData?.price).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
-                        </h5>
-                    </div>
-                    <div className="flex flex-col gap-4 justify-end items-end py-6">
-                        <div className="flex">
-                            <h5 className="text-[rgb(99,115,129)] text-sm font-normal">
-                                Subtotal
+                    <div className="w-full flex flex-col gap-4 justify-end items-end py-6 border-y-2 border-dashed border-[rgb(244,246,248)] sm:gap-4">
+                        <div className="flex sm:w-full">
+                            <h5 className="text-[rgb(99,115,129)] text-sm font-normal sm:w-full">
+                                Payment Method:
                             </h5>
-                            <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-sm font-semibold">
+                            <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-sm font-semibold capitalize sm:w-full">
+                                {booking?.paymentMethod}
+                            </h5>
+                        </div>
+                        <div className="flex sm:w-full">
+                            <h5 className="text-[rgb(99,115,129)] text-sm font-normal sm:w-full">
+                                Payment Status:
+                            </h5>
+                            <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-sm font-semibold capitalize sm:w-full">
+                                {booking?.paymentStatus === "paid" && (
+                                    <p className="h-6 bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)] rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
+                                        Paid
+                                    </p>
+                                )}
+                                {booking?.paymentStatus === "pending" && (
+                                    <p className="h-6 bg-orange-200 text-orange-900 rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
+                                        In Review
+                                    </p>
+                                )}
+                                {booking?.paymentStatus === "refunded" && (
+                                    <p className="h-6 bg-[#276c79a8] text-white rounded-md px-1.5 text-xs font-bold inline-flex items-center whitespace-nowrap">
+                                        Refunded
+                                    </p>
+                                )}
+                            </h5>
+                        </div>
+                    </div>
+                    <div className="flex flex-col">
+                        <div className="flex justify-between py-6 border-b-2 border-dashed border-[rgb(244,246,248)]">
+                            <div className="flex gap-2 items-center sm:flex-col">
+                                <img
+                                    src={booking?.moreData ? booking?.moreData.imageOne : travelImage}
+                                    alt="travelPackage"
+                                    className="w-14 h-14 rounded-md object-cover sm:place-self-start"
+                                />
+                                <div className="flex flex-col gap-1">
+                                    <p className="text-[rgb(33,43,54)] text-base font-semibold">
+                                        {booking?.title}
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                        {handleFormatDate2(booking?.date)}
+                                    </p>
+                                </div>
+                            </div>
+                            <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
+                                {booking?.moreData?.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                            </h4>
+                        </div>
+                        <div className="flex justify-between py-6 border-b-2 border-dashed border-[rgb(244,246,248)] sm:grid sm:grid-cols-2 sm:gap-4">
+                            <h5 className="text-[rgb(33,43,54)] text-base font-semibold">
+                                Travellers
+                            </h5>
+                            <p className="text-[rgb(99,115,129)] text-sm font-medium sm:order-3">
+                                {booking?.travellers} x  {initialPrice?.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                            </p>
+                            <h5 className="text-[rgb(33,43,54)] text-base font-semibold sm:order-2 sm:text-right">
                                 {(booking?.travellers * booking?.moreData?.price).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
                             </h5>
                         </div>
-                        <div className="flex">
-                            <h5 className="text-[rgb(99,115,129)] text-sm font-normal">
-                                Discount
-                            </h5>
-                            <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-sm font-semibold">
-                                ₦0
-                            </h5>
-                        </div>
-                        {/* <div className="flex">
+                        <div className="flex flex-col gap-4 justify-end items-end py-6">
+                            <div className="flex sm:w-full">
+                                <h5 className="text-[rgb(99,115,129)] text-sm font-normal sm:w-full">
+                                    Subtotal
+                                </h5>
+                                <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-sm font-semibold sm:w-full">
+                                    {priceWithTravelers.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                                </h5>
+                            </div>
+                            <div className="flex sm:w-full">
+                                <h5 className="text-[rgb(99,115,129)] text-sm font-normal sm:w-full">
+                                    Discount
+                                </h5>
+                                <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-sm font-semibold sm:w-full">   {" - "}
+                                    {discoutedAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                                </h5>
+                            </div>
+                            {/* <div className="flex">
                             <h5 className="text-[rgb(99,115,129)] text-sm font-normal">
                                 Tax
                             </h5>
@@ -226,42 +270,66 @@ export const BookingActivities = () => {
                                 0
                             </h5>
                         </div> */}
-                        <div className="flex">
-                            <h5 className="text-[rgb(33,43,54)] text-base font-semibold">
-                                Total
-                            </h5>
-                            <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-base font-semibold">
-                                {(booking?.travellers * booking?.moreData?.price).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
-                            </h5>
+                            <div className="flex sm:w-full">
+                                <h5 className="text-[rgb(33,43,54)] text-base font-semibold sm:w-full">
+                                    Total
+                                </h5>
+                                <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-base font-semibold sm:w-full">
+                                    {totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                                </h5>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div className="flex flex-col gap-8">
-                    <div className="p-6 h-max sm:p-4" style={{
+                    <div className="w-full p-6 h-max sm:p-4" style={{
                         backgroundColor: "rgb(255, 255, 255)",
                         color: "rgb(33, 43, 54)",
                         transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
                         boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px",
                         borderRadius: "16px",
                     }}>
-                        {booking?.status === "pending" ?
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => handleConfirm({ status: "cancelled" })}
-                                    className="px-6 py-3 rounded-lg bg-red-600 text-white text-sm font-semibold text-center transition duration-300 ease-in-out hover:bg-red-700 sm:px-3 sm:py-2.5"
-                                >
-                                    Cancel Booking
-                                </button>
-                                <button
-                                    onClick={() => handleConfirm({ status: "confirmed" })}
-                                    className="px-6 py-3 rounded-lg bg-white text-black border border-gray-300 text-sm font-semibold text-center transition duration-300 ease-in-out hover:bg-gray-100 sm:px-3 sm:py-2.5"
-                                > Confirm Booking
-                                </button>
-                            </div> :
-                            <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
-                                Payment Details
-                            </h4>
-                        }
+                        <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
+                            Booking Setup
+                        </h4>
+                        <div className="py-6">
+                            {booking?.status === "pending" ?
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => handleConfirm({ status: "confirmed" })}
+                                        className="w-full px-6 py-3 rounded-lg bg-white text-black border border-gray-300 text-sm font-semibold text-center transition duration-300 ease-in-out hover:bg-gray-100 sm:px-3 sm:py-2.5"
+                                    > Confirm Booking
+                                    </button>
+                                    <button
+                                        onClick={() => handleConfirm({ status: "cancelled" })}
+                                        className="w-full px-6 py-3 rounded-lg bg-red-600 text-white text-sm font-semibold text-center transition duration-300 ease-in-out hover:bg-red-700 sm:px-3 sm:py-2.5"
+                                    >
+                                        Cancel Booking
+                                    </button>
+                                </div> : (booking?.status === "cancelled" && (booking?.paymentStatus === "paid" || booking?.paymentStatus === "pending")) ?
+                                    <div className="w-full">
+                                        <button
+                                            onClick={() => handleConfirm({ status: "refunded" })}
+                                            className="w-full px-6 py-3 rounded-lg bg-[#276c79a8] text-white text-sm font-semibold text-center transition duration-300 ease-in-out hover:bg-[#276c79] sm:px-3 sm:py-2.5"
+                                        >
+                                            Refund Booking
+                                        </button>
+                                    </div> : booking?.status === "confirmed" && booking?.paymentStatus === "paid" ?
+                                        <div className="w-full  bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)] rounded-md px-1.5 text-center">
+                                            <p className="h-6 text-xs font-bold inline-flex items-center whitespace-nowrap">
+                                                Confirmed
+                                            </p>
+                                        </div> : booking?.status === "cancelled" && booking?.paymentStatus === "refunded" ?
+                                            <div className="w-full bg-red-200 text-red-700 rounded-md px-1.5 text-center">
+                                                <p className="h-6 text-xs font-bold inline-flex items-center whitespace-nowrap">
+                                                    Cancelled
+                                                </p>
+                                            </ div>
+                                            : <h4 className="text-[rgb(33,43,54)] text-lg font-bold">
+                                                Payment Details
+                                            </h4>
+                            }
+                        </div>
                     </div>
                     <div className="p-6 h-max" style={{
                         backgroundColor: "rgb(255, 255, 255)",
@@ -308,6 +376,13 @@ export const BookingActivities = () => {
                 title={title}
                 text={text}
                 handleClick={handleChangeStatus}
+            />
+            <ConfirmPassKeyModal
+                passkey={passKey}
+                setPassKey={setPassKey}
+                openPassKey={isPassKeyOpen}
+                setOpenPasskey={setIsPassKeyOpen}
+                setOpenConfirmModal={setOpen}
             />
         </div>
     )

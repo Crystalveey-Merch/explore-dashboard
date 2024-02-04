@@ -10,13 +10,14 @@ const statusOptions = [
     // { name: "Refunded", value: "refunded" }
 ]
 
-export const StatusDropDown = ({ booking, setText, setOpen, setPickedStatus }: any) => {
+export const StatusDropDown = ({ booking, setText, setIsPassKeyOpen, setPickedStatus }: any) => {
+   
 
     const handleClick = ({ status }: any) => {
         if (booking?.status === status) {
             return
         }  
-        setOpen(true);
+        setIsPassKeyOpen(true);
         setPickedStatus(status);
         // setText({`you want to change the status of this booking to ${status}?)`});
         setText(`you want to change the status of this booking to "${status}" ?`);
@@ -79,7 +80,7 @@ export const StatusDropDown = ({ booking, setText, setOpen, setPickedStatus }: a
                                 <div className="overflow-hidden min-w-[140px] rounded-lg shadow-lg ring-1 ring-black/5"
                                     style={{ boxShadow: "rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) -20px 20px 40px -4px" }}
                                 >
-                                    <div className="relative grid gap-1 bg-white p-1 lg:grid-cols-2 bg-gradient-to-bl from-purple-50 via-white to-green-50 transform transition-transform duration-500 ease-out"
+                                    <div className="relative grid gap-1 bg-white p-1 bg-gradient-to-bl from-purple-50 via-white to-green-50 transform transition-transform duration-500 ease-out"
                                     >
                                         {statusOptions.map((item) => (
                                             <button
