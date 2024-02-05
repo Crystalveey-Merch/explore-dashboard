@@ -31,7 +31,8 @@ import {
 import { AtelierOverview } from './Pages/Atelier';
 import { All, Cancelled, Installments, Paid, Review, Refunded, Booking } from "./Pages/Explore/TravelBookinngs"
 import { AllActivities, CancelledActivities, InstallmentActivities, PaidActivities, ReviewActivities, RefundedActivities, BookingActivities } from "./Pages/Explore/ActivitiesBookings"
-import {AllRetreats, CancelledRetreats, InstallmentRetreats, PaidRetreats, ReviewRetreats, RefundedRetreats, BookingRetreats} from "./Pages/Explore/RetreatBookings"
+import { AllRetreats, CancelledRetreats, InstallmentRetreats, PaidRetreats, ReviewRetreats, RefundedRetreats, BookingRetreats } from "./Pages/Explore/RetreatBookings"
+import { Waitlist } from './Components/Explore/Waitlist';
 import { UploadProductForm } from './Components/Atelier/UploadProduct/UploadProductForm';
 import { AllProducts } from './Components/Atelier/AllProducts';
 import { Refurblish } from './Components/Atelier/Refurblish';
@@ -472,6 +473,14 @@ function App() {
           element={
             <ExploreDasboardLayout>
               <BookingRetreats />
+            </ExploreDasboardLayout>
+          }
+        />
+        <Route
+          path="/explore/waitlist/:packageTitle"
+          element={
+            <ExploreDasboardLayout>
+              <Waitlist />
             </ExploreDasboardLayout>
           }
         />

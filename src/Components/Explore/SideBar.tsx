@@ -19,9 +19,10 @@ import flightSVG from "../../assets/SVG/Dashboard/flight-takeoff.svg"
 import hotelSVG from "../../assets/SVG/Dashboard/hotel.svg"
 import visaSVG from "../../assets/SVG/Dashboard/passport.svg"
 import routeSVG from "../../assets/SVG/Dashboard/route-solid.svg"
+import bellRingSVG from "../../assets/SVG/Dashboard/bell-ring.svg"
 
 
-export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: { travelBookings: any[], activityBookings: any[], retreatBookings: any[] }) => {
+export const SideBar = ({ travelBookings, activityBookings, retreatBookings, waitList }: { travelBookings: any[], activityBookings: any[], retreatBookings: any[], waitList: any[] }) => {
 
     const dispatch = useDispatch();
     const [activityDropdown, setActivityDropdown] = useState<boolean>(false);
@@ -31,6 +32,7 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
     const [activitiesBookingDropdown, setActivitiesBookingDropdown] = useState<boolean>(false);
     const [retreatsBookingDropdown, setRetreatsBookingDropdown] = useState<boolean>(false)
     const [bookingDropdown, setBookingDropdown] = useState<boolean>(false);
+    const [waitlistDropdown, setWaitlistDropdown] = useState<boolean>(false);
 
 
     const handleMenu = () => {
@@ -46,6 +48,10 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
         });
         dispatch(toggleMenu())
     }
+
+    const convertedTitle = (title: string) => {
+        return title.toLowerCase().split(" ").join("-");
+    };
 
     return (
         <div className="bar-links xl:z-10" onClick={handleMenu}>
@@ -82,7 +88,7 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
                             </svg>
                         </button>
                     </div>
-                    <div className="h-full bg-[rgb(0,108,156)] pt-10 p-2 flex flex-col gap-5 sm:py-3 sm:p-1">
+                    <div className="h-full bg-[rgb(0,108,156)] pt-10 p-2 flex flex-col gap-5 overflow-y-scroll scrollbar-hide sm:py-3 sm:p-1">
                         {/* Overview */}
                         <div className="flex flex-col gap-2.5">
                             <h4 className="pl-2 uppercase font-extrabold text-[0.75rem] text-gray-100">
@@ -121,7 +127,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
                                                 setRetreatPackageDropdown(false),
                                                 setActivitiesBookingDropdown(false),
                                                 setBookingDropdown(false),
-                                                setBookingDropdown(false)
+                                                setRetreatsBookingDropdown(false),
+                                                setWaitlistDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -257,7 +264,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
                                                 setRetreatPackageDropdown(false),
                                                 setTravelBookingDropdown(false),
                                                 setBookingDropdown(false),
-                                                setBookingDropdown(false)
+                                                setRetreatsBookingDropdown(false),
+                                                setWaitlistDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -391,7 +399,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
                                                 setRetreatPackageDropdown(false),
                                                 setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
-                                                setBookingDropdown(false)
+                                                setBookingDropdown(false),
+                                                setWaitlistDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -511,9 +520,83 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
                                     </ul>
                                 </Collapsible>
                             </div>
+
+                            <div className="xl:px-1">
+                                <Collapsible
+                                    trigger={
+                                        <button
+                                            className={`flex justify-between w-full h-10 mb-1 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer`}
+                                            onClick={() => (
+                                                setBookingDropdown(!bookingDropdown),
+                                                setActivityDropdown(false),
+                                                setTravelPackageDropdown(false),
+                                                setRetreatPackageDropdown(false),
+                                                setActivitiesBookingDropdown(false),
+                                                setRetreatsBookingDropdown(false),
+                                                setTravelBookingDropdown(false),
+                                                setWaitlistDropdown(false)
+                                            )}
+                                        >
+                                            <div className="flex gap-3.5 items-center">
+                                                <img src={bookingsSVG} alt="bookings svg" className="w-6 h-6" />
+                                                <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/bookings" ? "text-white" : "text-white"}`}>
+                                                    Bookings
+                                                </h4>
+                                            </div>
+                                            <svg
+                                                className={`w-4 h-4 transform transition-transform duration-500 ${bookingDropdown ? "rotate-180" : ""}`}
+                                                aria-hidden="true"
+                                                fill="none"
+                                                stroke="#ffffff"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M19 9l-7 7-7-7"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                    }
+                                    open={bookingDropdown}
+                                    transitionTime={300}
+                                    easing="ease-in-out"
+                                >
+                                    <ul
+                                        className={`pl-1 flex flex-col gap-1.5 w-full transition-all duration-500 ease-in-out`}
+                                    >
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/flight-bookings" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/flight-bookings" ? "bg-gray-500" : ""}`}>
+                                                <img src={flightSVG} alt="plus" className="w-4 h-4" />
+                                                <p className={`font-semibold text-base sm:text-[15px] sm:block ${location.pathname === "/explore/flight-bookings" ? "text-white" : "text-white"}`}>
+                                                    Flight Bookings
+                                                </p>
+                                            </NavLink>
+                                        </li>
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/hotel-reservations" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/hotel-reservations" ? "bg-gray-500" : ""}`}>
+                                                <img src={hotelSVG} alt="plus" className="w-4 h-4" />
+                                                <p className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/hotel-reservations" ? "text-white" : "text-white"}`}>
+                                                    Hotel Reservations
+                                                </p>
+                                            </NavLink>
+                                        </li>
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/visa-applications" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/visa-applications" ? "bg-gray-500" : ""}`}>
+                                                <img src={visaSVG} alt="plus" className="w-4 h-4" />
+                                                <p className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/visa-applications" ? "text-white" : "text-white"}`}>
+                                                    Visa Applications
+                                                </p>
+                                            </NavLink>
+                                        </li>
+                                    </ul>
+                                </Collapsible>
+                            </div>
                         </div>
                         {/* Bookings End */}
-                        {/* Managementg */}
+                        {/* Management */}
                         <div className="flex flex-col gap-2.5">
                             <h4 className="pl-2 uppercase font-extrabold text-[0.75rem] text-gray-100">
                                 <span className="">
@@ -532,7 +615,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
                                                 setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
-                                                setBookingDropdown(false)
+                                                setBookingDropdown(false),
+                                                setWaitlistDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -595,7 +679,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
                                                 setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
-                                                setBookingDropdown(false)
+                                                setBookingDropdown(false),
+                                                setWaitlistDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -660,7 +745,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
                                                 setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
-                                                setBookingDropdown(false)
+                                                setBookingDropdown(false),
+                                                setWaitlistDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -713,29 +799,40 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
                                     </ul>
                                 </Collapsible>
                             </div>
+                        </div>
+                        {/* Management End */}
+                        {/* Marketing */}
+                        <div className="flex flex-col gap-2.5">
+                            <h4 className="pl-2 uppercase font-extrabold text-[0.75rem] text-gray-100">
+                                <span className="">
+                                    Marketing
+                                </span>
+                            </h4>
+                            {/* wailist */}
                             <div className="xl:px-1">
                                 <Collapsible
                                     trigger={
                                         <button
                                             className={`flex justify-between w-full h-10 mb-1 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer`}
                                             onClick={() => (
-                                                setBookingDropdown(!bookingDropdown),
+                                                setWaitlistDropdown(!waitlistDropdown),
                                                 setActivityDropdown(false),
                                                 setTravelPackageDropdown(false),
                                                 setRetreatPackageDropdown(false),
+                                                setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
-                                                setTravelBookingDropdown(false)
+                                                setBookingDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
-                                                <img src={bookingsSVG} alt="bookings svg" className="w-6 h-6" />
-                                                <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/bookings" ? "text-white" : "text-white"}`}>
-                                                    Bookings
+                                                <img src={bellRingSVG} alt="bell" className="w-6 h-6" />
+                                                <h4 className={`font-semibold text-base sm:text-[15px] sm:block ${location.pathname === "/explore/waitlist" ? "text-white" : "text-white"}`}>
+                                                    Waitlist
                                                 </h4>
                                             </div>
                                             <svg
-                                                className={`w-4 h-4 transform transition-transform duration-500 ${bookingDropdown ? "rotate-180" : ""}`}
+                                                className={`w-4 h-4 transform transition-transform duration-500 ${waitlistDropdown ? "rotate-180" : ""}`}
                                                 aria-hidden="true"
                                                 fill="none"
                                                 stroke="#ffffff"
@@ -751,51 +848,47 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: {
                                             </svg>
                                         </button>
                                     }
-                                    open={bookingDropdown}
+                                    open={waitlistDropdown}
                                     transitionTime={300}
                                     easing="ease-in-out"
                                 >
                                     <ul
-                                        className={`pl-1 flex flex-col gap-1.5 w-full transition-all duration-500 ease-in-out`}
+                                        className={`pl-1 flex flex-col gap-1.5 w-full transition-all duration-500 ease-in-out `}
                                     >
-                                        <li className="bar-item hover:text-gray-400">
-                                            <NavLink to="/explore/flight-bookings" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/flight-bookings" ? "bg-gray-500" : ""}`}>
-                                                <img src={flightSVG} alt="plus" className="w-4 h-4" />
-                                                <p className={`font-semibold text-base sm:text-[15px] sm:block ${location.pathname === "/explore/flight-bookings" ? "text-white" : "text-white"}`}>
-                                                    Flight Bookings
-                                                </p>
-                                            </NavLink>
-                                        </li>
-                                        <li className="bar-item hover:text-gray-400">
-                                            <NavLink to="/explore/hotel-reservations" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/hotel-reservations" ? "bg-gray-500" : ""}`}>
-                                                <img src={hotelSVG} alt="plus" className="w-4 h-4" />
-                                                <p className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/hotel-reservations" ? "text-white" : "text-white"}`}>
-                                                    Hotel Reservations
-                                                </p>
-                                            </NavLink>
-                                        </li>
-                                        <li className="bar-item hover:text-gray-400">
-                                            <NavLink to="/explore/visa-applications" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/visa-applications" ? "bg-gray-500" : ""}`}>
-                                                <img src={visaSVG} alt="plus" className="w-4 h-4" />
-                                                <p className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/visa-applications" ? "text-white" : "text-white"}`}>
-                                                    Visa Applications
-                                                </p>
-                                            </NavLink>
-                                        </li>
+                                        {Object.entries(waitList).map(([packageTitle, entries]) => (
+                                            <li key={packageTitle} className="bar-item hover:text-gray-400">
+                                                <NavLink to={`/explore/waitlist/${convertedTitle(packageTitle)}`}
+                                                    className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === `/explore/waitlist/${convertedTitle(packageTitle)}` ? "bg-gray-500" : ""}`}
+                                                >
+                                                    <p className={`font-semibold text-base sm:text-[15px] ${location.pathname === `/explore/waitlist/${convertedTitle(packageTitle)}` ? "text-white" : "text-white"}`}>
+                                                        <span className="sm:block">
+                                                            {packageTitle.length > 15 ? `${packageTitle.substring(0, 15)}...` : packageTitle}
+                                                        </span>
+                                                    </p>
+                                                    <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                        <p className="text-xs text-[#FFFFFF] font-bold">
+                                                            {entries.length}
+                                                        </p>
+                                                    </div>
+                                                </NavLink>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </Collapsible>
                             </div>
-                            <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
-                                <NavLink
-                                    to="/explore/invoices"
-                                    className={`flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 cursor-pointer ${location.pathname === "/explore/invoices" ? "bg-gray-500" : ""}`}
-                                >
-                                    <img src={invoiceSVG} alt="activity" className="w-6 h-6" />
-                                    <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/invoices" ? "text-white" : "text-white"}`}>
-                                        Invoices
-                                    </h4>
-                                </NavLink>
-                            </div>
+                        </div>
+                        {/* Marketing End */}
+                        {/* Finance */}
+                        <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
+                            <NavLink
+                                to="/explore/invoices"
+                                className={`flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 cursor-pointer ${location.pathname === "/explore/invoices" ? "bg-gray-500" : ""}`}
+                            >
+                                <img src={invoiceSVG} alt="activity" className="w-6 h-6" />
+                                <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/invoices" ? "text-white" : "text-white"}`}>
+                                    Invoices
+                                </h4>
+                            </NavLink>
                         </div>
                     </div>
                 </div>

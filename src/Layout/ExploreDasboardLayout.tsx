@@ -19,6 +19,7 @@ export const ExploreDasboardLayout = ({ children }: { children: ReactNode }) => 
     const [travelBookings, setTravelBookings] = useState<any[]>([])
     const [activityBookings, setActivityBookings] = useState<any[]>([])
     const [retreatBookings, setRetreatBookings] = useState<any[]>([])
+    const [waitList, setWaitList] = useState<any[]>([])
 
     useEffect(() => {
         const fetchTravelBookings = async () => {
@@ -39,12 +40,54 @@ export const ExploreDasboardLayout = ({ children }: { children: ReactNode }) => 
             setRetreatBookings(bookings.filter((booking: { type: string }) => booking.type === "Retreats Packages"));
         }
         fetchTravelBookings()
+        fetchWaitlist();
     }, [])
+
+    const fetchWaitlist = async () => {
+        try {
+            const waitlistRef = collection(db, 'waitlist');
+            const waitlistSnapshot = await getDocs(waitlistRef);
+
+            const waitlistData = [] as any[];
+
+            waitlistSnapshot.forEach((doc) => {
+                const waitlistEntry = {
+                    id: doc.id,
+                    ...doc.data(),
+                };
+                waitlistData.push(waitlistEntry);
+            });
+
+            // console.log(waitlistData);
+
+            // Group by packageTitle using an object
+            const groupedWaitlist = waitlistData.reduce((acc, entry) => {
+                const { packageTitle, ...rest } = entry;
+                if (!acc[packageTitle]) {
+                    acc[packageTitle] = [];
+                }
+                acc[packageTitle].push(rest);
+                return acc;
+            }, {});
+
+            // console.log('Grouped Waitlist:', groupedWaitlist);
+
+            // Set the grouped data in your state or use it as needed
+            setWaitList(groupedWaitlist);
+        } catch (error) {
+            console.error('Error fetching waitlist:', error);
+            // Handle the error as needed
+        }
+    };
+
+
+    // console.log(waitList)
 
     return (
         <div className='flex h-screen overflow-hidden'>
             <div className='z-30'>
-                <SideBar travelBookings={travelBookings} activityBookings={activityBookings} retreatBookings={retreatBookings} />
+                <SideBar travelBookings={travelBookings} activityBookings={activityBookings} retreatBookings={retreatBookings} waitList={waitList}
+                />
             </div>
             <div className='flex flex-grow overflow-auto'>
                 {/* flex-grow or flex-1 */}
