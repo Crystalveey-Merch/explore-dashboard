@@ -34,7 +34,7 @@ export const BookingActivities = () => {
         fetchBooking();
     }, [id]);
 
-    const bookinggDate = handleFormatDate(booking?.dateCreated) + " " + handleFormatTime(booking?.timeCreated)
+    const bookingDate = handleFormatDate(booking?.dateCreated) + " " + handleFormatTime(booking?.timeCreated)
 
     const checkInDate = handleFormatDate2(booking?.date)
 
@@ -82,10 +82,10 @@ export const BookingActivities = () => {
         setOpen(false);
 
         if (pickedStatus === "confirmed" && booking?.paymentMethod === "bank") {
-            ConfirmedBookingForPayments(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookinggDate, checkInDate, booking?.title)
+            ConfirmedBookingForPayments(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookingDate, checkInDate, booking?.title)
         }
         else if (pickedStatus === "confirmed" && booking?.paymentMethod === "paystack") {
-            ConfirmationBookingGeneralConfirmed(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookinggDate, checkInDate, booking?.title)
+            ConfirmationBookingGeneralConfirmed(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookingDate, checkInDate, booking?.title)
         }
 
         // show toast

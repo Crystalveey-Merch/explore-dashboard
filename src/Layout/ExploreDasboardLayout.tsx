@@ -18,6 +18,7 @@ export const ExploreDasboardLayout = ({ children }: { children: ReactNode }) => 
 
     const [travelBookings, setTravelBookings] = useState<any[]>([])
     const [activityBookings, setActivityBookings] = useState<any[]>([])
+    const [retreatBookings, setRetreatBookings] = useState<any[]>([])
 
     useEffect(() => {
         const fetchTravelBookings = async () => {
@@ -32,8 +33,10 @@ export const ExploreDasboardLayout = ({ children }: { children: ReactNode }) => 
             });
             // set bookings of type "Promoted Travel Package" to state
             setTravelBookings(bookings.filter((booking: { type: string }) => booking.type === "Promoted Travel Package"));
-            // set bookings of type "Activity" to state
+            // set bookings of type "Exciting Activities" to state
             setActivityBookings(bookings.filter((booking: { type: string }) => booking.type === "Exciting Activities"));
+            // set bookings of type "Retreats Packages" to state
+            setRetreatBookings(bookings.filter((booking: { type: string }) => booking.type === "Retreats Packages"));
         }
         fetchTravelBookings()
     }, [])
@@ -41,7 +44,7 @@ export const ExploreDasboardLayout = ({ children }: { children: ReactNode }) => 
     return (
         <div className='flex h-screen overflow-hidden'>
             <div className='z-30'>
-                <SideBar travelBookings={travelBookings} activityBookings={activityBookings} />
+                <SideBar travelBookings={travelBookings} activityBookings={activityBookings} retreatBookings={retreatBookings} />
             </div>
             <div className='flex flex-grow overflow-auto'>
                 {/* flex-grow or flex-1 */}

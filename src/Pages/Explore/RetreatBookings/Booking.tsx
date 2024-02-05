@@ -7,13 +7,10 @@ import { handleFormatDate, handleFormatTime, ConfirmPassKeyModal, ConfirmModal, 
 import { StatusDropDown } from "../../../Components";
 import printSVG from "../../../assets/SVG/Dashboard/Action/print.svg";
 import travelImage from "../../../assets/Images/Dashboard/travel-location.png"
-import handleFormattedDateRange from "../../../Hooks/handleFormattedDateRange";
 import { ConfirmationBookingGeneralConfirmed, ConfirmedBookingForPayments } from "../../../Components/Explore/Emails";
 
 
-
-
-export const Booking = () => {
+export const BookingRetreats = () => {
     const [booking, setBooking] = useState<any>(null);
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -56,7 +53,7 @@ export const Booking = () => {
 
     const bookingDate = handleFormatDate(booking?.dateCreated) + " " + handleFormatTime(booking?.timeCreated)
 
-    const checkInDate = handleFormatDate2(booking?.moreData?.startDate) + "-" + handleFormatDate2(booking?.moreData?.endDate)
+    const checkInDate = handleFormatDate2(booking?.date)
 
     // status change function
     const handleChangeStatus = async () => {
@@ -105,7 +102,6 @@ export const Booking = () => {
         // setText({`you want to change the status of this booking to ${status}?)`});
         setText(`you want to change the status of this booking to "${status}" ?`);
     }
-
 
     return (
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-6 sm:w-[100vw] sm:gap-9">
@@ -186,7 +182,7 @@ export const Booking = () => {
                 </div>
             </div>
             <div className="grid grid-cols-3 grid-flow-row gap-8 lg:grid-cols-1">
-                <div className="p-6 col-span-2 flex flex-col gap-6 lg:col-span-1 sm:P-4"
+                <div className="p-6 col-span-2 flex flex-col lg:col-span-1 sm:p-4"
                     style={{
                         backgroundColor: "rgb(255, 255, 255)",
                         color: "rgb(33, 43, 54)",
@@ -243,7 +239,7 @@ export const Booking = () => {
                                         {booking?.title}
                                     </p>
                                     <p className="text-sm text-gray-500">
-                                        {handleFormattedDateRange(booking?.moreData.startDate, booking?.moreData.endDate)}
+                                        {handleFormatDate2(booking?.date)}
                                     </p>
                                 </div>
                             </div>
@@ -280,13 +276,13 @@ export const Booking = () => {
                                 </h5>
                             </div>
                             {/* <div className="flex">
-                            <h5 className="text-[rgb(99,115,129)] text-sm font-normal">
-                                Tax
-                            </h5>
-                            <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-sm font-semibold">
-                                0
-                            </h5>
-                        </div> */}
+                        <h5 className="text-[rgb(99,115,129)] text-sm font-normal">
+                            Tax
+                        </h5>
+                        <h5 className="w-[200px] text-right text-[rgb(33,43,54)] text-sm font-semibold">
+                            0
+                        </h5>
+                    </div> */}
                             <div className="flex sm:w-full">
                                 <h5 className="text-[rgb(33,43,54)] text-base font-semibold sm:w-full">
                                     Total

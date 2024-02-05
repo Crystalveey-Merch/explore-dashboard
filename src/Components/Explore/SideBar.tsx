@@ -14,13 +14,14 @@ import travelPackageSVG from "../../assets/SVG/Dashboard/tour.svg"
 import retreatPackageSVG from "../../assets/SVG/Dashboard/adventure-relaxation-shelter.svg"
 import bookingsSVG from "../../assets/SVG/Dashboard/ticket.svg"
 import activitiesSVG from "../../assets/SVG/Dashboard/square-person-confined-solid.svg"
+import retreatsSVG from "../../assets/SVG/Dashboard/adventure-journey-location.svg"
 import flightSVG from "../../assets/SVG/Dashboard/flight-takeoff.svg"
 import hotelSVG from "../../assets/SVG/Dashboard/hotel.svg"
 import visaSVG from "../../assets/SVG/Dashboard/passport.svg"
 import routeSVG from "../../assets/SVG/Dashboard/route-solid.svg"
 
 
-export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: any[], activityBookings: any[] }) => {
+export const SideBar = ({ travelBookings, activityBookings, retreatBookings }: { travelBookings: any[], activityBookings: any[], retreatBookings: any[] }) => {
 
     const dispatch = useDispatch();
     const [activityDropdown, setActivityDropdown] = useState<boolean>(false);
@@ -28,6 +29,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
     const [retreatPackageDropdown, setRetreatPackageDropdown] = useState<boolean>(false);
     const [travelBookingDropdown, setTravelBookingDropdown] = useState<boolean>(false);
     const [activitiesBookingDropdown, setActivitiesBookingDropdown] = useState<boolean>(false);
+    const [retreatsBookingDropdown, setRetreatsBookingDropdown] = useState<boolean>(false)
     const [bookingDropdown, setBookingDropdown] = useState<boolean>(false);
 
 
@@ -118,6 +120,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 setTravelPackageDropdown(false),
                                                 setRetreatPackageDropdown(false),
                                                 setActivitiesBookingDropdown(false),
+                                                setBookingDropdown(false),
                                                 setBookingDropdown(false)
                                             )}
                                         >
@@ -253,6 +256,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 setTravelPackageDropdown(false),
                                                 setRetreatPackageDropdown(false),
                                                 setTravelBookingDropdown(false),
+                                                setBookingDropdown(false),
                                                 setBookingDropdown(false)
                                             )}
                                         >
@@ -374,6 +378,139 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                 </Collapsible>
                             </div>
                             {/* Activities Booking End */}
+                            {/* Retreats Booking */}
+                            <div className="xl:px-1">
+                                <Collapsible
+                                    trigger={
+                                        <button
+                                            className={`flex justify-between w-full h-10 mb-1 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer`}
+                                            onClick={() => (
+                                                setRetreatsBookingDropdown(!retreatsBookingDropdown),
+                                                setActivityDropdown(false),
+                                                setTravelPackageDropdown(false),
+                                                setRetreatPackageDropdown(false),
+                                                setTravelBookingDropdown(false),
+                                                setActivitiesBookingDropdown(false),
+                                                setBookingDropdown(false)
+                                            )}
+                                        >
+                                            <div className="flex gap-3.5 items-center">
+                                                <img src={retreatsSVG} alt="retreats" className="w-6 h-6" />
+                                                <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname.includes("/explore/retreat-bookings") ? "text-white" : "text-white"}`}>
+                                                    Retreats Bookings
+                                                </h4>
+                                            </div>
+                                            <svg
+                                                className={`w-4 h-4 transform transition-transform duration-500 ${retreatsBookingDropdown ? "rotate-180" : ""}`}
+                                                aria-hidden="true"
+                                                fill="none"
+                                                stroke="#ffffff"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M19 9l-7 7-7-7"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                    }
+                                    open={retreatsBookingDropdown}
+                                    transitionTime={300}
+                                    easing="ease-in-out"
+                                >
+                                    <ul
+                                        className={`pl-1 flex flex-col gap-1.5 w-full transition-all duration-500 ease-in-out `}
+                                    >
+                                        {/* All Retreats Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/retreat-bookings" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/retreat-bookings" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/retreat-bookings" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> All </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {retreatBookings.length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* All Retreats Bookings End */}
+                                        {/* Pending Retreats Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/retreat-bookings/pending" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/retreat-bookings/pending" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/retreat-bookings/pending" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> In Review </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-semibold">
+                                                        {retreatBookings.filter((booking: { status: string }) => booking.status === "pending").length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Pending Retreats Bookings End */}
+                                        {/* Confirmed Retreats Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/retreat-bookings/confirmed" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/retreat-bookings/confirmed" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/retreat-bookings/confirmed" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Confirmed </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {retreatBookings.filter((booking: { status: string }) => booking.status === "confirmed").length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Confirmed Retreats Bookings End */}
+                                        {/* Cancelled Retreats Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/retreat-bookings/cancelled" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/retreat-bookings/cancelled" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/retreat-bookings/cancelled" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Cancelled </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {retreatBookings.filter((booking: { status: string }) => booking?.status === "cancelled").length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Cancelled Retreats Bookings End */}
+                                        {/* Refunded Retreats Bookings*/}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/retreat-bookings/refunded" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/retreat-bookings/refunded" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/retreat-bookings/refunded" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Refunded </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {retreatBookings.filter((booking: { paymentStatus: string }) => booking.paymentStatus === "refunded").length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Refunded Retreats Bookings End */}
+                                        {/* Installment Retreats Bookings*/}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/retreat-bookings/installment" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/retreat-bookings/installment" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/retreat-bookings/installment" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Installment </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {retreatBookings.filter((booking: { installment: boolean }) => booking.installment === true).length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Installment Retreats Bookings End */}
+                                    </ul>
+                                </Collapsible>
+                            </div>
                         </div>
                         {/* Bookings End */}
                         {/* Managementg */}
@@ -394,6 +531,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 setRetreatPackageDropdown(false),
                                                 setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
+                                                setRetreatsBookingDropdown(false),
                                                 setBookingDropdown(false)
                                             )}
                                         >
@@ -456,6 +594,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 setRetreatPackageDropdown(false),
                                                 setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
+                                                setRetreatsBookingDropdown(false),
                                                 setBookingDropdown(false)
                                             )}
                                         >
@@ -520,6 +659,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 setTravelPackageDropdown(false),
                                                 setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
+                                                setRetreatsBookingDropdown(false),
                                                 setBookingDropdown(false)
                                             )}
                                         >
@@ -584,6 +724,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 setTravelPackageDropdown(false),
                                                 setRetreatPackageDropdown(false),
                                                 setActivitiesBookingDropdown(false),
+                                                setRetreatsBookingDropdown(false),
                                                 setTravelBookingDropdown(false)
                                             )}
                                         >
