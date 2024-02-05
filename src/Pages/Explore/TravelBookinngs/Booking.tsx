@@ -56,6 +56,8 @@ export const Booking = () => {
 
     const bookinggDate = handleFormatDate(booking?.dateCreated) + " " + handleFormatTime(booking?.timeCreated)
 
+    const checkInDate = handleFormatDate2(booking?.moreData?.startDate) + "-" + handleFormatDate2(booking?.moreData?.endDate)
+
     // status change function
     const handleChangeStatus = async () => {
         // if pickedStatus is paid, pending, and refunded. set status to pickedStatus else if pickedStatus is cancelled set isCancelled to true  and set status to ""
@@ -83,10 +85,10 @@ export const Booking = () => {
         // close modal
         setOpen(false);
         if (pickedStatus === "confirmed" && booking?.paymentMethod === "bank") {
-            ConfirmedBookingForPayments(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookinggDate, handleFormatDate2(booking?.moreData?.startDate), handleFormatDate2(booking?.moreData?.endDate), booking?.title)
+            ConfirmedBookingForPayments(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookinggDate, checkInDate, booking?.title)
         }
         else if (pickedStatus === "confirmed" && booking?.paymentMethod === "paystack") {
-        ConfirmationBookingGeneralConfirmed(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookinggDate, handleFormatDate2(booking?.moreData?.startDate), handleFormatDate2(booking?.moreData?.endDate), booking?.title)
+            ConfirmationBookingGeneralConfirmed(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookinggDate, checkInDate, booking?.title)
         }
 
         // show toast

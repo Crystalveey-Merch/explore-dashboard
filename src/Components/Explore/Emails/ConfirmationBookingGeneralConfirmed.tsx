@@ -9,7 +9,7 @@ const config = new Configuration({
 const emailsApi = new EmailsApi(config);
 
 
-export const ConfirmationBookingGeneralConfirmed = async (recipientEmail: string, firstName: string, price: string, bookingId: string, travellers: any, bookingDate: any, startDate: any, endDate: any, itemName: string) => {
+export const ConfirmationBookingGeneralConfirmed = async (recipientEmail: string, firstName: string, price: string, bookingId: string, travellers: any, bookingDate: any, checkInDate: any, itemName: string) => {
     try {
         const emailTransactionalMessageData: EmailTransactionalMessageData = {
             Recipients: {
@@ -30,8 +30,7 @@ export const ConfirmationBookingGeneralConfirmed = async (recipientEmail: string
                     bookingid: bookingId,
                     travelling: travellers,
                     bookingdate: bookingDate,
-                    startdate: startDate,
-                    enddate: endDate,
+                    checkindate: checkInDate,
                     itemname: itemName,
                 },
                 From: "ExploreCrystalveey <muzardemoses@crystalveey.com>",

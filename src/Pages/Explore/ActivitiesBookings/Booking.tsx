@@ -7,6 +7,7 @@ import { handleFormatDate, handleFormatTime, ConfirmModal, ConfirmPassKeyModal, 
 import { StatusDropDown } from "../../../Components";
 import printSVG from "../../../assets/SVG/Dashboard/Action/print.svg";
 import travelImage from "../../../assets/Images/Dashboard/travel-location.png"
+import { ConfirmedBookingForPayments, ConfirmationBookingGeneralConfirmed } from "../../../Components/Explore/Emails";
 
 
 
@@ -32,6 +33,15 @@ export const BookingActivities = () => {
         };
         fetchBooking();
     }, [id]);
+
+    const bookinggDate = handleFormatDate(booking?.dateCreated) + " " + handleFormatTime(booking?.timeCreated)
+
+    const checkInDate = handleFormatDate2(booking?.date)
+
+    const initialPrice = booking?.moreData?.price
+    const priceWithTravelers = booking?.travellers * initialPrice
+    const discoutedAmount = (priceWithTravelers * booking?.discount) / 100
+    const totalAmount = priceWithTravelers - discoutedAmount
 
     // 
     const [passKey, setPassKey] = useState("")
@@ -70,6 +80,14 @@ export const BookingActivities = () => {
 
         // close modal
         setOpen(false);
+
+        if (pickedStatus === "confirmed" && booking?.paymentMethod === "bank") {
+            ConfirmedBookingForPayments(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookinggDate, checkInDate, booking?.title)
+        }
+        else if (pickedStatus === "confirmed" && booking?.paymentMethod === "paystack") {
+            ConfirmationBookingGeneralConfirmed(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookinggDate, checkInDate, booking?.title)
+        }
+
         // show toast
         toast.success(`Booking status changed to ${pickedStatus}`);
         // console.log(pickedStatus);
@@ -85,10 +103,6 @@ export const BookingActivities = () => {
         setText(`you want to change the status of this booking to ${status}?`);
     }
 
-    const initialPrice = booking?.moreData?.price
-    const priceWithTravelers = booking?.travellers * initialPrice
-    const discoutedAmount = (priceWithTravelers * booking?.discount) / 100
-    const totalAmount = priceWithTravelers - discoutedAmount
 
     return (
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-6 sm:w-[100vw] sm:gap-9">
