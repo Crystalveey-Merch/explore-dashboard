@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { collection, getDocs, db, doc, updateDoc } from '../../../Config/firebase';
-import { handleFormatDate, handleFormatTime, ConfirmPassKeyModal, ConfirmModal } from "../../../Hooks"
+import { handleFormatDate, handleFormatTime, ConfirmPassKeyModal, ConfirmModal, handleFormatDate2 } from "../../../Hooks"
 import { StatusDropDown } from "../../../Components";
 import printSVG from "../../../assets/SVG/Dashboard/Action/print.svg";
 import travelImage from "../../../assets/Images/Dashboard/travel-location.png"
 import handleFormattedDateRange from "../../../Hooks/handleFormattedDateRange";
+import { ConfirmationBookingGeneralConfirmed, ConfirmedBookingForPayments } from "../../../Components/Explore/Emails";
+
 
 
 
@@ -44,6 +46,16 @@ export const Booking = () => {
     const [text, setText] = useState("");
     const title = "Are you sure";
 
+
+
+
+    const initialPrice = booking?.moreData?.price
+    const priceWithTravelers = booking?.travellers * initialPrice
+    const discoutedAmount = (priceWithTravelers * booking?.discount) / 100
+    const totalAmount = priceWithTravelers - discoutedAmount
+
+    const bookinggDate = handleFormatDate(booking?.dateCreated) + " " + handleFormatTime(booking?.timeCreated)
+
     // status change function
     const handleChangeStatus = async () => {
         // if pickedStatus is paid, pending, and refunded. set status to pickedStatus else if pickedStatus is cancelled set isCancelled to true  and set status to ""
@@ -70,6 +82,13 @@ export const Booking = () => {
 
         // close modal
         setOpen(false);
+        if (pickedStatus === "confirmed" && booking?.paymentMethod === "bank") {
+            ConfirmedBookingForPayments(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookinggDate, handleFormatDate2(booking?.moreData?.startDate), handleFormatDate2(booking?.moreData?.endDate), booking?.title)
+        }
+        else if (pickedStatus === "confirmed" && booking?.paymentMethod === "paystack") {
+        ConfirmationBookingGeneralConfirmed(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookinggDate, handleFormatDate2(booking?.moreData?.startDate), handleFormatDate2(booking?.moreData?.endDate), booking?.title)
+        }
+
         // show toast
         toast.success(`Booking status changed to ${pickedStatus}`);
         // console.log(pickedStatus);
@@ -85,10 +104,6 @@ export const Booking = () => {
         setText(`you want to change the status of this booking to "${status}" ?`);
     }
 
-    const initialPrice = booking?.moreData?.price
-    const priceWithTravelers = booking?.travellers * initialPrice
-    const discoutedAmount = (priceWithTravelers * booking?.discount) / 100
-    const totalAmount = priceWithTravelers - discoutedAmount
 
     return (
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-6 sm:w-[100vw] sm:gap-9">

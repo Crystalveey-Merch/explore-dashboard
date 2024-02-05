@@ -51,8 +51,15 @@ export const TableRow = ({ booking }: any) => {
                     </p>
                 </div>
             </td>
-            <td className="px-6 py-4 text-[rgb(33,43,54)] text-sm xl:px-3">
-                {booking.travellers}
+            <td className="px-6 py-4 text-sm xl:px-3">
+                <div className="flex flex-col gap-2">
+                    <p className="text-[rgb(33,43,54)]">
+                        {booking.travellers} {booking.travellers > 1 ? "Travellers" : "Traveller"}
+                    </p>
+                    <p className={`${booking.paymentStatus === "paid" ? "text-green-500" : booking.paymentStatus === "pending" ? "text-[#dda05a]" : "text-[#276c79a8]"} text-sm font-medium capitalize`}>
+                        {booking.paymentStatus}
+                    </p>
+                </div>
             </td>
             <td className="px-6 py-4 xl:px-3">
                 <div className="flex flex-col gap-1 items-start">
@@ -107,6 +114,6 @@ export const TableRow = ({ booking }: any) => {
                     anchorEl={anchorEl}
                 />
             </td>
-        </tr>
+        </tr >
     )
 }

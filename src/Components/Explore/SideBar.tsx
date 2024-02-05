@@ -217,7 +217,7 @@ export const SideBar = ({ travelBookings, activityBookings }: { travelBookings: 
                                                 </p>
                                                 <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
                                                     <p className="text-xs text-[#FFFFFF] font-bold">
-                                                        {travelBookings.filter((booking: { paymentStaus: string }) => booking.paymentStaus === "refunded").length}
+                                                        {travelBookings.filter((booking: { paymentStatus: string }) => booking.paymentStatus === "refunded").length}
                                                     </p>
                                                 </div>
                                             </NavLink>

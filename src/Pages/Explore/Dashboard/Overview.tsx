@@ -81,11 +81,11 @@ export const Overview = () => {
 
     const completedInstallmentsTransactionsLength = transactions.filter((transaction) => transaction.installment === true && transaction.isInstallmentCompleted === true).length;
 
-    const completedInstallmentsPercentage = (completedInstallmentsTransactionsLength / totalTransactions) * 100;
+    const completedInstallmentsPercentage = (completedInstallmentsTransactionsLength / installmentsTransactionsLength) * 100;
 
     const uncompletedInstallmentsTransactionsLength = transactions.filter((transaction) => transaction.installment === true && transaction.isInstallmentCompleted === false).length;
 
-    const uncompletedInstallmentsPercentage = (uncompletedInstallmentsTransactionsLength / totalTransactions) * 100;
+    const uncompletedInstallmentsPercentage = (uncompletedInstallmentsTransactionsLength / installmentsTransactionsLength) * 100;
 
     const overdueInstallmentsTransactionsLength = transactions.filter((transaction) => {
         if (transaction.installment) {
@@ -95,7 +95,7 @@ export const Overview = () => {
         return false;
     }).length;
 
-    const overdueInstallmentsPercentage = (overdueInstallmentsTransactionsLength / totalTransactions) * 100;
+    const overdueInstallmentsPercentage = (overdueInstallmentsTransactionsLength / installmentsTransactionsLength) * 100;
 
     // Exciting Activities transactions
     const excitingActivitiesTransactionsLength = transactions.filter((transaction) => transaction.type === 'Exciting Activities').length;
