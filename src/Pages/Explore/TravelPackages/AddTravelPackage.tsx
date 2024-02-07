@@ -174,6 +174,17 @@ export const AddTravelPackage = () => {
             setLoading(false)
             return
         }
+
+
+        // upload at two images for combo packages
+        if (title.includes('&')) {
+            if (imageOneUrl === "" || imageTwoUrl === "") {
+                toast.error("Please upload at least two images for combo packages");
+                setLoading(false)
+                return
+            }
+        }
+
         if (maxBookings === "") {
             toast.error("Please add max bookings");
             setLoading(false)
@@ -356,7 +367,7 @@ export const AddTravelPackage = () => {
                         <div className="p-4 flex flex-col gap-8">
                             <label htmlFor="title" className="flex flex-col gap-1.5 w-full">
                                 <p className="text-sm font-medium text-gray-700">
-                                    Title
+                                    Title (use & for combo packages e.g Ghana & Togo Tour)
                                 </p>
                                 <Input placeholder="e.g winter in Lebanon" name={"title"} type={"text"} value={title} onChange={(e) => setTitle(e.target.value)} className={"w-full"} required />
                             </label>
