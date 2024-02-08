@@ -26,7 +26,7 @@ import {
 } from './Pages';
 import {
   Overview,
-  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, RetreatPackages, AddRetreatPackages, EditRetreatPackages, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications
+  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, RetreatPackages, AddRetreatPackages, EditRetreatPackages, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications, PrivateTrips, ExploreVault
 } from "./Pages"
 import { AtelierOverview } from './Pages/Atelier';
 import { All, Cancelled, Installments, Paid, Review, Refunded, Booking } from "./Pages/Explore/TravelBookinngs"
@@ -308,6 +308,14 @@ function App() {
             }
           />
           <Route
+            path="/explore/private-trips"
+            element={
+              <ExploreDasboardLayout>
+                <PrivateTrips />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
             path="/explore/travel-bookings"
             element={
               <ExploreDasboardLayout>
@@ -481,6 +489,14 @@ function App() {
           element={
             <ExploreDasboardLayout>
               <Waitlist />
+            </ExploreDasboardLayout>
+          }
+        />
+        <Route
+          path="/explore/explore-vault"
+          element={
+            <ExploreDasboardLayout>
+              <ExploreVault />
             </ExploreDasboardLayout>
           }
         />

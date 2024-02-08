@@ -18,8 +18,10 @@ import retreatsSVG from "../../assets/SVG/Dashboard/adventure-journey-location.s
 import flightSVG from "../../assets/SVG/Dashboard/flight-takeoff.svg"
 import hotelSVG from "../../assets/SVG/Dashboard/hotel.svg"
 import visaSVG from "../../assets/SVG/Dashboard/passport.svg"
+import privateSVG from "../../assets/SVG/Dashboard/business-travel.svg"
 import routeSVG from "../../assets/SVG/Dashboard/route-solid.svg"
 import bellRingSVG from "../../assets/SVG/Dashboard/bell-ring.svg"
+import piggySolidSVG from "../../assets/SVG/Dashboard/piggy-bank-solid.svg"
 
 
 export const SideBar = ({ travelBookings, activityBookings, retreatBookings, waitList }: { travelBookings: any[], activityBookings: any[], retreatBookings: any[], waitList: any[] }) => {
@@ -591,6 +593,14 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                                 </p>
                                             </NavLink>
                                         </li>
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/private-trips" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/private-trips" ? "bg-gray-500" : ""}`}>
+                                                <img src={privateSVG} alt="plus" className="w-4 h-4" />
+                                                <p className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/private-trips" ? "text-white" : "text-white"}`}>
+                                                    Private Trips
+                                                </p>
+                                            </NavLink>
+                                        </li>
                                     </ul>
                                 </Collapsible>
                             </div>
@@ -875,6 +885,19 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                         ))}
                                     </ul>
                                 </Collapsible>
+                            </div>
+                            {/* wailist End */}
+                            {/* Explore Vault */}
+                            <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
+                                <NavLink
+                                    to="/explore/explore-vault"
+                                    className={`flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 cursor-pointer ${location.pathname === "/explore/explore-vault" ? "bg-gray-500" : ""}`}
+                                >
+                                    <img src={piggySolidSVG} alt="activity" className="w-6 h-6" />
+                                    <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/explore-vault" ? "text-white" : "text-white"}`}>
+                                      Explore  Vault
+                                    </h4>
+                                </NavLink>
                             </div>
                         </div>
                         {/* Marketing End */}

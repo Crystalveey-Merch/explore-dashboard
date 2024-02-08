@@ -1,19 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom"
 import TablePagination from '@mui/material/TablePagination';
 import { collection, getDocs, db } from '../../../Config/firebase';
-import { TableRow } from "../../../Components/Explore/ActivitiesBoking";
 import { Sort } from "../../../Hooks";
 import noResultImg from "../../../assets/Images/Dashboard/no-results.png"
 import { SearchInput } from "../../../Components";
+import { PrivateBookingRow } from "../../../Components";
 
-
-export const AllActivities = () => {
-    const [activitiesBookings, setActivitiesBookings] = useState<any[]>([])
-    const [displayedBookings, setDisplayedBookings] = useState<any[]>([])
-    const [bookingsFiltered, setBookingsFiltered] = useState<any[]>([])
-    // show filter
+export const PrivateTrips = () => {
+    const [privateTrips, setPrivateTrips] = useState<any[]>([]);
+    const [displayedPrivateTrips, setDisplayedPrivateTrips] = useState<any[]>([]);
+    const [filteredPrivateTrips, setFilteredPrivateTrips] = useState<any[]>([]);
     const [activeFilter, setActiveFilter] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -25,24 +22,24 @@ export const AllActivities = () => {
         setActiveTab(tab);
     };
 
+
     useEffect(() => {
-        const fetchTravelBookings = async () => {
+        const fetchPrivateTrips = async () => {
             setLoading(true);
-            const bookingsRef = collection(db, "transactions");
-            const bookingsSnapshot = await getDocs(bookingsRef);
-            const bookings: any[] = [];
-            bookingsSnapshot.forEach((doc) => {
-                bookings.push({
+            const privateTripsRef = collection(db, "private-trips");
+            const privateTripsSnapshot = await getDocs(privateTripsRef);
+            const privateTrips: any[] = [];
+            privateTripsSnapshot.forEach((doc) => {
+                privateTrips.push({
                     id: doc.id,
                     ...doc.data(),
                 });
             });
-            // set bookings of type "Exciting Activities" to state
-            setActivitiesBookings(bookings.filter((booking: { type: string }) => booking.type === "Exciting Activities"));
+            setPrivateTrips(privateTrips);
             setLoading(false);
-        }
-        fetchTravelBookings()
-    }, [])
+        };
+        fetchPrivateTrips();
+    }, []);
 
     const [status, setStatus] = useState<string>("all");
 
@@ -55,52 +52,34 @@ export const AllActivities = () => {
     useEffect(() => {
         if (status === "all") {
             if (!searchActive) {
-                setDisplayedBookings(activitiesBookings);
-                setBookingsFiltered(activitiesBookings);
+                setDisplayedPrivateTrips(privateTrips);
+                setFilteredPrivateTrips(privateTrips);
             } else {
-                setDisplayedBookings(searchResults);
+                setDisplayedPrivateTrips(searchResults);
             }
         } else if (status === "confirmed") {
             if (!searchActive) {
-                setDisplayedBookings(activitiesBookings.filter((booking) => booking.status === "confirmed"));
-                setBookingsFiltered(activitiesBookings.filter((booking) => booking.status === "confirmed"));
+                setDisplayedPrivateTrips(privateTrips.filter((booking) => booking.status === "confirmed"));
+                setFilteredPrivateTrips(privateTrips.filter((booking) => booking.status === "confirmed"));
             } else {
-                setDisplayedBookings(searchResults.filter((booking) => booking.status === "confirmed"));
-            }
-        } else if (status === "installment") {
-            if (!searchActive) {
-                setDisplayedBookings(activitiesBookings.filter((booking) => booking.installment === true));
-                setBookingsFiltered(activitiesBookings.filter((booking) => booking.installment === true));
-            } else {
-                setDisplayedBookings(searchResults.filter((booking) => booking.installment === true));
+                setDisplayedPrivateTrips(searchResults.filter((booking) => booking.status === "confirmed"));
             }
         } else if (status === "pending") {
             if (!searchActive) {
-                setDisplayedBookings(activitiesBookings.filter((booking) => booking.status === "pending"));
-                setBookingsFiltered(activitiesBookings.filter((booking) => booking.status === "pending"));
+                setDisplayedPrivateTrips(privateTrips.filter((booking) => booking.status === "pending"));
+                setFilteredPrivateTrips(privateTrips.filter((booking) => booking.status === "pending"));
             } else {
-                setDisplayedBookings(searchResults.filter((booking) => booking.status === "pending"));
+                setDisplayedPrivateTrips(searchResults.filter((booking) => booking.status === "pending"));
             }
         } else if (status === "cancelled") {
             if (!searchActive) {
-                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.status === "cancelled")));
-                setBookingsFiltered(activitiesBookings.filter((booking) => (booking.status === "cancelled")));
+                setDisplayedPrivateTrips(privateTrips.filter((booking) => booking.status === "cancelled"));
+                setFilteredPrivateTrips(privateTrips.filter((booking) => booking.status === "cancelled"));
             } else {
-                setDisplayedBookings(searchResults.filter((booking) => (booking.status === "cancelled")));
+                setDisplayedPrivateTrips(searchResults.filter((booking) => booking.status === "cancelled"));
             }
-        } else if (status === "refunded") {
-            if (!searchActive) {
-                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.paymentStatus === "refunded")));
-                setBookingsFiltered(activitiesBookings.filter((booking) => (booking.status === "refunded")));
-            } else {
-                setDisplayedBookings(searchResults.filter((booking) => (booking.paymentStatus === "refunded")));
-            }
-        } else {
-            // setDisplayedBookings(activitiesBookings);
-            // setBookingsFiltered(activitiesBookings);
         }
-    }, [status, activitiesBookings, searchActive, searchResults]);
-
+    }, [status, privateTrips, searchResults, searchActive]);
 
     // set active filter
     useEffect(() => {
@@ -114,18 +93,17 @@ export const AllActivities = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status]);
 
-
     useEffect(() => {
         if (searchActive) {
-            setDisplayedBookings(searchResults);
+            setDisplayedPrivateTrips(searchResults);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchActive]);
+    }, [searchResults]);
 
     // search filter
     useEffect(() => {
         if (search.length > 0) {
-            setSearchResults(bookingsFiltered.filter((booking) => booking.customer.name.toLowerCase().includes(search.toLowerCase()) || booking.customer.email.toLowerCase().includes(search.toLowerCase()) || booking.id.toLowerCase().includes(search.toLowerCase())));
+            setSearchResults(filteredPrivateTrips.filter((booking) => booking.firstName.toLowerCase().includes(search.toLowerCase()) || booking.lastName.toLowerCase().includes(search.toLowerCase()) || booking.email.toLowerCase().includes(search.toLowerCase()) || booking.id.toLowerCase().includes(search.toLowerCase())));
             setSearchActive(true);
             // set active filter by adding to it's array of objects with type keywords and value based on search
             setActiveFilter([{ type: "keywords", value: search }, ...activeFilter.filter((filter) => filter.type !== "keywords")]);
@@ -157,45 +135,12 @@ export const AllActivities = () => {
         }
     };
 
+    const handleDeletePrivateTrip = async (id: string) => {
+        // format date to string
+        const formatDateToString = (dateString: string): number => new Date(dateString).getTime();
+        console.log(formatDateToString("2022-10-10"), id);
+    }
 
-    // format date to string
-    const formatDateToString = (dateString: string): number => new Date(dateString).getTime();
-
-    // sort 
-    useEffect(() => {
-        if (sort === "asc" && activeTab === "customer") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => a.customer.name[0].localeCompare(b.customer.name[0])));
-        } else if (sort === "desc" && activeTab === "customer") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => b.customer.name[0].localeCompare(a.customer.name[0])));
-        } else if (sort === "asc" && activeTab === "package") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => a.title.localeCompare(b.title)));
-        } else if (sort === "desc" && activeTab === "package") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => b.title.localeCompare(a.title)));
-        } else if (sort === "asc" && activeTab === "amount") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => a.overallPrice - b.overallPrice));
-        } else if (sort === "desc" && activeTab === "amount") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => b.overallPrice - a.overallPrice));
-        } else if (sort === "asc" && activeTab === "travellers") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => a.travellers - b.travellers));
-        } else if (sort === "desc" && activeTab === "travellers") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => b.travellers - a.travellers));
-        } else if (sort === "asc" && activeTab === "checkInDate") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(a.date) - formatDateToString(b.date)));
-        } else if (sort === "desc" && activeTab === "checkInDate") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(b.date) - formatDateToString(a.date)));
-        } else if (sort === "asc" && activeTab === "bookingId") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => a.id.localeCompare(b.id)));
-        } else if (sort === "desc" && activeTab === "bookingId") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => b.id.localeCompare(a.id)));
-        } else if (sort === "asc" && activeTab === "status") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => a.status.localeCompare(b.status)));
-        } else if (sort === "desc" && activeTab === "status") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => b.status.localeCompare(a.status)));
-        } else {
-            setDisplayedBookings(displayedBookings);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sort, activeTab]);
 
     // pagination 
     const [page, setPage] = useState(0);
@@ -210,7 +155,6 @@ export const AllActivities = () => {
         setPage(0);
     };
 
-
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center w-full h-screen">
@@ -218,31 +162,8 @@ export const AllActivities = () => {
             </div>
         );
     }
-
     return (
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-12 sm:px-4 sm:gap-9">
-            <div className="flex flex-col gap-2">
-                <h2 className="text-2xl font-semibold text-[#1C1C1C]">
-                    All Activities Bookings
-                </h2>
-                <div className="flex gap-2.5 items-center">
-                    <Link to="/" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
-                        Dashboard
-                    </Link>
-                    {/* a dot */}
-                    <span className="h-1 w-1 rounded-full bg-[rgb(99,115,129)]">
-                    </span>
-                    <Link to="/explore/activities-bookings" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
-                        Activities Bookings
-                    </Link>
-                    {/* a dot */}
-                    <span className="h-1 w-1 rounded-full bg-[rgb(99,115,129)]">
-                    </span>
-                    <span className="text-[rgb(99,115,129)] text-sm font-medium">
-                        All
-                    </span>
-                </div>
-            </div>
             <div
                 className="w-full rounded-2xl flex flex-col mb-10 2xl:w-[calc(100vw-21rem)] xl:w-[calc(100vw-3rem)] sm:w-[calc(100vw-2rem)]"
                 style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
@@ -261,7 +182,7 @@ export const AllActivities = () => {
                             All
                         </p>
                         <p className={`h-6 w-6 bg-black text-white rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out`}>
-                            {activitiesBookings.length}
+                            {privateTrips.length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("pending")}
@@ -270,7 +191,7 @@ export const AllActivities = () => {
                             In Review
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "pending" ? "bg-orange-800 text-[#ffffff]" : "bg-orange-200 text-orange-800"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.status === "pending").length}
+                            {privateTrips.filter((booking) => booking.status === "pending").length}
                         </p>
                     </button>
                     <button
@@ -280,16 +201,7 @@ export const AllActivities = () => {
                             Confirmed
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "confirmed" ? "bg-[rgb(17,141,87)] text-[#ffffff]" : "bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)]"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.status === "confirmed").length}
-                        </p>
-                    </button>
-                    <button onClick={() => setStatus("installment")}
-                        className={`flex gap-2 items-center max-w-[360px] min-w-[max-content] min-h-[48px] pb-1 border-b-2 transition duration-300 ease-in-out  ${status === "installment" ? "border-black" : "border-transparent"}`}>
-                        <p className={`text-sm font-semibold text-[rgb(99,115,129)] transition duration-300 ease-in-out ${status === "installment" ? "text-black" : "text-[rgb(99,115,129)]"}`}>
-                            Installment
-                        </p>
-                        <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "installment" ? "bg-purple-800 text-[#ffffff]" : "bg-purple-200 text-purple-800"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.installment === true).length}
+                            {privateTrips.filter((booking) => booking.status === "confirmed").length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("cancelled")}
@@ -298,16 +210,7 @@ export const AllActivities = () => {
                             Cancelled
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "cancelled" ? "bg-red-700 text-[#ffffff]" : "bg-red-200 text-red-700"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.isCancelled === true).length}
-                        </p>
-                    </button>
-                    <button onClick={() => setStatus("refunded")}
-                        className={`flex gap-2 items-center max-w-[360px] min-w-[max-content] min-h-[48px] pb-1 border-b-2 transition duration-300 ease-in-out  ${status === "refunded" ? "border-black" : "border-transparent"}`}>
-                        <p className={`text-sm font-semibold text-[rgb(99,115,129)] transition duration-300 ease-in-out ${status === "refunded" ? "text-black" : "text-[rgb(99,115,129)]"}`}>
-                            Refunded
-                        </p>
-                        <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "refunded" ? "bg-stone-700 text-[#ffffff]" : "bg-stone-200 text-stone-700"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.paymentStatus === "refunded").length}
+                            {privateTrips.filter((booking) => booking.status === "cancelled").length}
                         </p>
                     </button>
                 </div>
@@ -318,7 +221,7 @@ export const AllActivities = () => {
                 <div className="p-5 flex flex-col gap-3">
                     {activeFilter.length > 0 &&
                         <p className="text-sm font-bold text-[rgb(99,115,129)]">
-                            {displayedBookings.length}
+                            {displayedPrivateTrips.length}
                             <span className="text-[rgb(145,158,171)] font-medium ml-0.5">
                                 results found
                             </span>
@@ -371,15 +274,6 @@ export const AllActivities = () => {
                                         sort={sort}
                                         activeTab={activeTab}
                                         handleSortChange={handleSortChange}
-                                        tab="package"
-                                        label="Package"
-                                    />
-                                </th>
-                                <th scope="col" className="px-6 py-3 xl:px-3">
-                                    <Sort
-                                        sort={sort}
-                                        activeTab={activeTab}
-                                        handleSortChange={handleSortChange}
                                         tab="customer"
                                         label="Customer"
                                     />
@@ -389,8 +283,8 @@ export const AllActivities = () => {
                                         sort={sort}
                                         activeTab={activeTab}
                                         handleSortChange={handleSortChange}
-                                        tab="travellers"
-                                        label="Travellers"
+                                        tab="destination"
+                                        label="Destination"
                                     />
                                 </th>
                                 <th scope="col" className="px-6 py-3 xl:px-3">
@@ -398,8 +292,17 @@ export const AllActivities = () => {
                                         sort={sort}
                                         activeTab={activeTab}
                                         handleSortChange={handleSortChange}
-                                        tab="checkInDate"
-                                        label="Check In Date"
+                                        tab="departureDate"
+                                        label="Departure Date"
+                                    />
+                                </th>
+                                <th scope="col" className="px-6 py-3 xl:px-3">
+                                    <Sort
+                                        sort={sort}
+                                        activeTab={activeTab}
+                                        handleSortChange={handleSortChange}
+                                        tab="returnDate"
+                                        label="Return Date"
                                     />
                                 </th>
                                 <th scope="col" className="px-6 py-3 xl:px-1">
@@ -426,7 +329,7 @@ export const AllActivities = () => {
                                 </th>
                             </tr>
                         </thead>
-                        {displayedBookings.length === 0 ? (
+                        {displayedPrivateTrips.length === 0 ? (
                             <tbody className="bg-white border-b border-gray-200">
                                 <tr className="bg-white border-b">
                                     <td className="px-6 py-6" colSpan={8}>
@@ -446,10 +349,11 @@ export const AllActivities = () => {
                         ) : (
                             <>
                                 <tbody>
-                                    {displayedBookings.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((booking) => (
-                                        <TableRow
+                                    {displayedPrivateTrips.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((booking) => (
+                                        <PrivateBookingRow
                                             key={booking.id}
                                             booking={booking}
+                                            handleDelete={handleDeletePrivateTrip}
                                         />
                                     ))}
                                 </tbody>
@@ -460,7 +364,7 @@ export const AllActivities = () => {
                 <div className="p-2">
                     <TablePagination
                         component="div"
-                        count={displayedBookings.length}
+                        count={displayedPrivateTrips.length}
                         page={page}
                         onPageChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
