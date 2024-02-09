@@ -33,7 +33,7 @@ export const ConfirmedBookingForPayments = async (recipientEmail: string, firstN
                     checkindate: checkInDate,
                     itemname: itemName,
                 },
-                From: "ExploreCrystalveey <muzardemoses@crystalveey.com>",
+                From: "ExploreCrystalveey <bookings@crystalveey.com>",
                 Subject: "Your Booking is Confirmed!",
             },
         }
