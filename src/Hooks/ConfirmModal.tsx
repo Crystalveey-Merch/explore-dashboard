@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Fade from '@mui/material/Fade';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
-export const ConfirmModal = ({ open, setOpen, text, title, handleClick }: any) => {
+export const ConfirmModal = ({ open, setOpen, text, title, handleClick, loading }: any) => {
     const style = {
         position: 'absolute',
         top: '50%',
@@ -54,9 +54,10 @@ export const ConfirmModal = ({ open, setOpen, text, title, handleClick }: any) =
                             </button>
                             <button
                                 onClick={() => handleClick()}
-                                className="w-32 px-6 py-3 rounded-lg bg-[rgba(0,109,156,0.86)] text-white font-semibold text-center transition duration-300 ease-in-out hover:bg-[#006d9c]"
+                                disabled={loading}
+                                className={`w-32 px-6 py-3 rounded-lg bg-[rgba(0,109,156,0.86)] text-white font-semibold text-center transition duration-300 ease-in-out hover:bg-[#006d9c] ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                Yes
+                                {loading ? 'Updating...' : 'Yes'}
                             </button>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from 'react'
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -126,6 +127,51 @@ function App() {
     return () => unsubscribe();
   }, [dispatch]);
 
+
+  //all states will be fetched here and assigned to their pages
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [travelBookings, setTravelBookings] = useState<any[]>([])
+  const [activityBookings, setActivityBookings] = useState<any[]>([])
+  const [retreatBookings, setRetreatBookings] = useState<any[]>([])
+  const [waitList, setWaitList] = useState<any[]>([])
+
+  useEffect(() => {
+    const unsubscribeBookings = onSnapshot(collection(db, 'transactions'), (snapshot) => {
+      const updatedBookings = [] as any;
+      snapshot.forEach((doc) => {
+        updatedBookings.push({ ...doc.data(), id: doc.id });
+      });
+      setBookings(updatedBookings);
+    });
+
+    const unsubscribeWaitlist = onSnapshot(collection(db, 'waitlist'), (snapshot) => {
+      const updatedWaitlist = [] as any;
+      snapshot.forEach((doc) => {
+        const waitlistEntry = { ...doc.data(), id: doc.id };
+        updatedWaitlist.push(waitlistEntry);
+      });
+
+      
+      setWaitList(updatedWaitlist);
+    });
+
+    // Cleanup function to unsubscribe from real-time updates
+    return () => {
+      unsubscribeBookings();
+      unsubscribeWaitlist();
+    };
+  }, []);
+
+  useEffect(() => {
+    const travelBookings = bookings.filter((booking: { type: string }) => booking.type === "Promoted Travel Package");
+    const activityBookings = bookings.filter((booking: { type: string }) => booking.type === "Exciting Activities");
+    const retreatBookings = bookings.filter((booking: { type: string }) => booking.type === "Retreats Packages");
+
+    setTravelBookings(travelBookings);
+    setActivityBookings(activityBookings);
+    setRetreatBookings(retreatBookings);
+  }, [bookings]);
+
   return (
     <div>
       <Routes>
@@ -178,7 +224,7 @@ function App() {
             path="/explore"
             element={
               <ExploreDasboardLayout>
-                <Overview />
+                <Overview transactions={bookings} />
               </ExploreDasboardLayout>
             }
           />
@@ -319,7 +365,7 @@ function App() {
             path="/explore/travel-bookings"
             element={
               <ExploreDasboardLayout>
-                <All />
+                <All travelBookings={travelBookings} />
               </ExploreDasboardLayout>
             }
           />
@@ -367,7 +413,7 @@ function App() {
             path="/explore/travel-bookings/:id"
             element={
               <ExploreDasboardLayout>
-                <Booking />
+                <Booking bookings={travelBookings} />
               </ExploreDasboardLayout>
             }
           />
@@ -375,7 +421,7 @@ function App() {
             path="/explore/activities-bookings"
             element={
               <ExploreDasboardLayout>
-                <AllActivities />
+                <AllActivities activitiesBookings={activityBookings} />
               </ExploreDasboardLayout>
             }
           />
@@ -423,7 +469,7 @@ function App() {
             path="/explore/activities-bookings/:id"
             element={
               <ExploreDasboardLayout>
-                <BookingActivities />
+                <BookingActivities bookings={activityBookings} />
               </ExploreDasboardLayout>
             }
           />
@@ -432,7 +478,7 @@ function App() {
           path="/explore/retreat-bookings"
           element={
             <ExploreDasboardLayout>
-              <AllRetreats />
+              <AllRetreats retreatBookings={retreatBookings} />
             </ExploreDasboardLayout>
           }
         />
@@ -480,7 +526,7 @@ function App() {
           path="/explore/retreat-bookings/:id"
           element={
             <ExploreDasboardLayout>
-              <BookingRetreats />
+              <BookingRetreats bookings={retreatBookings} />
             </ExploreDasboardLayout>
           }
         />
@@ -488,7 +534,7 @@ function App() {
           path="/explore/waitlist/:packageTitle"
           element={
             <ExploreDasboardLayout>
-              <Waitlist />
+              <Waitlist allWaitlist={waitList} />
             </ExploreDasboardLayout>
           }
         />

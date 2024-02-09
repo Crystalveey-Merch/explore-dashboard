@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { collection, getDocs, db, doc, updateDoc } from '../../../Config/firebase';
+import { db, doc, updateDoc } from '../../../Config/firebase';
 import { handleFormatDate, handleFormatTime, ConfirmPassKeyModal, ConfirmModal, handleFormatDate2 } from "../../../Hooks"
 import { StatusDropDown } from "../../../Components";
 import printSVG from "../../../assets/SVG/Dashboard/Action/print.svg";
@@ -10,28 +10,18 @@ import travelImage from "../../../assets/Images/Dashboard/travel-location.png"
 import { ConfirmationBookingGeneralConfirmed, ConfirmedBookingForPayments } from "../../../Components/Explore/Emails";
 
 
-export const BookingRetreats = () => {
+export const BookingRetreats = ({ bookings }: { bookings: any }) => {
     const [booking, setBooking] = useState<any>(null);
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
 
     useEffect(() => {
-        const fetchBooking = async () => {
-            const bookingRef = collection(db, "transactions");
-            const bookingSnapshot = await getDocs(bookingRef);
-            const bookings: any[] = [];
-            bookingSnapshot.forEach((doc) => {
-                bookings.push({
-                    id: doc.id,
-                    ...doc.data(),
-                });
-            });
-            const booking = bookings.find((booking) => booking.id === id);
+        if (bookings.length > 0) {
+            const booking = bookings.find((booking: { id: string | undefined; }) => booking.id === id);
             setBooking(booking);
-        };
-        fetchBooking();
-    }, [id]);
+        }
+    }, [bookings, id]);
 
     // 
     const [passKey, setPassKey] = useState("")
@@ -42,7 +32,7 @@ export const BookingRetreats = () => {
     const [pickedStatus, setPickedStatus] = useState<any>("");
     const [text, setText] = useState("");
     const title = "Are you sure";
-
+    const [changeStatusLoading, setChangeStatusLoading] = useState(false);
 
 
 
@@ -57,6 +47,7 @@ export const BookingRetreats = () => {
 
     // status change function
     const handleChangeStatus = async () => {
+        setChangeStatusLoading(true);
         // if pickedStatus is paid, pending, and refunded. set status to pickedStatus else if pickedStatus is cancelled set isCancelled to true  and set status to ""
         const bookingRef = doc(db, "transactions", booking.id);
 
@@ -88,6 +79,7 @@ export const BookingRetreats = () => {
             ConfirmationBookingGeneralConfirmed(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookingDate, checkInDate, booking?.title)
         }
 
+        setChangeStatusLoading(false);
         // show toast
         toast.success(`Booking status changed to ${pickedStatus}`);
         // console.log(pickedStatus);
@@ -389,6 +381,7 @@ export const BookingRetreats = () => {
                 title={title}
                 text={text}
                 handleClick={handleChangeStatus}
+                loading={changeStatusLoading}
             />
             <ConfirmPassKeyModal
                 passkey={passKey}

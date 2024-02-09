@@ -2,20 +2,17 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 import TablePagination from '@mui/material/TablePagination';
-import { collection, getDocs, db } from '../../../Config/firebase';
 import { TableRow } from "../../../Components/Explore/ActivitiesBoking";
 import { Sort } from "../../../Hooks";
 import noResultImg from "../../../assets/Images/Dashboard/no-results.png"
 import { SearchInput } from "../../../Components";
 
 
-export const AllActivities = () => {
-    const [activitiesBookings, setActivitiesBookings] = useState<any[]>([])
+export const AllActivities = ({ activitiesBookings }: { activitiesBookings: any[] }) => {
     const [displayedBookings, setDisplayedBookings] = useState<any[]>([])
     const [bookingsFiltered, setBookingsFiltered] = useState<any[]>([])
     // show filter
     const [activeFilter, setActiveFilter] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
 
     const [sort, setSort] = useState("");
     const [activeTab, setActiveTab] = useState("");
@@ -25,24 +22,6 @@ export const AllActivities = () => {
         setActiveTab(tab);
     };
 
-    useEffect(() => {
-        const fetchTravelBookings = async () => {
-            setLoading(true);
-            const bookingsRef = collection(db, "transactions");
-            const bookingsSnapshot = await getDocs(bookingsRef);
-            const bookings: any[] = [];
-            bookingsSnapshot.forEach((doc) => {
-                bookings.push({
-                    id: doc.id,
-                    ...doc.data(),
-                });
-            });
-            // set bookings of type "Exciting Activities" to state
-            setActivitiesBookings(bookings.filter((booking: { type: string }) => booking.type === "Exciting Activities"));
-            setLoading(false);
-        }
-        fetchTravelBookings()
-    }, [])
 
     const [status, setStatus] = useState<string>("all");
 
@@ -211,14 +190,6 @@ export const AllActivities = () => {
     };
 
 
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center w-full h-screen">
-                <h2 className="text-2xl font-bold">Loading...</h2>
-            </div>
-        );
-    }
-
     return (
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-12 sm:px-4 sm:gap-9">
             <div className="flex flex-col gap-2">
@@ -298,7 +269,7 @@ export const AllActivities = () => {
                             Cancelled
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "cancelled" ? "bg-red-700 text-[#ffffff]" : "bg-red-200 text-red-700"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.isCancelled === true).length}
+                            {activitiesBookings.filter((invoice) => invoice.status === "cancelled").length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("refunded")}

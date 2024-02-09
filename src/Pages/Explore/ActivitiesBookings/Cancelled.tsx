@@ -83,7 +83,7 @@ export const CancelledActivities = () => {
             }
         } else if (status === "cancelled") {
             if (!searchActive) {
-                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.isCancelled === true)));
+                setDisplayedBookings(activitiesBookings.filter((booking) => (booking.status === "cancelled")));
                 setBookingsFiltered(activitiesBookings.filter((booking) => (booking.status === "cancelled")));
             } else {
                 setDisplayedBookings(searchResults.filter((booking) => (booking.status === "cancelled")));
@@ -246,7 +246,7 @@ export const CancelledActivities = () => {
                 className="w-full rounded-2xl flex flex-col mb-10 2xl:w-[calc(100vw-21rem)] xl:w-[calc(100vw-3rem)] sm:w-[calc(100vw-2rem)]"
                 style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
             >
-               <div className="px-4 flex gap-10 overflow-y-hidden md overflow-xscrol md:gap-6"
+                <div className="px-4 flex gap-10 overflow-y-hidden md overflow-xscrol md:gap-6"
                     // hide scrollbar
                     style={{
                         boxShadow: "rgba(145, 158, 171, 0.08) 0px -2px 0px 0px inset",
@@ -297,7 +297,7 @@ export const CancelledActivities = () => {
                             Cancelled
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "cancelled" ? "bg-red-700 text-[#ffffff]" : "bg-red-200 text-red-700"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.isCancelled === true).length}
+                            {activitiesBookings.filter((invoice) => invoice.status === "cancelled").length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("refunded")}

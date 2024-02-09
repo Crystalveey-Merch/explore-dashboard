@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import TablePagination from '@mui/material/TablePagination';
-import { collection, getDocs,  db } from '../../Config/firebase';
 // import { toast } from "react-toastify";
 import { handleFormatTimestampToDateC } from "../../Hooks";
 import { SearchInput } from "../../Components"
@@ -10,12 +9,11 @@ import { Sort } from "../../Hooks";
 import noResultImg from "../../assets/Images/Dashboard/no-results.png"
 
 
-export const Waitlist = () => {
+export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
     const { packageTitle } = useParams<{ packageTitle: string }>();
     // const [allWaitlist, setAllWaitlist] = useState<any[]>([]);
     const [waitlist, setWaitlist] = useState<any[]>([]);
     const [displayedWaitlist, setDisplayedWaitlist] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
 
     const [sort, setSort] = useState("");
     const [activeTab, setActiveTab] = useState("");
@@ -44,31 +42,13 @@ export const Waitlist = () => {
     };
 
     useEffect(() => {
-        const fetchWaitlist = async () => {
-            setLoading(true);
-            const waitlistRef = collection(db, "waitlist");
-            const waitlistSnapshot = await getDocs(waitlistRef);
+        if (allWaitlist.length > 0) {
+            const waitlist = allWaitlist.filter((entry: { packageTitle: string; }) => convertedTitle(entry.packageTitle) === packageTitle);
+            setWaitlist(waitlist);
+            setDisplayedWaitlist(waitlist);
+        }
 
-            const waitlistData: any[] = [];
-
-            waitlistSnapshot.forEach((doc) => {
-                const waitlistEntry = {
-                    id: doc.id,
-                    ...doc.data(),
-                };
-                waitlistData.push(waitlistEntry);
-            });
-
-            // return only waitlist that the packageTitle matches the route
-            // setAllWaitlist(waitlistData);
-            setWaitlist(waitlistData.filter((entry) => convertedTitle(entry.packageTitle) === packageTitle));
-            setDisplayedWaitlist(waitlistData.filter((entry) => convertedTitle(entry.packageTitle) === packageTitle));
-            setLoading(false);
-        };
-
-        fetchWaitlist();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [packageTitle]);
+    }, [packageTitle, allWaitlist]);
 
 
     // const handleDelete = async (id: string, title: string) => {
@@ -121,7 +101,7 @@ export const Waitlist = () => {
     // search by authorName, packageTitle, authorPhone and authorEmail
     useEffect(() => {
         if (search) {
-            const searchResult = waitlist.filter((entry) => {
+            const searchResult = waitlist.filter((entry: { authorName: string; packageTitle: string; authorPhone: string; authorEmail: string; }) => {
                 return (
                     entry.authorName.toLowerCase().includes(search.toLowerCase()) ||
                     entry.packageTitle.toLowerCase().includes(search.toLowerCase()) ||
@@ -149,13 +129,6 @@ export const Waitlist = () => {
         setPage(0);
     };
 
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center w-full h-screen">
-                <h2 className="text-2xl font-bold">Loading...</h2>
-            </div>
-        );
-    }
 
     return (
         <div className="px-10 py-14 flex flex-col gap-20 xl:px-6 xl:w-[calc(100vw-10px)] lg:gap-16 md:gap-12 md:w-[100vw] sm:gap-9">

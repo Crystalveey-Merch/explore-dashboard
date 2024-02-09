@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReactNode, useEffect, useState } from "react"
-import { collection, getDocs, db } from '../Config/firebase';
+import { collection, db, onSnapshot } from '../Config/firebase';
 // import { useNavigate } from "react-router-dom"
 // import { getKey } from "../Components/KeyFunctions"
 import { Header, SideBar } from "../Components"
@@ -16,52 +16,91 @@ export const ExploreDasboardLayout = ({ children }: { children: ReactNode }) => 
     //     }
     // }, [navigate])
 
+    const [bookings, setBookings] = useState<any[]>([]);
     const [travelBookings, setTravelBookings] = useState<any[]>([])
     const [activityBookings, setActivityBookings] = useState<any[]>([])
     const [retreatBookings, setRetreatBookings] = useState<any[]>([])
     const [waitList, setWaitList] = useState<any[]>([])
 
+    // useEffect(() => {
+    //     const fetchTravelBookings = async () => {
+    //         const bookingsRef = collection(db, "transactions");
+    //         const bookingsSnapshot = await getDocs(bookingsRef);
+    //         const bookings: any[] = [];
+    //         bookingsSnapshot.forEach((doc: { id: any; data: () => any; }) => {
+    //             bookings.push({
+    //                 id: doc.id,
+    //                 ...doc.data(),
+    //             });
+    //         });
+    //         // set bookings of type "Promoted Travel Package" to state
+    //         setTravelBookings(bookings.filter((booking: { type: string }) => booking.type === "Promoted Travel Package"));
+    //         // set bookings of type "Exciting Activities" to state
+    //         setActivityBookings(bookings.filter((booking: { type: string }) => booking.type === "Exciting Activities"));
+    //         // set bookings of type "Retreats Packages" to state
+    //         setRetreatBookings(bookings.filter((booking: { type: string }) => booking.type === "Retreats Packages"));
+    //     }
+    //     fetchTravelBookings()
+    //     fetchWaitlist();
+    // }, [])
+
+    // const fetchWaitlist = async () => {
+    //     try {
+    //         const waitlistRef = collection(db, 'waitlist');
+    //         const waitlistSnapshot = await getDocs(waitlistRef);
+
+    //         const waitlistData = [] as any[];
+
+    //         waitlistSnapshot.forEach((doc) => {
+    //             const waitlistEntry = {
+    //                 id: doc.id,
+    //                 ...doc.data(),
+    //             };
+    //             waitlistData.push(waitlistEntry);
+    //         });
+
+    //         // console.log(waitlistData);
+
+    //         // Group by packageTitle using an object
+    //         const groupedWaitlist = waitlistData.reduce((acc, entry) => {
+    //             const { packageTitle, ...rest } = entry;
+    //             if (!acc[packageTitle]) {
+    //                 acc[packageTitle] = [];
+    //             }
+    //             acc[packageTitle].push(rest);
+    //             return acc;
+    //         }, {});
+
+    //         // console.log('Grouped Waitlist:', groupedWaitlist);
+
+    //         // Set the grouped data in your state or use it as needed
+    //         setWaitList(groupedWaitlist);
+    //     } catch (error) {
+    //         console.error('Error fetching waitlist:', error);
+    //         // Handle the error as needed
+    //     }
+    // };
+
+
+    // console.log(waitList)
+
     useEffect(() => {
-        const fetchTravelBookings = async () => {
-            const bookingsRef = collection(db, "transactions");
-            const bookingsSnapshot = await getDocs(bookingsRef);
-            const bookings: any[] = [];
-            bookingsSnapshot.forEach((doc: { id: any; data: () => any; }) => {
-                bookings.push({
-                    id: doc.id,
-                    ...doc.data(),
-                });
+        const unsubscribeBookings = onSnapshot(collection(db, 'transactions'), (snapshot) => {
+            const updatedBookings = [] as any;
+            snapshot.forEach((doc) => {
+                updatedBookings.push({ ...doc.data(), id: doc.id });
             });
-            // set bookings of type "Promoted Travel Package" to state
-            setTravelBookings(bookings.filter((booking: { type: string }) => booking.type === "Promoted Travel Package"));
-            // set bookings of type "Exciting Activities" to state
-            setActivityBookings(bookings.filter((booking: { type: string }) => booking.type === "Exciting Activities"));
-            // set bookings of type "Retreats Packages" to state
-            setRetreatBookings(bookings.filter((booking: { type: string }) => booking.type === "Retreats Packages"));
-        }
-        fetchTravelBookings()
-        fetchWaitlist();
-    }, [])
+            setBookings(updatedBookings);
+        });
 
-    const fetchWaitlist = async () => {
-        try {
-            const waitlistRef = collection(db, 'waitlist');
-            const waitlistSnapshot = await getDocs(waitlistRef);
-
-            const waitlistData = [] as any[];
-
-            waitlistSnapshot.forEach((doc) => {
-                const waitlistEntry = {
-                    id: doc.id,
-                    ...doc.data(),
-                };
-                waitlistData.push(waitlistEntry);
+        const unsubscribeWaitlist = onSnapshot(collection(db, 'waitlist'), (snapshot) => {
+            const updatedWaitlist = [] as any;
+            snapshot.forEach((doc) => {
+                updatedWaitlist.push({ ...doc.data(), id: doc.id });
             });
-
-            // console.log(waitlistData);
 
             // Group by packageTitle using an object
-            const groupedWaitlist = waitlistData.reduce((acc, entry) => {
+            const groupedWaitlist = updatedWaitlist.reduce((acc: any, entry: any) => {
                 const { packageTitle, ...rest } = entry;
                 if (!acc[packageTitle]) {
                     acc[packageTitle] = [];
@@ -70,18 +109,25 @@ export const ExploreDasboardLayout = ({ children }: { children: ReactNode }) => 
                 return acc;
             }, {});
 
-            // console.log('Grouped Waitlist:', groupedWaitlist);
-
-            // Set the grouped data in your state or use it as needed
             setWaitList(groupedWaitlist);
-        } catch (error) {
-            console.error('Error fetching waitlist:', error);
-            // Handle the error as needed
-        }
-    };
+        });
 
+        // Cleanup function to unsubscribe from real-time updates
+        return () => {
+            unsubscribeBookings();
+            unsubscribeWaitlist();
+        };
+    }, []);
 
-    // console.log(waitList)
+    useEffect(() => {
+        const travelBookings = bookings.filter((booking: { type: string }) => booking.type === "Promoted Travel Package");
+        const activityBookings = bookings.filter((booking: { type: string }) => booking.type === "Exciting Activities");
+        const retreatBookings = bookings.filter((booking: { type: string }) => booking.type === "Retreats Packages");
+
+        setTravelBookings(travelBookings);
+        setActivityBookings(activityBookings);
+        setRetreatBookings(retreatBookings);
+    }, [bookings]);
 
     return (
         <div className='flex h-screen overflow-hidden'>

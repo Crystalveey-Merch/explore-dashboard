@@ -2,20 +2,19 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 import TablePagination from '@mui/material/TablePagination';
-import { collection, getDocs, db } from '../../../Config/firebase';
 import { TableRow } from "../../../Components/Explore/TravelBookings";
 import { Sort } from "../../../Hooks";
 import noResultImg from "../../../assets/Images/Dashboard/no-results.png"
 import { SearchInput } from "../../../Components";
 
 
-export const All = () => {
-    const [travelBookings, setTravelBookings] = useState<any[]>([])
+export const All = ({ travelBookings }: { travelBookings: any[] }) => {
+    // const [travelBookings, setTravelBookings] = useState<any[]>([])
     const [displayedBookings, setDisplayedBookings] = useState<any[]>([])
     const [bookingsFiltered, setBookingsFiltered] = useState<any[]>([])
     // show filter
     const [activeFilter, setActiveFilter] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    // const [loading, setLoading] = useState<boolean>(false);
 
     const [sort, setSort] = useState("");
     const [activeTab, setActiveTab] = useState("");
@@ -25,24 +24,24 @@ export const All = () => {
         setActiveTab(tab);
     };
 
-    useEffect(() => {
-        const fetchTravelBookings = async () => {
-            setLoading(true);
-            const bookingsRef = collection(db, "transactions");
-            const bookingsSnapshot = await getDocs(bookingsRef);
-            const bookings: any[] = [];
-            bookingsSnapshot.forEach((doc) => {
-                bookings.push({
-                    id: doc.id,
-                    ...doc.data(),
-                });
-            });
-            // set bookings of type "Promoted Travel Package" to state
-            setTravelBookings(bookings.filter((booking: { type: string }) => booking.type === "Promoted Travel Package"));
-            setLoading(false);
-        }
-        fetchTravelBookings()
-    }, [])
+    // useEffect(() => {
+    //     const fetchTravelBookings = async () => {
+    //         setLoading(true);
+    //         const bookingsRef = collection(db, "transactions");
+    //         const bookingsSnapshot = await getDocs(bookingsRef);
+    //         const bookings: any[] = [];
+    //         bookingsSnapshot.forEach((doc) => {
+    //             bookings.push({
+    //                 id: doc.id,
+    //                 ...doc.data(),
+    //             });
+    //         });
+    //         // set bookings of type "Promoted Travel Package" to state
+    //         setTravelBookings(bookings.filter((booking: { type: string }) => booking.type === "Promoted Travel Package"));
+    //         setLoading(false);
+    //     }
+    //     fetchTravelBookings()
+    // }, [])
 
     const [status, setStatus] = useState<string>("all");
 
@@ -211,13 +210,13 @@ export const All = () => {
     };
 
 
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center w-full h-screen">
-                <h2 className="text-2xl font-bold">Loading...</h2>
-            </div>
-        );
-    }
+    // if (loading) {
+    //     return (
+    //         <div className="flex flex-col items-center justify-center w-full h-screen">
+    //             <h2 className="text-2xl font-bold">Loading...</h2>
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-12 sm:px-4 sm:gap-9">
@@ -311,7 +310,7 @@ export const All = () => {
                         </p>
                     </button>
                 </div>
-                {/* filter by search */} 
+                {/* filter by search */}
                 <div className="flex justify-end pt-5 px-4">
                     <SearchInput search={search} setSearch={setSearch} placeholder="Search by name, email, booking ID" />
                 </div>

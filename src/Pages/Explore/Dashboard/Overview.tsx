@@ -4,13 +4,13 @@ import { useEffect, useState } from "react"
 import moment from "moment";
 // import { useSelector } from "react-redux";
 // import { selectUser } from "../../../Config/userSlice"
-import { collection, getDocs, db } from '../../../Config/firebase';
+// import { collection, getDocs, db } from '../../../Config/firebase';
 import totalSvg from "../../../assets/SVG/Dashboard/Overview/total.svg"
 import canceledSvg from "../../../assets/SVG/Dashboard/Overview/cancelled.svg"
 import soldSvg from "../../../assets/SVG/Dashboard/Overview/sold.svg"
 
 
-export const Overview = () => {
+export const Overview = ({ transactions }: { transactions: any[] }) => {
     // const navigate = useNavigate()
     // const user = useSelector(selectUser)
 
@@ -21,27 +21,27 @@ export const Overview = () => {
     // }, [user, navigate])
 
 
-    const [transactions, setTransactions] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    // const [transactions, setTransactions] = useState<any[]>([]);
+    // const [loading, setLoading] = useState<boolean>(false);
 
-    useEffect(() => {
-        const fetchTravelPackages = async () => {
-            try {
-                setLoading(true);
-                const querySnapshot = await getDocs(collection(db, 'transactions'));
-                const packagedata = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-                setTransactions(packagedata);
-                setLoading(false);
-            } catch (error) {
-                console.log(error);
-                setLoading(false);
-            }
-        }
-        fetchTravelPackages();
-    }, [])
+    // useEffect(() => {
+    //     const fetchTravelPackages = async () => {
+    //         try {
+    //             setLoading(true);
+    //             const querySnapshot = await getDocs(collection(db, 'transactions'));
+    //             const packagedata = querySnapshot.docs.map(doc => ({
+    //                 id: doc.id,
+    //                 ...doc.data()
+    //             }));
+    //             setTransactions(packagedata);
+    //             setLoading(false);
+    //         } catch (error) {
+    //             console.log(error);
+    //             setLoading(false);
+    //         }
+    //     }
+    //     fetchTravelPackages();
+    // }, [])
 
     const totalTransactions = transactions.length;
 
@@ -150,13 +150,13 @@ export const Overview = () => {
 
 
 
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center w-full h-screen">
-                <h2 className="text-2xl font-bold">Loading...</h2>
-            </div>
-        );
-    }
+    // if (loading) {
+    //     return (
+    //         <div className="flex flex-col items-center justify-center w-full h-screen">
+    //             <h2 className="text-2xl font-bold">Loading...</h2>
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className="px-10 py-14 font-public-sans flex flex-col gap-5 xl:px-6 sm:w-[100vw]">

@@ -296,7 +296,7 @@ export const RefundedActivities = () => {
                             Cancelled
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "cancelled" ? "bg-red-700 text-[#ffffff]" : "bg-red-200 text-red-700"}`}>
-                            {activitiesBookings.filter((invoice) => invoice.isCancelled === true).length}
+                            {activitiesBookings.filter((invoice) => invoice.status === "cancelled").length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("refunded")}

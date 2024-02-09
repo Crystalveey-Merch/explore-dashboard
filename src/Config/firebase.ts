@@ -28,6 +28,7 @@ import {
     getDocs,
     updateDoc,
     serverTimestamp,
+    onSnapshot,
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -115,4 +116,5 @@ export {
     getDocs,
     updateDoc,
     serverTimestamp,
+    onSnapshot,
 }

@@ -20,7 +20,9 @@ export const PrivateRoutes = () => {
 
     if (checkingAuth) {
         // You can render a loading spinner or any other UI while checking authentication
-        return <div>Loading...</div>;
+        return <div className="flex flex-col items-center justify-center w-full h-screen">
+            <h2 className="text-2xl font-bold">Loading...</h2>
+        </div>
     }
 
     return user ? <Outlet /> : <Navigate to="/login" />;
