@@ -112,6 +112,10 @@ export const Overview = ({ transactions }: { transactions: any[] }) => {
 
     const retreatsTravelPackagePercentage = (retreatsTravelPackageTransactionsLength / totalTransactions) * 100;
 
+    const tourPackageTransactionsLength = transactions.filter((transaction) => transaction.type === 'Tour Packages').length;
+
+    const tourPackagePercentage = (tourPackageTransactionsLength / totalTransactions) * 100;
+
 
     const [paidTransactions, setPaidTransactions] = useState<any[]>([]);
 
@@ -281,7 +285,7 @@ export const Overview = ({ transactions }: { transactions: any[] }) => {
                         </div>
                     </div>
                 </div>
-                <div className="rounded-2xl bg-white text-[rgb(33,43,54)] w-full py-4 pr-6 pl-4 flex flex-col gap-9 justify-between"
+                <div className="rounded-2xl bg-white text-[rgb(33,43,54)] w-full py-4 pr-6 pl-4 flex flex-col gap-4 justify-between"
                     style={{
                         boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px"
                     }}
@@ -301,7 +305,7 @@ export const Overview = ({ transactions }: { transactions: any[] }) => {
                             </div>
                             <div className="relative w-full">
                                 <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
-                                <p className="h-2 bg-[rgb(255,171,0)] rounded absolute top-0 left-0"
+                                <p className="h-2 bg-[rgb(246,255,0)] rounded absolute top-0 left-0"
                                     style={{ width: `${excitingActivitiesPercentage}%` }}></p>
                             </div>
                         </div>
@@ -316,7 +320,7 @@ export const Overview = ({ transactions }: { transactions: any[] }) => {
                             </div>
                             <div className="relative w-full">
                                 <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
-                                <p className="h-2 bg-[rgb(34,197,94)] rounded absolute top-0 left-0"
+                                <p className="h-2 bg-[rgb(42,197,34)] rounded absolute top-0 left-0"
                                     style={{ width: `${promotedTravelPackagePercentage}%` }}></p>
                             </div>
                         </div>
@@ -331,8 +335,23 @@ export const Overview = ({ transactions }: { transactions: any[] }) => {
                             </div>
                             <div className="relative w-full">
                                 <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
-                                <p className="h-2 bg-[rgb(255,0,0)] rounded absolute top-0 left-0"
+                                <p className="h-2 bg-[rgb(251,0,255)] rounded absolute top-0 left-0"
                                     style={{ width: `${retreatsTravelPackagePercentage}%` }}></p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="uppercase text-xs font-bold">
+                                    Tour Packages
+                                </p>
+                                <p className="">
+                                    {tourPackageTransactionsLength}
+                                </p>
+                            </div>
+                            <div className="relative w-full">
+                                <p className="h-2 bg-[rgba(145,158,171,0.16)] w-full rounded"></p>
+                                <p className="h-2 bg-[rgb(0,174,255)] rounded absolute top-0 left-0"
+                                    style={{ width: `${tourPackagePercentage}%` }}></p>
                             </div>
                         </div>
                     </div>

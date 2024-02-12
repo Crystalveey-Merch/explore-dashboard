@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom"
 import TablePagination from '@mui/material/TablePagination';
-import { collection, getDocs, deleteDoc, doc, db } from '../../../Config/firebase';
+import { deleteDoc, doc, db } from '../../../Config/firebase';
 import { toast } from "react-toastify";
 import handleFormattedDateRange from "../../../Hooks/handleFormattedDateRange";
 import { BlueButton, SearchInput } from "../../../Components"
@@ -10,7 +10,7 @@ import PlusSVG from "../../../assets/SVG/Dashboard/plus.svg"
 import { Sort } from "../../../Hooks";
 import noResultImg from "../../../assets/Images/Dashboard/no-results.png"
 
-export const RetreatPackages = () => {
+export const RetreatPackages = ({ allRetreatPackages }: { allRetreatPackages: any[] }) => {
     const [retreatPackages, setRetreatPackages] = useState<any[]>([]);
     const [displayedRetreatPackages, setDisplayedRetreatPackages] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -24,24 +24,11 @@ export const RetreatPackages = () => {
     };
 
     useEffect(() => {
-        const fetchRetreatPackages = async () => {
-            try {
-                setLoading(true);
-                const querySnapshot = await getDocs(collection(db, 'retreatPackages'));
-                const packagedata = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-                setRetreatPackages(packagedata);
-                setDisplayedRetreatPackages(packagedata);
-                setLoading(false);
-            } catch (error) {
-                console.log(error);
-                setLoading(false);
-            }
-        }
-        fetchRetreatPackages();
-    }, [])
+        setLoading(true);
+        setRetreatPackages(allRetreatPackages);
+        setDisplayedRetreatPackages(allRetreatPackages);
+        setLoading(false);
+    }, [allRetreatPackages]);
 
 
     const handleDelete = async (id: string, title: string) => {

@@ -197,7 +197,7 @@ export const AllRetreats = ({ retreatBookings }: { retreatBookings: any[] }) => 
                     All Retreat Bookings
                 </h2>
                 <div className="flex gap-2.5 items-center">
-                    <Link to="/" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
+                    <Link to="/explore" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
                         Dashboard
                     </Link>
                     {/* a dot */}

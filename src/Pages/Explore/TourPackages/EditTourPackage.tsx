@@ -3,48 +3,50 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import {
     serverTimestamp,
-    doc,
     updateDoc,
+    doc,
 } from "firebase/firestore";
 import { toast } from 'react-toastify'
-import FormControlLabel from "@mui/material/FormControlLabel";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { db, storage } from '../../../Config/firebase';
 import Input from "../../../Components/Explore/Custom/Input"
 import imagePictureSVG from "../../../assets/SVG/Dashboard/image-picture.svg"
 import downloadCloudSVG from "../../../assets/SVG/Dashboard/download-cloud.svg"
-import { BlueButton, IOSSwitch } from '../../../Components';
+import { BlueButton } from '../../../Components';
+import { countries } from '../../../data/data'
 
-
-
-
-export const EditRetreatPackages = ({ retreatPackages }: { retreatPackages: any }) => {
+export const EditTourPackage = ({ tourPackages }: { tourPackages: any }) => {
     const { id } = useParams<{ id: string }>()
-    const [retreatPackage, setRetreatPackage] = useState<any>({});
+    const [tourPackage, setTourPackage] = useState<any>({})
+
+    useEffect(() => {
+        if (tourPackages.length > 0) {
+            const tourPackage = tourPackages.find((tourPackage: { id: string | undefined; }) => (tourPackage.id === id))
+            setTourPackage(tourPackage);
+        }
+    }, [tourPackages, id])
 
     const navigate = useNavigate()
 
     const [isImageOneChanged, setIsImageOneChanged] = useState(false)
     const [isImageTwoChanged, setIsImageTwoChanged] = useState(false)
 
-
     const [loading, setLoading] = useState(false)
-    const [isActive, setIsActive] = useState<boolean>(true)
-    const [waiting, setWaiting] = useState<boolean>(false)
-    const [maxBookings, setMaxBookings] = useState<number | string>("")
-    const [title, setTitle] = useState<string>("")
-    const [description, setDescription] = useState<string>("")
+    const [name, setName] = useState<string>('')
+    const [description, setDescription] = useState<string>('')
+    const [location, setLocation] = useState<string>('')
+    const [country, setCountry] = useState<string>('Nigeria')
     const [reviews, setReviews] = useState<any[]>([])
     const [rating, setRating] = useState<number>(0)
-    const [travelling, setTravelling] = useState<number | string>("")
-    const [duration, setDuration] = useState<string>("")
     const [price, setPrice] = useState<number | string>("")
-    //inclusion is array of string
+    const [ticketRedemptionPoint, setTicketRedemptionPoint] = useState<string>("")
     const [inclusion, setInclusion] = useState<string>("")
     const [inclusions, setInclusions] = useState<string[]>([])
+    const [exclusion, setExclusion] = useState<string>("")
+    const [exclusions, setExclusions] = useState<string[]>([])
     const [featureList, setFeatureList] = useState<string>("")
     const [featureLists, setFeatureLists] = useState<string[]>([])
-    const [visitingCities, setVisitingCities] = useState([{ name: '', activities: [''] }]);
+    const [whatToExpect, setWhatToExpect] = useState([{ name: "", duration: "", description: "" }])
 
     const handleAddInclusion = () => {
         if (inclusion !== "") {
@@ -64,6 +66,19 @@ export const EditRetreatPackages = ({ retreatPackages }: { retreatPackages: any 
         const newInclusions = [...inclusions]
         newInclusions.splice(index, 1)
         setInclusions(newInclusions)
+    }
+
+    const handleAddExclusion = () => {
+        if (exclusion !== "") {
+            setExclusions([...exclusions, exclusion])
+            setExclusion("")
+        }
+    }
+
+    const handleRemoveExclusion = (index: number) => {
+        const newExclusions = [...exclusions]
+        newExclusions.splice(index, 1)
+        setExclusions(newExclusions)
     }
 
     const handleAddFeatureList = () => {
@@ -86,36 +101,16 @@ export const EditRetreatPackages = ({ retreatPackages }: { retreatPackages: any 
         setFeatureLists(newFeatureLists)
     }
 
-    const handleAddVisitingCityField = () => {
-        setVisitingCities([...visitingCities, { name: '', activities: [''] }]);
-    };
-
-    const handleRemoveVisitingCityField = (index: number) => {
-        const updatedCities = [...visitingCities];
-        updatedCities.splice(index, 1);
-        setVisitingCities(updatedCities);
-    };
-
-    const handleAddActivityField = (index: number) => {
-        const updatedCities = [...visitingCities];
-        updatedCities[index].activities.push('');
-        setVisitingCities(updatedCities);
-    };
-
-    const handleRemoveActivityField = (cityIndex: number, activityIndex: number) => {
-        const updatedCities = [...visitingCities];
-        updatedCities[cityIndex].activities.splice(activityIndex, 1);
-        setVisitingCities(updatedCities);
-    };
-
-    const handleMaxBookingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value
-        if (value === "" || /^[0-9\b]+$/.test(value)) {
-            setMaxBookings(value)
-        }
+    const handleAddWhatToExpectField = () => {
+        setWhatToExpect([...whatToExpect, { name: "", duration: "", description: "" }])
     }
 
-    //add rules for handlePriceChange to accept only numbers and empty string
+    const handleRemoveWhatToExpectField = (index: number) => {
+        const newWhatToExpect = [...whatToExpect]
+        newWhatToExpect.splice(index, 1)
+        setWhatToExpect(newWhatToExpect)
+    }
+
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value
         if (value === "" || /^[0-9\b]+$/.test(value)) {
@@ -123,13 +118,13 @@ export const EditRetreatPackages = ({ retreatPackages }: { retreatPackages: any 
         }
     }
 
-    //add rules for handleDurationChange to accept max 2 digits  and only numbers and empty string
-    const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //add rules for whatToExpect duration to accept only numbers
+    const handleWhatToExpectDurationChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const value = e.target.value
         if (value === "" || /^[0-9\b]+$/.test(value)) {
-            if (value.length <= 2) {
-                setDuration(value)
-            }
+            const newWhatToExpect = [...whatToExpect]
+            newWhatToExpect[index].duration = value
+            setWhatToExpect(newWhatToExpect)
         }
     }
 
@@ -189,26 +184,23 @@ export const EditRetreatPackages = ({ retreatPackages }: { retreatPackages: any 
     }
 
     useEffect(() => {
-        const retreatPackage = retreatPackages.find((retreatPackage: any) => retreatPackage.id === id)
-        if (retreatPackage) {
-            setIsActive(retreatPackage.isActive)
-            setWaiting(retreatPackage.isWaitList)
-            setMaxBookings(retreatPackage.maxBookings)
-            setRetreatPackage(retreatPackage)
-            setTitle(retreatPackage.title)
-            setDescription(retreatPackage.description)
-            setDuration(retreatPackage.duration)
-            setReviews(retreatPackage.reviews)
-            setRating(retreatPackage.rating)
-            setTravelling(retreatPackage.travelling)
-            setPrice(retreatPackage.price)
-            setInclusions(retreatPackage.inclusions)
-            setFeatureLists(retreatPackage.featureLists)
-            setVisitingCities(retreatPackage.visitingCities)
-            setImageOneUrl(retreatPackage.images.imageOne)
-            setImageTwoUrl(retreatPackage.images.imageTwo)
+        if (tourPackage) {
+            setName(tourPackage.name)
+            setDescription(tourPackage.description)
+            setLocation(tourPackage.location)
+            setCountry(tourPackage.country)
+            setReviews(tourPackage.reviews)
+            setRating(tourPackage.rating)
+            setPrice(tourPackage.price)
+            setTicketRedemptionPoint(tourPackage.ticketRedemptionPoint)
+            setInclusions(tourPackage.inclusions)
+            setExclusions(tourPackage.exclusions)
+            setFeatureLists(tourPackage.featureLists)
+            setImageOneUrl(tourPackage.imageOne)
+            setImageTwoUrl(tourPackage.imageTwo)
+            setWhatToExpect(tourPackage.whatToExpect)
         }
-    }, [retreatPackages, id])
+    }, [tourPackage])
 
     useEffect(() => {
         // check is it is empty
@@ -228,174 +220,96 @@ export const EditRetreatPackages = ({ retreatPackages }: { retreatPackages: any 
 
     const timestamp = serverTimestamp()
 
-    const updateRetreatPackage = async () => {
+    const updateTourPackage = async () => {
         setLoading(true)
+
         // Upload media files and get their download URLs
         const imageDownloadURLs = await Promise.all(
             [imageOneFile, imageTwoFile].map(async (file) => {
                 if (!file) return "";
-                const storageRef = ref(storage, `retreatPackages/${file.name}`);
+                const storageRef = ref(storage, `tourPackages/${file.name}`);
                 const snapshot = await uploadBytes(storageRef, file);
                 const downloadURL = await getDownloadURL(snapshot.ref);
                 return downloadURL;
             })
         );
 
-        if (title.trim() === "") {
-            toast.error("Please add title");
-            setLoading(false)
-            return
+        if (
+            name.trim() === "" ||
+            description.trim() === "" ||
+            location.trim() === "" ||
+            country === "" ||
+            price === "" ||
+            ticketRedemptionPoint === "" ||
+            inclusions.length === 0 ||
+            featureLists.length === 0 ||
+            whatToExpect.length === 0 ||
+            imageOneUrl.trim() === ""
+        ) {
+            toast.error("Please fill all fields");
+            setLoading(false);
+            return;
         }
 
-        if (maxBookings === "") {
-            toast.error("Please add max bookings");
-            setLoading(false)
-            return
-        }
-
-        if (imageOneUrl === "") {
-            toast.error("Please upload at least image one");
-            setLoading(false)
-            return
-        }
-
-        if (!waiting) {
-            if (
-                title.trim() === "" ||
-                duration.trim() === "" ||
-                price === "" ||
-                inclusions.length === 0 ||
-                visitingCities.length === 0 ||
-                imageOneUrl.trim() === ""
-                //imageTwoUrl.trim() === ""
-            ) {
-                toast.error("Please fill all fields");
-                setLoading(false);
-                return;
-            }
-        }
-
-
-        const retreatPackageRef = doc(db, "retreatPackages", retreatPackage.id);
-
+        const activitiesRef = doc(db, "tourPackages", tourPackage.id);
 
         try {
-            await updateDoc(retreatPackageRef, {
-                isActive,
-                isWaitList: waiting,
-                maxBookings: Number(maxBookings),
-                title,
+            await updateDoc(activitiesRef, {
+                name,
                 description,
-                duration,
+                location,
+                country,
                 reviews,
                 rating,
-                travelling: Number(travelling),
-                //convert price to number
                 price: Number(price),
+                ticketRedemptionPoint,
                 inclusions,
+                exclusions,
                 featureLists,
-                visitingCities,
-                images: {
-                    imageOne: isImageOneChanged ? imageDownloadURLs[0] : imageOneUrl,
-                    imageTwo: isImageTwoChanged ? imageDownloadURLs[1] : imageTwoUrl,
-                },
+                imageOne: isImageOneChanged ? imageDownloadURLs[0] : imageOneUrl,
+                imageTwo: isImageTwoChanged ? imageDownloadURLs[1] : imageTwoUrl,
+                whatToExpect,
                 updatedAt: timestamp,
             });
-            setIsActive(false)
-            setWaiting(false)
-            setMaxBookings("15")
-            setTitle("")
-            setDescription("")
-            setDuration("")
+            setName("");
+            setDescription("");
+            setLocation("");
+            setCountry("");
             setReviews([]);
             setRating(0);
-            setTravelling("0")
-            setPrice("")
-            setInclusions([])
-            setFeatureLists([])
-            setVisitingCities([{ name: '', activities: [''] }])
-            setImageOneFile(null)
-            setImageTwoFile(null)
-            setImageOneUrl("")
-            setImageTwoUrl("")
-            toast.success("Retreat Package updated successfully")
-            navigate('/explore/retreat-packages/')
-            setLoading(false)
+            setPrice("");
+            setTicketRedemptionPoint("");
+            setInclusions([]);
+            setExclusions([]);
+            setFeatureLists([]);
+            setWhatToExpect([{ name: "", duration: "", description: "" }]);
+            setImageOneFile(null);
+            setImageTwoFile(null);
+            setImageOneUrl("");
+            setImageTwoUrl("");
+            toast.success("Tour Package updated successfully");
+            setLoading(false);
+            navigate("/explore/tour-packages");
         } catch (error) {
-            console.error("Error updating retreat package: ", error);
-            toast.error("Error updating retreat package");
-            setLoading(false)
+            console.error("Error updating Tour Package: ", error);
+            toast.error("An error occurred while updating the Tour Package");
+            setLoading(false);
         }
     }
-
 
     return (
         <div className="px-10 py-11 pb-16 flex flex-col gap-12 xl:px-5 md:gap-8">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800 md:text-xl">
-                    Edit Retreat Package
+                    Edit Tour Package
                 </h1>
             </div>
-
             <form className="w-full min-h-[400px] flex flex-col gap-10">
-                <div className="flex flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
-                    <div className="p-3 border-b border-gray-200">
-                        <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
-                            Package  Settings
-                        </h3>
-                    </div>
-                    <div className="p-4 flex gap-10 xl:gap-5 lg:flex-col">
-                        <div className="w-full flex justify-between items-center border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 placeholder:text-gray-900 placeholder:opacity-60 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out">
-                            <div className="flex gap-1 items-center">
-                                <p>
-                                    Set Active
-                                </p>
-                            </div>
-                            <FormControlLabel
-                                control={
-                                    <IOSSwitch
-                                        checked={isActive}
-                                        onChange={() => setIsActive(!isActive)}
-                                        name="isActive"
-                                        className='w-max'
-                                    />
-                                }
-                                label=""
-                            />
-                        </div>
-                        <div className="w-full flex justify-between items-center border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 placeholder:text-gray-900 placeholder:opacity-60 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out">
-                            <div className="flex gap-1 items-center">
-                                <p>
-                                    Enable Waitlist
-                                </p>
-                            </div>
-                            <FormControlLabel
-                                control={
-                                    <IOSSwitch
-                                        checked={waiting}
-                                        onChange={() => setWaiting(!waiting)}
-                                        name="waitlist"
-                                        className='w-max'
-                                    />
-                                }
-                                label=""
-                            />
-                        </div>
-                        <label htmlFor="maxBookings" className="flex flex-col gap-1.5 w-full">
-                            <p className="text-sm font-medium text-gray-700">
-                                Max Bookings
-                            </p>
-                            <Input placeholder="e.g 15"
-                                name={"maxBookings"} type={"text"} value={maxBookings}
-                                onChange={handleMaxBookingChange} className={"w-full"} required />
-                        </label>
-                    </div>
-                </div>
                 <div className="flex gap-10 xl:gap-5 lg:flex-col">
                     <div className="flex flex-1 flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                         <div className="p-3 border-b border-gray-200">
                             <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
-                                Retreat Package Info
+                                Tour Package Info
                             </h3>
                         </div>
                         <div className="p-4 flex flex-col gap-8">
@@ -403,7 +317,12 @@ export const EditRetreatPackages = ({ retreatPackages }: { retreatPackages: any 
                                 <p className="text-sm font-medium text-gray-700">
                                     Name
                                 </p>
-                                <Input placeholder="e.g Lagos weekend getaway" name={"title"} type={"text"} value={title} onChange={(e) => setTitle(e.target.value)} className={"w-full"} required />
+                                <Input
+                                    placeholder="enter tourPackage name"
+                                    name={"name"}
+                                    type={"text"} value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    className={"w-full"} required />
                             </label>
                             <label htmlFor="description" className="flex flex-col gap-1.5 w-full">
                                 <p className="text-sm font-medium text-gray-700">
@@ -415,21 +334,38 @@ export const EditRetreatPackages = ({ retreatPackages }: { retreatPackages: any 
                                     rows={3}
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
-                                    placeholder="enter travel retreat description"
+                                    placeholder="enter tourPackage description"
                                     className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out w-full"
                                 />
+                            </label>
+                            <label htmlFor="country" className="flex flex-col gap-1.5">
+                                <p className="text-sm font-medium text-gray-700">
+                                    Country
+                                </p>
+                                <select
+                                    id="country"
+                                    name="country"
+                                    value={country}
+                                    onChange={(e) => setCountry(e.target.value)}
+                                    className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out"
+                                >
+                                    <option value="">--Select Country--</option>
+                                    {countries.map((country) => (
+                                        <option key={country} value={country}>{country}</option>
+                                    ))}
+                                </select>
                             </label>
                         </div>
                     </div>
                     <div className="flex flex-1 flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                         <div className="p-3 border-b border-gray-200">
                             <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
-                                Retreat Package Images
+                                Tour Package Images
                             </h3>
                         </div>
                         <div className="p-4 flex flex-col gap-4">
                             <p className="text-sm font-medium text-gray-700">
-                                Upload at least one image
+                                Upload at least one image for your package.
                             </p>
                             <div className="p-4 flex gap-8">
                                 <div
@@ -579,50 +515,17 @@ export const EditRetreatPackages = ({ retreatPackages }: { retreatPackages: any 
                 <div className="flex flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                     <div className="p-3 border-b border-gray-200">
                         <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
-                            Retreat Package Details
+                            Tour Package  Details
                         </h3>
                     </div>
-                    <div className="grid grid-cols-2 grid-flow-row p-4 gap-8">
-                        <label htmlFor="duration" className="flex flex-col gap-1.5 w-full">
+                    <div className="grid grid-cols-2 grid-flow-row p-4 gap-8 lg:flex lg:flex-col">
+                        <label htmlFor="location" className="flex flex-col gap-1.5">
                             <p className="text-sm font-medium text-gray-700">
-                                Duration (Days)
+                                Location
                             </p>
-                            <Input placeholder="e.g full day" name={"duration"} type={"text"} value={duration} onChange={handleDurationChange} className={"w-full"} required />
+                            <Input placeholder="enter location" name={"location"} type={"text"} value={location} onChange={(e) => setLocation(e.target.value)} className={"w-full"} required />
                         </label>
-                        <label htmlFor="price" className="flex flex-col gap-1.5 w-full">
-                            <p className="text-sm font-medium text-gray-700">
-                                Price (₦)
-                            </p>
-                            <Input placeholder="e.g 1000" name={"price"} type={"text"} value={price}
-                                onChange={handlePriceChange}
-                                className={"w-full"} required />
-                        </label>
-                        <div className="flex flex-col gap-2  w-full sm:col-span-2">
-                            <p className="text-sm font-medium text-gray-700">
-                                Feature List (Add at least one)
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                                {featureLists?.map((featureList, index) => (
-                                    <label key={index} className="flex items-center gap-2 border border-[#3fc5e7] text-white px-3 py-2 rounded">
-                                        <input type="text" value={featureList} onChange={(e) => handleEditFeatureList(index, e)}
-                                            className="text-[#3fc5e7] py-2 px-1 font-semibold focus:outline-none" />
-                                        <button className="bg-[#3fc5e7]"
-                                            type="button" onClick={() => handleRemoveFeatureList(index)}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
-                                        </button>
-                                    </label>
-                                ))}
-                            </div>
-                            <div className="flex gap-2">
-                                <label htmlFor="featureList" className="w-full">
-                                    <Input placeholder="e.g Flight" name={"featureList"} type={"text"} value={featureList} onChange={(e) => setFeatureList(e.target.value)} className={"w-full flex-grow"} required />
-                                </label>
-                                <button className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
-                                    type="button"
-                                    onClick={handleAddFeatureList}>Add</button>
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-2 w-full sm:col-span-2">
+                        <div className="flex flex-col gap-2 w-full">
                             <p className="text-sm font-medium text-gray-700">
                                 Inclusions (Add at least one)
                             </p>
@@ -647,102 +550,156 @@ export const EditRetreatPackages = ({ retreatPackages }: { retreatPackages: any 
                                     onClick={handleAddInclusion}>Add</button>
                             </div>
                         </div>
-                    </div>
-                    <div className="flex flex-col p-4 gap-2 w-full">
-                        <div className="flex justify-between items-center">
-                            <p className="text-sm font-medium text-gray-700">Visiting Cities</p>
-
-                            <button
-                                className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
-                                type="button"
-                                onClick={handleAddVisitingCityField}
-                            >
-                                Add Visiting City Field
-                            </button>
+                        <div className="flex flex-col gap-2 w-full">
+                            <p className="text-sm font-medium text-gray-700">
+                                Exclusions (Add at least one)
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                {exclusions?.map((exclusion, index) => (
+                                    <label key={index} className="flex items-center gap-2 border border-[#3fc5e7] text-white px-3 py-0.5 rounded">
+                                        <input type="text" value={exclusion} onChange={(e) => handleEditInclusion(index, e)}
+                                            className="text-[#3fc5e7] py-2 px-1 font-semibold focus:outline-none" />
+                                        <button className="bg-[#3fc5e7]"
+                                            type="button" onClick={() => handleRemoveExclusion(index)}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                                        </button>
+                                    </label>
+                                ))}
+                            </div>
+                            <div className="flex gap-2">
+                                <label htmlFor="exclusion" className="w-full">
+                                    <Input placeholder="e.g Flight" name={"exclusion"} type={"text"} value={exclusion} onChange={(e) => setExclusion(e.target.value)} className={"w-full flex-grow"} required />
+                                </label>
+                                <button className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
+                                    type="button"
+                                    onClick={handleAddExclusion}>Add</button>
+                            </div>
                         </div>
-                        {visitingCities.map((city, cityIndex) => (
-                            <div key={cityIndex} className="flex flex-col gap-4 p-3 border border-gray-100 rounded">
-                                {cityIndex > 0 && (
+                        <label htmlFor="price" className="flex flex-col gap-1.5 place-self-end w-full">
+                            <p className="text-sm font-medium text-gray-700">
+                                Price (₦) <span className='text-xs text-gray-500 font-normal'>
+                                    Set to 0 if price is free or flexible
+                                </span>
+                            </p>
+                            <Input placeholder="enter price" name={"price"} type={"text"} value={price} onChange={handlePriceChange} className={"w-full"} required />
+                        </label>
+                        <div className="flex flex-col gap-2 w-full">
+                            <p className="text-sm font-medium text-gray-700">
+                                Feature List (Add at least one)
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                {featureLists?.map((featureList, index) => (
+                                    <label key={index} className="flex items-center gap-2 border border-[#3fc5e7] text-white px-3 py-2 rounded">
+                                        <input type="text" value={featureList} onChange={(e) => handleEditFeatureList(index, e)}
+                                            className="text-[#3fc5e7] py-2 px-1 font-semibold focus:outline-none" />
+                                        <button className="bg-[#3fc5e7]"
+                                            type="button" onClick={() => handleRemoveFeatureList(index)}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                                        </button>
+                                    </label>
+                                ))}
+                            </div>
+                            <div className="flex gap-2">
+                                <label htmlFor="featureList" className="w-full">
+                                    <Input placeholder="e.g Flight" name={"featureList"} type={"text"} value={featureList} onChange={(e) => setFeatureList(e.target.value)} className={"w-full flex-grow"} required />
+                                </label>
+                                <button className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
+                                    type="button"
+                                    onClick={handleAddFeatureList}>Add</button>
+                            </div>
+                        </div>
+                        <label htmlFor="ticketRedemptionPoint" className="flex place-self-end w-full flex-col gap-1.5">
+                            <p className="text-sm font-medium text-gray-700">
+                                Ticket Redemption Point
+                            </p>
+                            <Input placeholder="enter ticket redemption point" name={"ticketRedemptionPoint"} type={"text"} value={ticketRedemptionPoint} onChange={(e) => setTicketRedemptionPoint(e.target.value)} className={"w-full"} required />
+                        </label>
+                    </div>
+                    <div className="flex flex-col p-4 gap-4 w-full">
+                        <div className="flex justify-between items-center sm:flex-wrap sm:gap-2">
+                            <p className="text-sm font-medium text-gray-700">
+                                What To Expect
+                            </p>
+                            <div className="sticky top-32 bg-white z-10 p-2">
+
+
+                                <button
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
+                                    type="button"
+                                    onClick={handleAddWhatToExpectField}
+                                >
+                                    Add What To Expect Field
+                                </button>
+                            </div>
+                        </div>
+                        {whatToExpect?.map((item, index) => (
+                            <div key={index} className="flex flex-col gap-4 p-3 border border-gray-100 rounded">
+                                {index > 0 && (
                                     <BlueButton
                                         label={<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>}
-                                        onClick={() => handleRemoveVisitingCityField(cityIndex)}
+                                        onClick={() => handleRemoveWhatToExpectField(index)}
                                         className="w-max place-self-end bg-red-500 border-red-500 hover:bg-red-600 hover:border-red-600"
                                     />
                                 )}
                                 <div className='flex flex-col gap-4 w-full'>
-                                    <label htmlFor="city" className="flex flex-col gap-1.5 w-full">
-                                        <p className="text-sm font-medium text-gray-700">City</p>
-                                        <Input
-                                            placeholder="enter city"
-                                            name="city"
-                                            type="text"
-                                            value={city.name}
+                                    <div className="flex gap-2 lg:flex-col lg:gap-3">
+                                        <label htmlFor="name" className="flex flex-col gap-1.5 w-full">
+                                            <p className="text-sm font-medium text-gray-700">
+                                                Name
+                                            </p>
+                                            <Input placeholder="enter name" name={"name"} type={"text"} value={item.name} onChange={(e) => {
+                                                const newWhatToExpect = [...whatToExpect]
+                                                newWhatToExpect[index].name = e.target.value
+                                                setWhatToExpect(newWhatToExpect)
+                                            }} className={"w-full"} required />
+                                        </label>
+                                        <label htmlFor="duration" className="flex flex-col gap-1.5 w-full">
+                                            <p className="text-sm font-medium text-gray-700">
+                                                Duration (in minutes) {" "}
+                                                <span className='text-xs text-gray-500 font-normal'>
+                                                    Set to 0 if duration is flexible
+                                                </span>
+                                            </p>
+                                            <Input placeholder="enter duration" name={"duration"} type={"text"} value={item.duration}
+                                                onChange={(e) => handleWhatToExpectDurationChange(e, index)}
+                                                className={"w-full"} required />
+                                        </label>
+                                    </div>
+                                    <label htmlFor="description" className="flex flex-col gap-1.5 w-full">
+                                        <p className="text-sm font-medium text-gray-700">
+                                            Description
+                                        </p>
+                                        <textarea
+                                            id="description"
+                                            name="description"
+                                            rows={3}
+                                            value={item.description}
                                             onChange={(e) => {
-                                                const updatedCities = [...visitingCities];
-                                                updatedCities[cityIndex].name = e.target.value;
-                                                setVisitingCities(updatedCities);
+                                                const newWhatToExpect = [...whatToExpect]
+                                                newWhatToExpect[index].description = e.target.value
+                                                setWhatToExpect(newWhatToExpect)
                                             }}
-                                            className="w-full"
-                                            required
+                                            placeholder="enter description"
+                                            className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out w-full"
                                         />
                                     </label>
-                                    <div className="flex flex-col gap-2 w-full">
-                                        <label htmlFor="activity" className="flex flex-col gap-1.5 w-full">
-                                            <p className="text-sm font-medium text-gray-700">Activity</p>
-                                            <div className="flex flex-wrap gap-4">
-                                                {city.activities.map((activity, activityIndex) => (
-                                                    <div className='flex gap-2 items-center sm:w-full'>
-                                                        <Input
-                                                            key={activityIndex}
-                                                            type="text"
-                                                            name="activity"
-                                                            placeholder="enter activity"
-                                                            value={activity}
-                                                            onChange={(e) => {
-                                                                const updatedCities = [...visitingCities];
-                                                                updatedCities[cityIndex].activities[activityIndex] = e.target.value;
-                                                                setVisitingCities(updatedCities);
-                                                            }}
-                                                            className="sm:w-full"
-                                                        />
-                                                        {activityIndex > 0 && (
-                                                            <BlueButton
-                                                                label={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>}
-                                                                onClick={() => handleRemoveActivityField(cityIndex, activityIndex)}
-                                                                className="w-max bg-red-500 border-red-500 hover:bg-red-600 hover:border-red-600"
-                                                            />
-                                                        )}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </label>
-                                        <div className="flex gap-2">
-                                            <button
-                                                className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
-                                                type="button"
-                                                onClick={() => handleAddActivityField(cityIndex)}
-                                            >
-                                                Add New Activity Field
-                                            </button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
                 <div className="flex justify-end gap-4">
-                    <button className={`bg-[rgba(0,109,156,0.86)] text-white text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-[#006d9c] ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
-                        type="submit"
+                    <button className="bg-[rgba(0,109,156,0.86)] text-white text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-[#006d9c]"
+                        type="button"
+                        onClick={updateTourPackage}
                         disabled={loading}
-                        onClick={updateRetreatPackage}>
-                        {loading ? "Updating..." : "Update"}
+                    >
+                        {loading ? "Updating..." : "Update Tour Package"}
                     </button>
-                    <button
-                        className="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-gray-200"
-                        type="button">Cancel</button>
+                    <button className="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-gray-200" type="button">Cancel</button>
                 </div>
             </form>
+
         </div>
     )
 }

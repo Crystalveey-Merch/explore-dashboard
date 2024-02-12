@@ -51,6 +51,7 @@ export const categories = [
     }
 ];
 
-export const countries = ["Nigeria", "Kenya", "Ghana", "Mauritius", "Rwanda", "South Africa", "Lebanon", "Tanzania"];
+export const countries = ["Nigeria", "Kenya", "Ghana", "UK", "Spain", "Italy", "France", "Germany", "Netherlands", "Belgium", "Portugal", "Greece", "Sweden", "Vietnam",
+    "Mauritius", "Rwanda", "South Africa", "Lebanon", "Tanzania", "Uganda", "Zimbabwe", "Zambia", "Egypt", "Morocco", "Tunisia", "Algeria", "Angola", "Benin", "Botswana", "Burkina Faso", "Burundi", "Cabo Verde", "Cameroon", "Central African Republic", "Chad", "Comoros", "Congo", "Cote d'Ivoire", "Djibouti", "Equatorial Guinea", "Eritrea", "Eswatini", "Ethiopia", "Gabon", "Gambia", "Guinea", "Guinea-Bissau", "Lesotho", "Liberia", "Libya", "Madagascar", "Malawi", "Mali", "Mauritania", "Mozambique", "Namibia", "Niger", "Republic of the Congo", "Sao Tome and Principe", "Senegal", "Seychelles", "Sierra Leone", "Somalia", "South Sudan", "Sudan", "Togo", "Tunisia", "Uganda", "Zambia", "Zimbabwe", "Afghanistan", "Armenia", "Azerbaijan", "Bahrain", "Bangladesh", "Bhutan", "Brunei", "Cambodia", "China", "Cyprus", "Georgia", "India", "Indonesia", "Iran", "Iraq"]
 
 

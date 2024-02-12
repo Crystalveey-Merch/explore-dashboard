@@ -10,9 +10,11 @@ import { Sort } from "../../../Hooks";
 import noResultImg from "../../../assets/Images/Dashboard/no-results.png"
 
 
-export const Activities = ({ allActivities }: { allActivities: any[], }) => {
-    const [activities, setActivities] = useState<any[]>([]);
-    const [displayedActivities, setDisplayedActivities] = useState<any[]>([]);
+
+
+export const TourPackages = ({ allTours }: { allTours: any }) => {
+    const [tourPackages, setTourPackages] = useState<any[]>([]);
+    const [displayedTours, setDisplayedTours] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
     const [sort, setSort] = useState("");
@@ -25,23 +27,23 @@ export const Activities = ({ allActivities }: { allActivities: any[], }) => {
 
     useEffect(() => {
         setLoading(true);
-        setActivities(allActivities);
-        setDisplayedActivities(allActivities);
+        setTourPackages(allTours);
+        setDisplayedTours(allTours);
         setLoading(false);
-    }, [allActivities]);
+    }, [allTours]);
 
 
     const handleDelete = async (id: string, name: string) => {
         if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
             try {
                 // Delete the document from Firestore
-                await deleteDoc(doc(db, 'activities', id));
+                await deleteDoc(doc(db, 'tourPackages', id));
 
                 // Update the state after successful deletion
-                const updatedActivities = activities.filter((activity) => activity.id !== id);
-                setActivities(updatedActivities);
-                setDisplayedActivities(updatedActivities);
-                toast.success("Activity deleted successfully");
+                const updatedActivities = tourPackages.filter((tour) => tour.id !== id);
+                setTourPackages(updatedActivities);
+                setDisplayedTours(updatedActivities);
+                toast.success("Tour Package deleted successfully");
             } catch (error) {
                 console.log(error);
                 toast.error("Something went wrong");
@@ -56,23 +58,23 @@ export const Activities = ({ allActivities }: { allActivities: any[], }) => {
     // sort 
     useEffect(() => {
         if (sort === "asc" && activeTab === "activityName") {
-            setDisplayedActivities([...displayedActivities].sort((a, b) => a.name.localeCompare(b.name)));
+            setDisplayedTours([...displayedTours].sort((a, b) => a.name.localeCompare(b.name)));
         } else if (sort === "desc" && activeTab === "activityName") {
-            setDisplayedActivities([...displayedActivities].sort((a, b) => b.name.localeCompare(a.name)));
+            setDisplayedTours([...displayedTours].sort((a, b) => b.name.localeCompare(a.name)));
         } else if (sort === "asc" && activeTab === "price") {
-            setDisplayedActivities([...displayedActivities].sort((a, b) => a.price - b.price));
+            setDisplayedTours([...displayedTours].sort((a, b) => a.price - b.price));
         } else if (sort === "desc" && activeTab === "price") {
-            setDisplayedActivities([...displayedActivities].sort((a, b) => b.price - a.price));
+            setDisplayedTours([...displayedTours].sort((a, b) => b.price - a.price));
         } else if (sort === "asc" && activeTab === "category") {
-            setDisplayedActivities([...displayedActivities].sort((a, b) => a.category.localeCompare(b.category)));
+            setDisplayedTours([...displayedTours].sort((a, b) => a.category.localeCompare(b.category)));
         } else if (sort === "desc" && activeTab === "category") {
-            setDisplayedActivities([...displayedActivities].sort((a, b) => b.category.localeCompare(a.category)));
+            setDisplayedTours([...displayedTours].sort((a, b) => b.category.localeCompare(a.category)));
         } else if (sort === "asc" && activeTab === "location") {
-            setDisplayedActivities([...displayedActivities].sort((a, b) => a.location.localeCompare(b.location)));
+            setDisplayedTours([...displayedTours].sort((a, b) => a.location.localeCompare(b.location)));
         } else if (sort === "desc" && activeTab === "location") {
-            setDisplayedActivities([...displayedActivities].sort((a, b) => b.location.localeCompare(a.location)));
+            setDisplayedTours([...displayedTours].sort((a, b) => b.location.localeCompare(a.location)));
         } else {
-            setDisplayedActivities(activities);
+            setDisplayedTours(tourPackages);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sort, activeTab]);
@@ -81,8 +83,8 @@ export const Activities = ({ allActivities }: { allActivities: any[], }) => {
     const [search, setSearch] = useState<string>("");
     // search by name and category
     useEffect(() => {
-        setDisplayedActivities(activities.filter((activity) => activity.name.toLowerCase().includes(search.toLowerCase()) || activity.category.toLowerCase().includes(search.toLowerCase())));
-    }, [search, activities]);
+        setDisplayedTours(tourPackages.filter((tour) => tour.name.toLowerCase().includes(search.toLowerCase()) || tour.category.toLowerCase().includes(search.toLowerCase())));
+    }, [search, tourPackages]);
 
 
     // pagination 
@@ -112,15 +114,17 @@ export const Activities = ({ allActivities }: { allActivities: any[], }) => {
         <div className="px-10 py-14 flex flex-col gap-20 xl:px-6 xl:w-[calc(100vw-10px)] lg:gap-16 md:gap-12 sm:w-[100vw] sm:gap-9">
             <div className="flex justify-between items-center sm:flex-col sm:items-start sm:gap-3">
                 <h1 className="text-3xl font-bold text-gray-800 xl:text-2xl lg:text-xl">
-                    Activities
+                    Tour Packages
                 </h1>
-                <NavLink to="/explore/activities/add">
+                <NavLink to="/explore/tour-packages/add">
                     <BlueButton
                         className="lg:py-1.5"
                         label={
                             <div className="flex items-center gap-2">
                                 <img src={PlusSVG} alt="plus" className="w-4 h-4 lg:w-3.5 lg:h-3.5" />
-                                <p className="xl:text-sm xl:font-normal">Add New Activity</p>
+                                <p className="xl:text-sm xl:font-normal">
+                                    Add New Tour Package
+                                </p>
                             </div>
                         }
                         onClick={undefined} />
@@ -133,7 +137,7 @@ export const Activities = ({ allActivities }: { allActivities: any[], }) => {
                             Activities
                         </h2> */}
                         <p className="text-sm text-gray-500">
-                            List of all activities
+                            List of all tour packages
                         </p>
                     </div>
                     <div className="flex flex-col gap-4 w-full">
@@ -142,7 +146,7 @@ export const Activities = ({ allActivities }: { allActivities: any[], }) => {
                             style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
                         >
                             <div className="flex justify-end pt-5 px-4">
-                                <SearchInput search={search} setSearch={setSearch} />
+                                <SearchInput search={search} setSearch={setSearch} placeholder="Search by name or category" />
                             </div>
                             <div className="relative w-full lg:overflow-x-scroll xl:overflow-y-hidden xl:rounded-lg">
                                 <table className="w-full text-sm text-left text-gray-500">
@@ -199,7 +203,7 @@ export const Activities = ({ allActivities }: { allActivities: any[], }) => {
                                             </th>
                                         </tr>
                                     </thead>
-                                    {displayedActivities.length === 0 ? (
+                                    {displayedTours.length === 0 ? (
                                         <tbody className="bg-white border-b border-gray-200">
                                             <tr className="bg-white border-b">
                                                 <td className="px-6 py-6" colSpan={6}>
@@ -218,38 +222,38 @@ export const Activities = ({ allActivities }: { allActivities: any[], }) => {
                                         </tbody>
                                     ) : (
                                         <>
-                                            {displayedActivities.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((activity) => (
-                                                <tbody key={activity.id}>
+                                            {displayedTours.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((tour) => (
+                                                <tbody key={tour.id}>
                                                     <tr className="bg-white border-b hover:bg-gray-50">
 
                                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex gap-2 items-center mx-5">
                                                             <img
-                                                                src={activity.imageOne}
+                                                                src={tour.imageOne}
                                                                 alt="activity"
                                                                 className="w-14 h-14 rounded-md object-cover"
                                                             />
                                                             <p>
-                                                                {activity.name}
+                                                                {tour.name}
                                                             </p>
                                                         </th>
                                                         <td className="px-6 py-4">
-                                                            {activity.price ? activity.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }) : "Free"}
+                                                            {tour.price ? tour.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }) : "Free"}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            {activity.category}
+                                                            {tour.category}
                                                         </td>
                                                         <td className="px-6 py-4">
                                                             Yes
                                                         </td>
                                                         <td className="px-6 py-4">
-                                                            {activity.location}
+                                                            {tour.location}
                                                         </td>
                                                         <td className="flex items-center px-6 py-4 space-x-3">
                                                             <NavLink
-                                                                to={`/explore/activities/edit/${activity.id}`}
+                                                                to={`/explore/tour-packages/edit/${tour.id}`}
                                                                 className="font-medium my-auto text-blue-600 dark:text-blue-500 hover:underline">Edit</NavLink>
                                                             <button
-                                                                onClick={() => handleDelete(activity.id, activity.name)}
+                                                                onClick={() => handleDelete(tour.id, tour.name)}
                                                                 className="font-medium my-auto text-red-600 dark:text-red-500 hover:underline">Remove</button>
                                                         </td>
                                                     </tr>
@@ -262,7 +266,7 @@ export const Activities = ({ allActivities }: { allActivities: any[], }) => {
                             <div className="p-2">
                                 <TablePagination
                                     component="div"
-                                    count={displayedActivities.length}
+                                    count={displayedTours.length}
                                     page={page}
                                     onPageChange={handleChangePage}
                                     rowsPerPage={rowsPerPage}

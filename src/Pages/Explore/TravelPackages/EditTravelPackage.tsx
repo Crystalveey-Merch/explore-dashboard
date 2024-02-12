@@ -5,8 +5,6 @@ import {
     serverTimestamp,
     doc,
     updateDoc,
-    collection,
-    getDocs,
 } from "firebase/firestore";
 import moment from 'moment';
 import { toast } from 'react-toastify'
@@ -19,30 +17,10 @@ import downloadCloudSVG from "../../../assets/SVG/Dashboard/download-cloud.svg"
 import { BlueButton, IOSSwitch } from '../../../Components';
 
 
-export const EditTravelPackage = () => {
+export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] }) => {
     const { id } = useParams<{ id: string }>()
-    const [travelPackages, setTravelPackages] = useState<any[]>([])
     const [travelPackage, setTravelPackage] = useState<any>({})
-    const [travelPackageLoading, setTravelPackageLoading] = useState<boolean>(false)
 
-    useEffect(() => {
-        const fetchTravelPackages = async () => {
-            try {
-                setTravelPackageLoading(true);
-                const querySnapshot = await getDocs(collection(db, 'travelPackages'));
-                const packagedata = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-                setTravelPackages(packagedata);
-                setTravelPackageLoading(false);
-            } catch (error) {
-                console.log(error);
-                setTravelPackageLoading(false);
-            }
-        }
-        fetchTravelPackages();
-    }, [])
 
     const navigate = useNavigate()
 
@@ -188,7 +166,7 @@ export const EditTravelPackage = () => {
     }
 
     useEffect(() => {
-        const travelPackage = travelPackages.find((travelPackage) => travelPackage.id === id)
+        const travelPackage = travelPackages.find((travelPackage: any) => travelPackage.id === id)
         if (travelPackage) {
             setIsActive(travelPackage.isActive)
             setWaiting(travelPackage.isWaitList)
@@ -365,14 +343,6 @@ export const EditTravelPackage = () => {
             toast.error("Error updating travel package")
             setLoading(false)
         }
-    }
-
-    if (travelPackageLoading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-2xl font-semibold text-gray-800">Loading...</p>
-            </div>
-        )
     }
 
     return (

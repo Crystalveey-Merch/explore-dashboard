@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useRef, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useRef } from 'react'
+import { useNavigate } from 'react-router-dom';
 import {
     serverTimestamp,
-    updateDoc,
-    doc,
+    // setDoc,
+    // doc,
+    addDoc,
+    collection,
 } from "firebase/firestore";
 import { toast } from 'react-toastify'
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
@@ -13,30 +15,17 @@ import Input from "../../../Components/Explore/Custom/Input"
 import imagePictureSVG from "../../../assets/SVG/Dashboard/image-picture.svg"
 import downloadCloudSVG from "../../../assets/SVG/Dashboard/download-cloud.svg"
 import { BlueButton } from '../../../Components';
-import { categories, countries } from '../../../data/data'
+import { countries } from '../../../data/data'
 
 
-export const EditActivity = ({ activities }: { activities: any }) => {
-    const { id } = useParams<{ id: string }>()
-    const [activity, setActivity] = useState<any>({})
 
-    useEffect(() => {
-        if (activities.length > 0) {
-            const activity = activities.find((activity: { id: string | undefined; }) => (activity.id === id))
-            setActivity(activity);
-        }
-    }, [activities, id])
-
+export const AddTourPackage = () => {
     const navigate = useNavigate()
-
-    const [isImageOneChanged, setIsImageOneChanged] = useState(false)
-    const [isImageTwoChanged, setIsImageTwoChanged] = useState(false)
 
     const [loading, setLoading] = useState(false)
     const [name, setName] = useState<string>('')
     const [description, setDescription] = useState<string>('')
     const [location, setLocation] = useState<string>('')
-    const [category, setCategory] = useState<any>({})
     const [country, setCountry] = useState<string>('Nigeria')
     const [reviews, setReviews] = useState<any[]>([])
     const [rating, setRating] = useState<number>(0)
@@ -44,6 +33,8 @@ export const EditActivity = ({ activities }: { activities: any }) => {
     const [ticketRedemptionPoint, setTicketRedemptionPoint] = useState<string>("")
     const [inclusion, setInclusion] = useState<string>("")
     const [inclusions, setInclusions] = useState<string[]>([])
+    const [exclusion, setExclusion] = useState<string>("")
+    const [exclusions, setExclusions] = useState<string[]>([])
     const [featureList, setFeatureList] = useState<string>("")
     const [featureLists, setFeatureLists] = useState<string[]>([])
     const [whatToExpect, setWhatToExpect] = useState([{ name: "", duration: "", description: "" }])
@@ -55,17 +46,24 @@ export const EditActivity = ({ activities }: { activities: any }) => {
         }
     }
 
-    const handleEditInclusion = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value
-        const newInclusions = [...inclusions]
-        newInclusions[index] = value
-        setInclusions(newInclusions)
-    }
-
     const handleRemoveInclusion = (index: number) => {
         const newInclusions = [...inclusions]
         newInclusions.splice(index, 1)
         setInclusions(newInclusions)
+    }
+
+
+    const handleAddExclusion = () => {
+        if (exclusion !== "") {
+            setExclusions([...exclusions, exclusion])
+            setExclusion("")
+        }
+    }
+
+    const handleRemoveExclusion = (index: number) => {
+        const newExclusions = [...exclusions]
+        newExclusions.splice(index, 1)
+        setExclusions(newExclusions)
     }
 
 
@@ -74,13 +72,6 @@ export const EditActivity = ({ activities }: { activities: any }) => {
             setFeatureLists([...featureLists, featureList])
             setFeatureList("")
         }
-    }
-
-    const handleEditFeatureList = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value
-        const newFeatureLists = [...featureLists]
-        newFeatureLists[index] = value
-        setFeatureLists(newFeatureLists)
     }
 
     const handleRemoveFeatureList = (index: number) => {
@@ -115,6 +106,7 @@ export const EditActivity = ({ activities }: { activities: any }) => {
             setWhatToExpect(newWhatToExpect)
         }
     }
+
 
 
     const [imageOneFile, setImageOneFile] = useState<File | null>(null)
@@ -171,51 +163,16 @@ export const EditActivity = ({ activities }: { activities: any }) => {
         setImageTwoUrl("")
     }
 
-    useEffect(() => {
-        if (activity) {
-            setName(activity.name)
-            setDescription(activity.description)
-            setLocation(activity.location)
-            setCategory(activity.category)
-            setCountry(activity.country)
-            setReviews(activity.reviews)
-            setRating(activity.rating)
-            setPrice(activity.price)
-            setTicketRedemptionPoint(activity.ticketRedemptionPoint)
-            setInclusions(activity.inclusions)
-            setFeatureLists(activity.featureLists)
-            setImageOneUrl(activity.imageOne)
-            setImageTwoUrl(activity.imageTwo)
-            setWhatToExpect(activity.whatToExpect)
-        }
-    }, [activity])
-
-    useEffect(() => {
-        // check is it is empty
-        if (imageOneFile === null) {
-            setIsImageOneChanged(false)
-        } else {
-            setIsImageOneChanged(true)
-        }
-
-        if (imageTwoFile === null) {
-            setIsImageTwoChanged(false)
-        } else {
-            setIsImageTwoChanged(true)
-        }
-
-    }, [imageOneFile, imageTwoFile])
-
     const timestamp = serverTimestamp()
 
-    const updateActivity = async () => {
-        setLoading(true)
+    const addTourPackage = async () => {
+        setLoading(true);
 
         // Upload media files and get their download URLs
         const imageDownloadURLs = await Promise.all(
             [imageOneFile, imageTwoFile].map(async (file) => {
                 if (!file) return "";
-                const storageRef = ref(storage, `activities/${file.name}`);
+                const storageRef = ref(storage, `tourPackages/${file.name}`);
                 const snapshot = await uploadBytes(storageRef, file);
                 const downloadURL = await getDownloadURL(snapshot.ref);
                 return downloadURL;
@@ -226,7 +183,6 @@ export const EditActivity = ({ activities }: { activities: any }) => {
             name.trim() === "" ||
             description.trim() === "" ||
             location.trim() === "" ||
-            category === "" ||
             country === "" ||
             price === "" ||
             ticketRedemptionPoint === "" ||
@@ -234,63 +190,77 @@ export const EditActivity = ({ activities }: { activities: any }) => {
             featureLists.length === 0 ||
             whatToExpect.length === 0 ||
             imageOneUrl.trim() === ""
+            // imageTwoUrl.trim() === ""
         ) {
             toast.error("Please fill all fields");
             setLoading(false);
             return;
         }
 
-        const activitiesRef = doc(db, "activities", activity.id);
+        if (imageDownloadURLs[0] === "") {
+            toast.error("Please upload image one");
+            setLoading(false);
+            return;
+        }
+
+        const tourPackagesRef = collection(db, "tourPackages");
 
         try {
-            await updateDoc(activitiesRef, {
+            await addDoc(tourPackagesRef, {
                 name,
                 description,
-                location,
-                category,
                 country,
+                location,
                 reviews,
                 rating,
                 price: Number(price),
                 ticketRedemptionPoint,
                 inclusions,
+                exclusions,
                 featureLists,
-                imageOne: isImageOneChanged ? imageDownloadURLs[0] : imageOneUrl,
-                imageTwo: isImageTwoChanged ? imageDownloadURLs[1] : imageTwoUrl,
                 whatToExpect,
+                imageOne: imageDownloadURLs[0],
+                imageTwo: imageDownloadURLs[1],
+                createdAt: timestamp,
                 updatedAt: timestamp,
             });
+
+            // Reset form fields and display success message
             setName("");
             setDescription("");
             setLocation("");
-            setCategory("");
             setCountry("");
             setReviews([]);
             setRating(0);
             setPrice("");
             setTicketRedemptionPoint("");
             setInclusions([]);
+            setExclusions([]);
             setFeatureLists([]);
             setWhatToExpect([{ name: "", duration: "", description: "" }]);
             setImageOneFile(null);
             setImageTwoFile(null);
             setImageOneUrl("");
             setImageTwoUrl("");
-            toast.success("Activity updated successfully");
             setLoading(false);
-            navigate("/explore/activities");
+            toast.success("Tour package added successfully");
+            navigate("/explore/tour-packages");
         } catch (error) {
-            console.error("Error updating activity: ", error);
-            toast.error("An error occurred while updating the activity");
+            console.error("Error adding tour package: ", error);
+            toast.error("An error occurred while adding the tour package. Please try again.");
             setLoading(false);
         }
-    }
+    };
+
+
+
+
 
     return (
         <div className="px-10 py-11 pb-16 flex flex-col gap-12 xl:px-5 md:gap-8">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800 md:text-xl">
-                    Edit Activity
+                    Add Tour Package
                 </h1>
             </div>
             <form className="w-full min-h-[400px] flex flex-col gap-10">
@@ -298,7 +268,7 @@ export const EditActivity = ({ activities }: { activities: any }) => {
                     <div className="flex flex-1 flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                         <div className="p-3 border-b border-gray-200">
                             <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
-                                Activity Info
+                                Tour Info
                             </h3>
                         </div>
                         <div className="p-4 flex flex-col gap-8">
@@ -306,12 +276,7 @@ export const EditActivity = ({ activities }: { activities: any }) => {
                                 <p className="text-sm font-medium text-gray-700">
                                     Name
                                 </p>
-                                <Input
-                                    placeholder="enter activity name"
-                                    name={"name"}
-                                    type={"text"} value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    className={"w-full"} required />
+                                <Input placeholder="enter tour name" name={"name"} type={"text"} value={name} onChange={(e) => setName(e.target.value)} className={"w-full"} required />
                             </label>
                             <label htmlFor="description" className="flex flex-col gap-1.5 w-full">
                                 <p className="text-sm font-medium text-gray-700">
@@ -323,24 +288,24 @@ export const EditActivity = ({ activities }: { activities: any }) => {
                                     rows={3}
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
-                                    placeholder="enter activity description"
+                                    placeholder="enter tour description"
                                     className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out w-full"
                                 />
                             </label>
-                            <label htmlFor="category" className="flex flex-col gap-1.5 w-full">
+                            <label htmlFor="country" className="flex flex-col gap-1.5">
                                 <p className="text-sm font-medium text-gray-700">
-                                    Category
+                                    Country
                                 </p>
                                 <select
-                                    id="category"
-                                    name="category"
-                                    value={category}
-                                    onChange={(e) => setCategory(e.target.value)}
-                                    className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out w-full"
+                                    id="country"
+                                    name="country"
+                                    value={country}
+                                    onChange={(e) => setCountry(e.target.value)}
+                                    className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out"
                                 >
-                                    <option value="">--Select Category--</option>
-                                    {categories.map((category) => (
-                                        <option key={category.id} value={category.name}>{category.name}</option>
+                                    <option value="">--Select Country--</option>
+                                    {countries.map((country) => (
+                                        <option key={country} value={country}>{country}</option>
                                     ))}
                                 </select>
                             </label>
@@ -349,7 +314,7 @@ export const EditActivity = ({ activities }: { activities: any }) => {
                     <div className="flex flex-1 flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                         <div className="p-3 border-b border-gray-200">
                             <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
-                                Activity Images
+                                Tour Images
                             </h3>
                         </div>
                         <div className="p-4 flex flex-col gap-4">
@@ -504,27 +469,12 @@ export const EditActivity = ({ activities }: { activities: any }) => {
                 <div className="flex flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                     <div className="p-3 border-b border-gray-200">
                         <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
-                            Activity  Details
+                            Tour Details
                         </h3>
                     </div>
                     <div className="grid grid-cols-2 grid-flow-row p-4 gap-8 lg:flex lg:flex-col">
-                        <label htmlFor="country" className="flex flex-col gap-1.5">
-                            <p className="text-sm font-medium text-gray-700">
-                                Country
-                            </p>
-                            <select
-                                id="country"
-                                name="country"
-                                value={country}
-                                onChange={(e) => setCountry(e.target.value)}
-                                className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out"
-                            >
-                                <option value="">--Select Country--</option>
-                                {countries.map((country) => (
-                                    <option key={country} value={country}>{country}</option>
-                                ))}
-                            </select>
-                        </label>
+
+
                         <label htmlFor="location" className="flex flex-col gap-1.5">
                             <p className="text-sm font-medium text-gray-700">
                                 Location
@@ -536,15 +486,14 @@ export const EditActivity = ({ activities }: { activities: any }) => {
                                 Inclusions (Add at least one)
                             </p>
                             <div className="flex flex-wrap gap-2">
-                                {inclusions?.map((inclusion, index) => (
-                                    <label key={index} className="flex items-center gap-2 border border-[#3fc5e7] text-white px-3 py-0.5 rounded">
-                                        <input type="text" value={inclusion} onChange={(e) => handleEditInclusion(index, e)}
-                                            className="text-[#3fc5e7] py-2 px-1 font-semibold focus:outline-none" />
-                                        <button className="bg-[#3fc5e7]"
+                                {inclusions.map((inclusion, index) => (
+                                    <div key={index} className="flex items-center gap-2 bg-[#3fc5e7] text-white px-3 py-2 rounded">
+                                        <p className="text-sm font-semibold">{inclusion}</p>
+                                        <button className=""
                                             type="button" onClick={() => handleRemoveInclusion(index)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                                         </button>
-                                    </label>
+                                    </div>
                                 ))}
                             </div>
                             <div className="flex gap-2">
@@ -554,6 +503,30 @@ export const EditActivity = ({ activities }: { activities: any }) => {
                                 <button className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
                                     type="button"
                                     onClick={handleAddInclusion}>Add</button>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2 w-full">
+                            <p className="text-sm font-medium text-gray-700">
+                                Exclusions (Add at least one)
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                {exclusions.map((exclusion, index) => (
+                                    <div key={index} className="flex items-center gap-2 bg-[#3fc5e7] text-white px-3 py-2 rounded">
+                                        <p className="text-sm font-semibold">{exclusion}</p>
+                                        <button className=""
+                                            type="button" onClick={() => handleRemoveExclusion(index)}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="flex gap-2">
+                                <label htmlFor="exclusion" className="w-full">
+                                    <Input placeholder="e.g Flight" name={"exclusion"} type={"text"} value={exclusion} onChange={(e) => setExclusion(e.target.value)} className={"w-full flex-grow"} required />
+                                </label>
+                                <button className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
+                                    type="button"
+                                    onClick={handleAddExclusion}>Add</button>
                             </div>
                         </div>
                         <label htmlFor="price" className="flex flex-col gap-1.5 place-self-end w-full">
@@ -569,15 +542,14 @@ export const EditActivity = ({ activities }: { activities: any }) => {
                                 Feature List (Add at least one)
                             </p>
                             <div className="flex flex-wrap gap-2">
-                                {featureLists?.map((featureList, index) => (
-                                    <label key={index} className="flex items-center gap-2 border border-[#3fc5e7] text-white px-3 py-2 rounded">
-                                        <input type="text" value={featureList} onChange={(e) => handleEditFeatureList(index, e)}
-                                            className="text-[#3fc5e7] py-2 px-1 font-semibold focus:outline-none" />
-                                        <button className="bg-[#3fc5e7]"
+                                {featureLists.map((featureList, index) => (
+                                    <div key={index} className="flex items-center gap-2 bg-[#3fc5e7] text-white px-3 py-2 rounded">
+                                        <p className="text-sm font-semibold">{featureList}</p>
+                                        <button className=""
                                             type="button" onClick={() => handleRemoveFeatureList(index)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                                         </button>
-                                    </label>
+                                    </div>
                                 ))}
                             </div>
                             <div className="flex gap-2">
@@ -613,7 +585,7 @@ export const EditActivity = ({ activities }: { activities: any }) => {
                                 </button>
                             </div>
                         </div>
-                        {whatToExpect?.map((item, index) => (
+                        {whatToExpect.map((item, index) => (
                             <div key={index} className="flex flex-col gap-4 p-3 border border-gray-100 rounded">
                                 {index > 0 && (
                                     <BlueButton
@@ -672,10 +644,10 @@ export const EditActivity = ({ activities }: { activities: any }) => {
                 <div className="flex justify-end gap-4">
                     <button className="bg-[rgba(0,109,156,0.86)] text-white text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-[#006d9c]"
                         type="button"
-                        onClick={updateActivity}
+                        onClick={addTourPackage}
                         disabled={loading}
                     >
-                        {loading ? "Updating..." : "Update Activity"}
+                        {loading ? "Adding..." : "Add Tour Package"}
                     </button>
                     <button className="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-gray-200" type="button">Cancel</button>
                 </div>

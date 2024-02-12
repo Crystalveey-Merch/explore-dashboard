@@ -20,6 +20,7 @@ export const ExploreDasboardLayout = ({ children }: { children: ReactNode }) => 
     const [travelBookings, setTravelBookings] = useState<any[]>([])
     const [activityBookings, setActivityBookings] = useState<any[]>([])
     const [retreatBookings, setRetreatBookings] = useState<any[]>([])
+    const [tourBookings, setTourBookings] = useState<any[]>([])
     const [waitList, setWaitList] = useState<any[]>([])
 
     // useEffect(() => {
@@ -123,16 +124,18 @@ export const ExploreDasboardLayout = ({ children }: { children: ReactNode }) => 
         const travelBookings = bookings.filter((booking: { type: string }) => booking.type === "Promoted Travel Package");
         const activityBookings = bookings.filter((booking: { type: string }) => booking.type === "Exciting Activities");
         const retreatBookings = bookings.filter((booking: { type: string }) => booking.type === "Retreats Packages");
+        const tourBookings = bookings.filter((booking: { type: string }) => booking.type === "Tour Packages");
 
         setTravelBookings(travelBookings);
         setActivityBookings(activityBookings);
         setRetreatBookings(retreatBookings);
+        setTourBookings(tourBookings);
     }, [bookings]);
 
     return (
         <div className='flex h-screen overflow-hidden'>
             <div className='z-30'>
-                <SideBar travelBookings={travelBookings} activityBookings={activityBookings} retreatBookings={retreatBookings} waitList={waitList}
+                <SideBar travelBookings={travelBookings} activityBookings={activityBookings} retreatBookings={retreatBookings} tourBookings={tourBookings} waitList={waitList}
                 />
             </div>
             <div className='flex flex-grow overflow-auto'>

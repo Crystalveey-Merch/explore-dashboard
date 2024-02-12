@@ -12,6 +12,7 @@ import invoiceSVG from "../../assets/SVG/Dashboard/invoice-dollar.svg"
 import activitySVG from "../../assets/SVG/Dashboard/outdoor-trip.svg"
 import travelPackageSVG from "../../assets/SVG/Dashboard/tour.svg"
 import retreatPackageSVG from "../../assets/SVG/Dashboard/adventure-relaxation-shelter.svg"
+import tourPackageSVG from "../../assets/SVG/Dashboard/compass-solid.svg"
 import bookingsSVG from "../../assets/SVG/Dashboard/ticket.svg"
 import activitiesSVG from "../../assets/SVG/Dashboard/square-person-confined-solid.svg"
 import retreatsSVG from "../../assets/SVG/Dashboard/adventure-journey-location.svg"
@@ -20,19 +21,22 @@ import hotelSVG from "../../assets/SVG/Dashboard/hotel.svg"
 import visaSVG from "../../assets/SVG/Dashboard/passport.svg"
 import privateSVG from "../../assets/SVG/Dashboard/business-travel.svg"
 import routeSVG from "../../assets/SVG/Dashboard/route-solid.svg"
+import mapSVG from "../../assets/SVG/Dashboard/map-location-dot-solid.svg"
 import bellRingSVG from "../../assets/SVG/Dashboard/bell-ring.svg"
 import piggySolidSVG from "../../assets/SVG/Dashboard/piggy-bank-solid.svg"
 
 
-export const SideBar = ({ travelBookings, activityBookings, retreatBookings, waitList }: { travelBookings: any[], activityBookings: any[], retreatBookings: any[], waitList: any[] }) => {
+export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tourBookings, waitList }: { travelBookings: any[], activityBookings: any[], retreatBookings: any[], tourBookings: any[], waitList: any[] }) => {
 
     const dispatch = useDispatch();
     const [activityDropdown, setActivityDropdown] = useState<boolean>(false);
     const [travelPackageDropdown, setTravelPackageDropdown] = useState<boolean>(false);
     const [retreatPackageDropdown, setRetreatPackageDropdown] = useState<boolean>(false);
+    const [tourPackageDropdown, setTourPackageDropdown] = useState<boolean>(false);
     const [travelBookingDropdown, setTravelBookingDropdown] = useState<boolean>(false);
     const [activitiesBookingDropdown, setActivitiesBookingDropdown] = useState<boolean>(false);
     const [retreatsBookingDropdown, setRetreatsBookingDropdown] = useState<boolean>(false)
+    const [tourBookingDropdown, setTourBookingDropdown] = useState<boolean>(false);
     const [bookingDropdown, setBookingDropdown] = useState<boolean>(false);
     const [waitlistDropdown, setWaitlistDropdown] = useState<boolean>(false);
 
@@ -130,7 +134,9 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                                 setActivitiesBookingDropdown(false),
                                                 setBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
-                                                setWaitlistDropdown(false)
+                                                setWaitlistDropdown(false),
+                                                setTourBookingDropdown(false),
+                                                setTourPackageDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -267,7 +273,9 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                                 setTravelBookingDropdown(false),
                                                 setBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
-                                                setWaitlistDropdown(false)
+                                                setWaitlistDropdown(false),
+                                                setTourBookingDropdown(false),
+                                                setTourPackageDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -402,7 +410,9 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                                 setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
                                                 setBookingDropdown(false),
-                                                setWaitlistDropdown(false)
+                                                setWaitlistDropdown(false),
+                                                setTourBookingDropdown(false),
+                                                setTourPackageDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -522,6 +532,141 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                     </ul>
                                 </Collapsible>
                             </div>
+                            <div className="xl:px-1">
+                                <Collapsible
+                                    trigger={
+                                        <button
+                                            className={`flex justify-between w-full h-10 mb-1 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer`}
+                                            onClick={() => (
+                                                setTourBookingDropdown(!tourBookingDropdown),
+                                                setActivityDropdown(false),
+                                                setTravelPackageDropdown(false),
+                                                setRetreatPackageDropdown(false),
+                                                setTravelBookingDropdown(false),
+                                                setActivitiesBookingDropdown(false),
+                                                setBookingDropdown(false),
+                                                setRetreatsBookingDropdown(false),
+                                                setWaitlistDropdown(false),
+                                                setTourPackageDropdown(false)
+                                            )}
+                                        >
+                                            <div className="flex gap-3.5 items-center">
+                                                <img src={mapSVG} alt="tour" className="w-6 h-6" />
+                                                <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname.includes("/explore/tour-bookings") ? "text-white" : "text-white"}`}>
+                                                    Tour Bookings
+                                                </h4>
+                                            </div>
+                                            <svg
+                                                className={`w-4 h-4 transform transition-transform duration-500 ${tourBookingDropdown ? "rotate-180" : ""}`}
+                                                aria-hidden="true"
+                                                fill="none"
+                                                stroke="#ffffff"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M19 9l-7 7-7-7"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                    }
+                                    open={tourBookingDropdown}
+                                    transitionTime={300}
+                                    easing="ease-in-out"
+                                >
+                                    <ul
+                                        className={`pl-1 flex flex-col gap-1.5 w-full transition-all duration-500 ease-in-out `}
+                                    >
+                                        {/* All Tour Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/tour-bookings" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/tour-bookings" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/tour-bookings" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> All </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {tourBookings.length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* All Tour Bookings End */}
+                                        {/* Pending Tour Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/tour-bookings/pending" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/tour-bookings/pending" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/tour-bookings/pending" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> In Review </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-semibold">
+                                                        {tourBookings.filter((booking: { status: string }) => booking.status === "pending").length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Pending Tour Bookings End */}
+                                        {/* Confirmed Tour Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/tour-bookings/confirmed" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/tour-bookings/confirmed" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/tour-bookings/confirmed" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Confirmed </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {tourBookings.filter((booking: { status: string }) => booking.status === "confirmed").length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Confirmed Tour Bookings End */}
+                                        {/* Cancelled Tour Bookings */}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/tour-bookings/cancelled" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/tour-bookings/cancelled" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/tour-bookings/cancelled" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Cancelled </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {tourBookings.filter((booking: { status: string }) => booking?.status === "cancelled").length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Cancelled Tour Bookings End */}
+                                        {/* Refunded Tour Bookings*/}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/tour-bookings/refunded" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/tour-bookings/refunded" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/tour-bookings/refunded" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Refunded </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {tourBookings.filter((booking: { paymentStatus: string }) => booking.paymentStatus === "refunded").length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Refunded Tour Bookings End */}
+                                        {/* Installment Tour Bookings*/}
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/tour-bookings/installment" className={`flex gap-3 w-full h-10 items-center justify-between bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/tour-bookings/installment" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-sm ${location.pathname === "/explore/tour-bookings/installment" ? "text-white" : "text-white"}`}>
+                                                    <span className=""> Installment </span>
+                                                </p>
+                                                <div className="bg-gray-800 rounded-full p-1  w-[25px] flex items-center justify-center">
+                                                    <p className="text-xs text-[#FFFFFF] font-bold">
+                                                        {tourBookings.filter((booking: { installment: boolean }) => booking.installment === true).length}
+                                                    </p>
+                                                </div>
+                                            </NavLink>
+                                        </li>
+                                        {/* Installment Tour Bookings End */}
+                                    </ul>
+                                </Collapsible>
+                            </div>
 
                             <div className="xl:px-1">
                                 <Collapsible
@@ -536,7 +681,9 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                                 setActivitiesBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
                                                 setTravelBookingDropdown(false),
-                                                setWaitlistDropdown(false)
+                                                setWaitlistDropdown(false),
+                                                setTourBookingDropdown(false),
+                                                setTourPackageDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -626,7 +773,9 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                                 setActivitiesBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
                                                 setBookingDropdown(false),
-                                                setWaitlistDropdown(false)
+                                                setWaitlistDropdown(false),
+                                                setTourBookingDropdown(false),
+                                                setTourPackageDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -690,7 +839,9 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                                 setActivitiesBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
                                                 setBookingDropdown(false),
-                                                setWaitlistDropdown(false)
+                                                setWaitlistDropdown(false),
+                                                setTourBookingDropdown(false),
+                                                setTourPackageDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -756,7 +907,9 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                                 setActivitiesBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
                                                 setBookingDropdown(false),
-                                                setWaitlistDropdown(false)
+                                                setWaitlistDropdown(false),
+                                                setTourBookingDropdown(false),
+                                                setTourPackageDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -809,6 +962,74 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                     </ul>
                                 </Collapsible>
                             </div>
+                            <div className="xl:px-1">
+                                <Collapsible
+                                    trigger={
+                                        <button
+                                            className={`flex justify-between w-full h-10 mb-1 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer`}
+                                            onClick={() => (
+                                                setTourPackageDropdown(!tourPackageDropdown),
+                                                setActivityDropdown(false),
+                                                setTravelPackageDropdown(false),
+                                                setRetreatPackageDropdown(false),
+                                                setTravelBookingDropdown(false),
+                                                setActivitiesBookingDropdown(false),
+                                                setRetreatsBookingDropdown(false),
+                                                setBookingDropdown(false),
+                                                setWaitlistDropdown(false),
+                                                setTourBookingDropdown(false)
+                                            )}
+                                        >
+                                            <div className="flex gap-3.5 items-center">
+                                                <img src={tourPackageSVG} alt="tour-package" className="w-6 h-6" />
+                                                <h4 className={`font-semibold text-base sm:text-[15px] sm:block ${location.pathname === "/explore/tour-packages" ? "text-white" : "text-white"}`}>
+                                                    Tour Packages
+                                                </h4>
+                                            </div>
+                                            <svg
+                                                className={`w-4 h-4 transform transition-transform duration-500 ${tourPackageDropdown ? "rotate-180" : ""}`}
+                                                aria-hidden="true"
+                                                fill="none"
+                                                stroke="#ffffff"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M19 9l-7 7-7-7"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                    }
+                                    open={tourPackageDropdown}
+                                    transitionTime={300}
+                                    easing="ease-in-out"
+                                >
+                                    <ul
+                                        className={`pl-1 flex flex-col gap-1.5 w-full transition-all duration-500 ease-in-out`}
+                                    >
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/tour-packages" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/tour-packages" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-base sm:text-[15px] ${location.pathname === "/explore/tour-packages" ? "text-white" : "text-white"}`}>
+                                                    <span className="">
+                                                        All Tour Packages
+                                                    </span>
+                                                </p>
+                                            </NavLink>
+                                        </li>
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/tour-packages/add" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/tour-packages/add" ? "bg-gray-500" : ""}`}>
+                                                <img src={PlusSVG} alt="plus" className="w-4 h-4" />
+                                                <p className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/tour-packages/add" ? "text-white" : "text-white"}`}>
+                                                    Add Tour Package
+                                                </p>
+                                            </NavLink>
+                                        </li>
+                                    </ul>
+                                </Collapsible>
+                            </div>
                         </div>
                         {/* Management End */}
                         {/* Marketing */}
@@ -832,7 +1053,9 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                                 setTravelBookingDropdown(false),
                                                 setActivitiesBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
-                                                setBookingDropdown(false)
+                                                setBookingDropdown(false),
+                                                setTourBookingDropdown(false),
+                                                setTourPackageDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -895,7 +1118,7 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, wai
                                 >
                                     <img src={piggySolidSVG} alt="activity" className="w-6 h-6" />
                                     <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/explore-vault" ? "text-white" : "text-white"}`}>
-                                      Explore  Vault
+                                        Explore  Vault
                                     </h4>
                                 </NavLink>
                             </div>

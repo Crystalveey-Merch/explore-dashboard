@@ -33,6 +33,8 @@ import { AtelierOverview } from './Pages/Atelier';
 import { All, Cancelled, Installments, Paid, Review, Refunded, Booking } from "./Pages/Explore/TravelBookinngs"
 import { AllActivities, CancelledActivities, InstallmentActivities, PaidActivities, ReviewActivities, RefundedActivities, BookingActivities } from "./Pages/Explore/ActivitiesBookings"
 import { AllRetreats, CancelledRetreats, InstallmentRetreats, PaidRetreats, ReviewRetreats, RefundedRetreats, BookingRetreats } from "./Pages/Explore/RetreatBookings"
+import { AllTours, CancelledTours, InstallmentTours, PaidTours, ReviewTours, RefundedTours, BookingTours } from "./Pages/Explore/TourBookings"
+import { AddTourPackage, EditTourPackage, TourPackages } from "./Pages/Explore/TourPackages"
 import { Waitlist } from './Components/Explore/Waitlist';
 import { UploadProductForm } from './Components/Atelier/UploadProduct/UploadProductForm';
 import { AllProducts } from './Components/Atelier/AllProducts';
@@ -133,7 +135,13 @@ function App() {
   const [travelBookings, setTravelBookings] = useState<any[]>([])
   const [activityBookings, setActivityBookings] = useState<any[]>([])
   const [retreatBookings, setRetreatBookings] = useState<any[]>([])
+  const [tourBookings, setTourBookings] = useState<any[]>([])
   const [waitList, setWaitList] = useState<any[]>([])
+
+  const [activities, setActivities] = useState<any[]>([])
+  const [travelPackages, setTravelPackages] = useState<any[]>([])
+  const [retreatPackages, setRetreatPackages] = useState<any[]>([])
+  const [tourPackages, setTourPackages] = useState<any[]>([])
 
   useEffect(() => {
     const unsubscribeBookings = onSnapshot(collection(db, 'transactions'), (snapshot) => {
@@ -150,15 +158,49 @@ function App() {
         const waitlistEntry = { ...doc.data(), id: doc.id };
         updatedWaitlist.push(waitlistEntry);
       });
-
-      
       setWaitList(updatedWaitlist);
+    });
+
+    const unsubscribeActivities = onSnapshot(collection(db, 'activities'), (snapshot) => {
+      const updatedActivities = [] as any;
+      snapshot.forEach((doc) => {
+        updatedActivities.push({ ...doc.data(), id: doc.id });
+      });
+      setActivities(updatedActivities);
+    });
+
+    const unsubscribeTravelPackages = onSnapshot(collection(db, 'travelPackages'), (snapshot) => {
+      const updatedTravelPackages = [] as any;
+      snapshot.forEach((doc) => {
+        updatedTravelPackages.push({ ...doc.data(), id: doc.id });
+      });
+      setTravelPackages(updatedTravelPackages);
+    });
+
+    const unsubscribeRetreatPackages = onSnapshot(collection(db, 'retreatPackages'), (snapshot) => {
+      const updatedRetreatPackages = [] as any;
+      snapshot.forEach((doc) => {
+        updatedRetreatPackages.push({ ...doc.data(), id: doc.id });
+      });
+      setRetreatPackages(updatedRetreatPackages);
+    });
+
+    const unsubscribeTourPackages = onSnapshot(collection(db, 'tourPackages'), (snapshot) => {
+      const updatedTourPackages = [] as any;
+      snapshot.forEach((doc) => {
+        updatedTourPackages.push({ ...doc.data(), id: doc.id });
+      });
+      setTourPackages(updatedTourPackages);
     });
 
     // Cleanup function to unsubscribe from real-time updates
     return () => {
       unsubscribeBookings();
       unsubscribeWaitlist();
+      unsubscribeActivities();
+      unsubscribeTravelPackages();
+      unsubscribeRetreatPackages();
+      unsubscribeTourPackages();
     };
   }, []);
 
@@ -166,10 +208,12 @@ function App() {
     const travelBookings = bookings.filter((booking: { type: string }) => booking.type === "Promoted Travel Package");
     const activityBookings = bookings.filter((booking: { type: string }) => booking.type === "Exciting Activities");
     const retreatBookings = bookings.filter((booking: { type: string }) => booking.type === "Retreats Packages");
+    const tourBookings = bookings.filter((booking: { type: string }) => booking.type === "Tour Packages");
 
     setTravelBookings(travelBookings);
     setActivityBookings(activityBookings);
     setRetreatBookings(retreatBookings);
+    setTourBookings(tourBookings);
   }, [bookings]);
 
   return (
@@ -257,7 +301,7 @@ function App() {
             path="/explore/activities"
             element={
               <ExploreDasboardLayout>
-                <Activities />
+                <Activities allActivities={activities} />
               </ExploreDasboardLayout>
             }
           />
@@ -275,7 +319,7 @@ function App() {
             path="/explore/activities/edit/:id"
             element={
               <ExploreDasboardLayout>
-                <EditActivity />
+                <EditActivity activities={activities} />
               </ExploreDasboardLayout>
             }
           />
@@ -283,7 +327,7 @@ function App() {
             path="/explore/travel-packages"
             element={
               <ExploreDasboardLayout>
-                <TravelPackages />
+                <TravelPackages allTravelPackages={travelPackages} />
               </ExploreDasboardLayout>
             }
           />
@@ -301,7 +345,7 @@ function App() {
             path="/explore/travel-packages/edit/:id"
             element={
               <ExploreDasboardLayout>
-                <EditTravelPackage />
+                <EditTravelPackage travelPackages={travelPackages} />
               </ExploreDasboardLayout>
             }
           />
@@ -309,7 +353,7 @@ function App() {
             path="/explore/retreat-packages"
             element={
               <ExploreDasboardLayout>
-                <RetreatPackages />
+                <RetreatPackages allRetreatPackages={retreatPackages} />
               </ExploreDasboardLayout>
             }
           />
@@ -325,7 +369,7 @@ function App() {
             path="/explore/retreat-packages/edit/:id"
             element={
               <ExploreDasboardLayout>
-                <EditRetreatPackages />
+                <EditRetreatPackages retreatPackages={retreatPackages} />
               </ExploreDasboardLayout>
             }
           />
@@ -373,7 +417,7 @@ function App() {
             path="/explore/travel-bookings/confirmed"
             element={
               <ExploreDasboardLayout>
-                <Paid />
+                <Paid allTravelBookings={travelBookings} />
               </ExploreDasboardLayout>
             }
           />
@@ -389,7 +433,7 @@ function App() {
             path="/explore/travel-bookings/pending"
             element={
               <ExploreDasboardLayout>
-                <Review />
+                <Review allTravelBookings={travelBookings} />
               </ExploreDasboardLayout>
             }
           />
@@ -397,7 +441,7 @@ function App() {
             path="/explore/travel-bookings/refunded"
             element={
               <ExploreDasboardLayout>
-                <Refunded />
+                <Refunded allTravelBookings={travelBookings} />
               </ExploreDasboardLayout>
             }
           />
@@ -405,7 +449,7 @@ function App() {
             path="/explore/travel-bookings/cancelled"
             element={
               <ExploreDasboardLayout>
-                <Cancelled />
+                <Cancelled allTravelBookings={travelBookings} />
               </ExploreDasboardLayout>
             }
           />
@@ -414,6 +458,86 @@ function App() {
             element={
               <ExploreDasboardLayout>
                 <Booking bookings={travelBookings} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/tour-packages"
+            element={
+              <ExploreDasboardLayout>
+                <TourPackages allTours={tourPackages} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/tour-packages/add"
+            element={
+              <ExploreDasboardLayout>
+                <AddTourPackage />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/tour-packages/edit/:id"
+            element={
+              <ExploreDasboardLayout>
+                <EditTourPackage tourPackages={tourPackages} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/tour-bookings"
+            element={
+              <ExploreDasboardLayout>
+                <AllTours tourBookings={tourBookings} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/tour-bookings/confirmed"
+            element={
+              <ExploreDasboardLayout>
+                <PaidTours allTourBookings={tourBookings} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/tour-bookings/installments"
+            element={
+              <ExploreDasboardLayout>
+                <InstallmentTours />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/tour-bookings/pending"
+            element={
+              <ExploreDasboardLayout>
+                <ReviewTours allTourBookings={tourBookings} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/tour-bookings/refunded"
+            element={
+              <ExploreDasboardLayout>
+                <RefundedTours allTourBookings={tourBookings} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/tour-bookings/cancelled"
+            element={
+              <ExploreDasboardLayout>
+                <CancelledTours allTourBookings={tourBookings} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/tour-bookings/:id"
+            element={
+              <ExploreDasboardLayout>
+                <BookingTours bookings={tourBookings} />
               </ExploreDasboardLayout>
             }
           />

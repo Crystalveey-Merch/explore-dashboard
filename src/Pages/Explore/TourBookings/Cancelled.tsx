@@ -2,15 +2,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 import TablePagination from '@mui/material/TablePagination';
-import { collection, getDocs, db } from '../../../Config/firebase';
-import { TableRow } from "../../../Components/Explore/RetreatsBookings"
+import { TableRow } from "../../../Components/Explore/TourBookings"
 import { Sort } from "../../../Hooks";
 import noResultImg from "../../../assets/Images/Dashboard/no-results.png"
 import { SearchInput } from "../../../Components";
 
-
-export const ReviewRetreats = () => {
-    const [retreatBookings, setRetreatBookings] = useState<any[]>([])
+export const CancelledTours = ({ allTourBookings }: { allTourBookings: any[] }) => {
+    const [tourBookings, setTourBookings] = useState<any[]>([])
     const [displayedBookings, setDisplayedBookings] = useState<any[]>([])
     const [bookingsFiltered, setBookingsFiltered] = useState<any[]>([])
     // show filter
@@ -26,23 +24,11 @@ export const ReviewRetreats = () => {
     };
 
     useEffect(() => {
-        const fetchTravelBookings = async () => {
-            setLoading(true);
-            const bookingsRef = collection(db, "transactions");
-            const bookingsSnapshot = await getDocs(bookingsRef);
-            const bookings: any[] = [];
-            bookingsSnapshot.forEach((doc) => {
-                bookings.push({
-                    id: doc.id,
-                    ...doc.data(),
-                });
-            });
-            // set bookings of type "Retreats Packages" and status "cancelled" to state
-            setRetreatBookings(bookings.filter((booking: { type: string, status: string }) => booking.type === "Retreats Packages" && booking.status === "pending"));
-            setLoading(false);
-        }
-        fetchTravelBookings()
-    }, [])
+        setLoading(true);
+        // set bookings of type "Tour Packages" and status "cancelled" to state
+        setTourBookings(allTourBookings.filter((booking: { type: string, status: string }) => booking.type === "Tour Packages" && booking.status === "cancelled"));
+        setLoading(false);
+    }, [allTourBookings]);
 
     const [status, setStatus] = useState<string>("all");
 
@@ -55,51 +41,51 @@ export const ReviewRetreats = () => {
     useEffect(() => {
         if (status === "all") {
             if (!searchActive) {
-                setDisplayedBookings(retreatBookings);
-                setBookingsFiltered(retreatBookings);
+                setDisplayedBookings(tourBookings);
+                setBookingsFiltered(tourBookings);
             } else {
                 setDisplayedBookings(searchResults);
             }
         } else if (status === "confirmed") {
             if (!searchActive) {
-                setDisplayedBookings(retreatBookings.filter((booking) => booking.status === "confirmed"));
-                setBookingsFiltered(retreatBookings.filter((booking) => booking.status === "confirmed"));
+                setDisplayedBookings(tourBookings.filter((booking) => booking.status === "confirmed"));
+                setBookingsFiltered(tourBookings.filter((booking) => booking.status === "confirmed"));
             } else {
                 setDisplayedBookings(searchResults.filter((booking) => booking.status === "confirmed"));
             }
         } else if (status === "installment") {
             if (!searchActive) {
-                setDisplayedBookings(retreatBookings.filter((booking) => booking.installment === true));
-                setBookingsFiltered(retreatBookings.filter((booking) => booking.installment === true));
+                setDisplayedBookings(tourBookings.filter((booking) => booking.installment === true));
+                setBookingsFiltered(tourBookings.filter((booking) => booking.installment === true));
             } else {
                 setDisplayedBookings(searchResults.filter((booking) => booking.installment === true));
             }
         } else if (status === "pending") {
             if (!searchActive) {
-                setDisplayedBookings(retreatBookings.filter((booking) => booking.status === "pending"));
-                setBookingsFiltered(retreatBookings.filter((booking) => booking.status === "pending"));
+                setDisplayedBookings(tourBookings.filter((booking) => booking.status === "pending"));
+                setBookingsFiltered(tourBookings.filter((booking) => booking.status === "pending"));
             } else {
                 setDisplayedBookings(searchResults.filter((booking) => booking.status === "pending"));
             }
         } else if (status === "cancelled") {
             if (!searchActive) {
-                setDisplayedBookings(retreatBookings.filter((booking) => (booking.status === "cancelled")));
-                setBookingsFiltered(retreatBookings.filter((booking) => (booking.status === "cancelled")));
+                setDisplayedBookings(tourBookings.filter((booking) => (booking.status === "cancelled")));
+                setBookingsFiltered(tourBookings.filter((booking) => (booking.status === "cancelled")));
             } else {
                 setDisplayedBookings(searchResults.filter((booking) => (booking.status === "cancelled")));
             }
         } else if (status === "refunded") {
             if (!searchActive) {
-                setDisplayedBookings(retreatBookings.filter((booking) => (booking.paymentStatus === "refunded")));
-                setBookingsFiltered(retreatBookings.filter((booking) => (booking.paymentStatus === "refunded")));
+                setDisplayedBookings(tourBookings.filter((booking) => (booking.paymentStatus === "refunded")));
+                setBookingsFiltered(tourBookings.filter((booking) => (booking.paymentStatus === "refunded")));
             } else {
                 setDisplayedBookings(searchResults.filter((booking) => (booking.paymentStatus === "refunded")));
             }
         } else {
-            // setDisplayedBookings(retreatBookings);
-            // setBookingsFiltered(retreatBookings);
+            // setDisplayedBookings(tourBookings);
+            // setBookingsFiltered(tourBookings);
         }
-    }, [status, retreatBookings, searchActive, searchResults]);
+    }, [status, tourBookings, searchActive, searchResults]);
 
 
     // set active filter
@@ -180,9 +166,9 @@ export const ReviewRetreats = () => {
         } else if (sort === "desc" && activeTab === "travellers") {
             setDisplayedBookings([...displayedBookings].sort((a, b) => b.travellers - a.travellers));
         } else if (sort === "asc" && activeTab === "checkInDate") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(a.moreData.startDate) - formatDateToString(b.moreData.startDate)));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(a.date) - formatDateToString(b.date)));
         } else if (sort === "desc" && activeTab === "checkInDate") {
-            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(b.moreData.startDate) - formatDateToString(a.moreData.startDate)));
+            setDisplayedBookings([...displayedBookings].sort((a, b) => formatDateToString(b.date) - formatDateToString(a.date)));
         } else if (sort === "asc" && activeTab === "bookingId") {
             setDisplayedBookings([...displayedBookings].sort((a, b) => a.id.localeCompare(b.id)));
         } else if (sort === "desc" && activeTab === "bookingId") {
@@ -196,7 +182,6 @@ export const ReviewRetreats = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sort, activeTab]);
-
     // pagination 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -223,7 +208,7 @@ export const ReviewRetreats = () => {
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-12 sm:px-4 sm:gap-9">
             <div className="flex flex-col gap-2">
                 <h2 className="text-2xl font-semibold text-[#1C1C1C]">
-                    In Review Retreat Bookings
+                    Cancelled Tour Bookings
                 </h2>
                 <div className="flex gap-2.5 items-center">
                     <Link to="/explore" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
@@ -232,15 +217,15 @@ export const ReviewRetreats = () => {
                     {/* a dot */}
                     <span className="h-1 w-1 rounded-full bg-[rgb(99,115,129)]">
                     </span>
-                    <Link to="/explore/retreat-bookings"
+                    <Link to="/explore/tour-bookings"
                         className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
-                        Retreat Bookings
+                        Tour Bookings
                     </Link>
                     {/* a dot */}
                     <span className="h-1 w-1 rounded-full bg-[rgb(99,115,129)]">
                     </span>
                     <span className="text-[rgb(99,115,129)] text-sm font-medium">
-                        In Review
+                        Cancelled
                     </span>
                 </div>
             </div>
@@ -262,7 +247,7 @@ export const ReviewRetreats = () => {
                             All
                         </p>
                         <p className={`h-6 w-6 bg-black text-white rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out`}>
-                            {retreatBookings.length}
+                            {tourBookings.length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("pending")}
@@ -271,7 +256,7 @@ export const ReviewRetreats = () => {
                             In Review
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "pending" ? "bg-orange-800 text-[#ffffff]" : "bg-orange-200 text-orange-800"}`}>
-                            {retreatBookings.filter((invoice) => invoice.status === "pending").length}
+                            {tourBookings.filter((invoice) => invoice.status === "pending").length}
                         </p>
                     </button>
                     <button
@@ -281,7 +266,7 @@ export const ReviewRetreats = () => {
                             Confirmed
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "confirmed" ? "bg-[rgb(17,141,87)] text-[#ffffff]" : "bg-[rgba(34,197,94,0.16)] text-[rgb(17,141,87)]"}`}>
-                            {retreatBookings.filter((invoice) => invoice.status === "confirmed").length}
+                            {tourBookings.filter((invoice) => invoice.status === "confirmed").length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("installment")}
@@ -290,7 +275,7 @@ export const ReviewRetreats = () => {
                             Installment
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "installment" ? "bg-purple-800 text-[#ffffff]" : "bg-purple-200 text-purple-800"}`}>
-                            {retreatBookings.filter((invoice) => invoice.installment === true).length}
+                            {tourBookings.filter((invoice) => invoice.installment === true).length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("cancelled")}
@@ -299,7 +284,7 @@ export const ReviewRetreats = () => {
                             Cancelled
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "cancelled" ? "bg-red-700 text-[#ffffff]" : "bg-red-200 text-red-700"}`}>
-                            {retreatBookings.filter((invoice) => invoice.status === "cancelled").length}
+                            {tourBookings.filter((invoice) => invoice.status === "cancelled").length}
                         </p>
                     </button>
                     <button onClick={() => setStatus("refunded")}
@@ -308,7 +293,7 @@ export const ReviewRetreats = () => {
                             Refunded
                         </p>
                         <p className={`h-6 w-6  rounded-md px-1 text-xs font-bold inline-flex items-center justify-center transition duration-300 ease-in-out ${status === "refunded" ? "bg-stone-700 text-[#ffffff]" : "bg-stone-200 text-stone-700"}`}>
-                            {retreatBookings.filter((invoice) => invoice.paymentStatus === "refunded").length}
+                            {tourBookings.filter((invoice) => invoice.paymentStatus === "refunded").length}
                         </p>
                     </button>
                 </div>

@@ -223,10 +223,10 @@ export const PaidRetreats = () => {
         <div className="px-10 py-7 flex flex-col gap-10 xl:px-6 lg:gap-16 md:gap-12 sm:px-4 sm:gap-9">
             <div className="flex flex-col gap-2">
                 <h2 className="text-2xl font-semibold text-[#1C1C1C]">
-                 Confirmed Retreat Bookings
+                    Confirmed Retreat Bookings
                 </h2>
                 <div className="flex gap-2.5 items-center">
-                    <Link to="/" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
+                    <Link to="/explore" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
                         Dashboard
                     </Link>
                     {/* a dot */}

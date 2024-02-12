@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom"
 import TablePagination from '@mui/material/TablePagination';
-import { collection, getDocs, deleteDoc, doc, db } from '../../../Config/firebase';
+import { deleteDoc, doc, db } from '../../../Config/firebase';
 import { toast } from "react-toastify";
 import handleFormattedDateRange from "../../../Hooks/handleFormattedDateRange";
 import { BlueButton, SearchInput } from "../../../Components"
@@ -12,7 +12,7 @@ import noResultImg from "../../../assets/Images/Dashboard/no-results.png"
 
 
 
-export const TravelPackages = () => {
+export const TravelPackages = ({ allTravelPackages }: { allTravelPackages: any[] }) => {
     const [travelPackages, setTravelPackages] = useState<any[]>([]);
     const [displayedTravelPackages, setDisplayedTravelPackages] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -26,24 +26,11 @@ export const TravelPackages = () => {
     };
 
     useEffect(() => {
-        const fetchTravelPackages = async () => {
-            try {
-                setLoading(true);
-                const querySnapshot = await getDocs(collection(db, 'travelPackages'));
-                const packagedata = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-                setTravelPackages(packagedata);
-                setDisplayedTravelPackages(packagedata);
-                setLoading(false);
-            } catch (error) {
-                console.log(error);
-                setLoading(false);
-            }
-        }
-        fetchTravelPackages();
-    }, [])
+        setLoading(true);
+        setTravelPackages(allTravelPackages);
+        setDisplayedTravelPackages(allTravelPackages);
+        setLoading(false);
+    }, [allTravelPackages]);
 
 
     const handleDelete = async (id: string, title: string) => {

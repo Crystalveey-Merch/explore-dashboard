@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 import TablePagination from '@mui/material/TablePagination';
-import { collection, getDocs, db } from '../../../Config/firebase';
 import { TableRow } from "../../../Components/Explore/TravelBookings";
 import { Sort } from "../../../Hooks";
 import noResultImg from "../../../assets/Images/Dashboard/no-results.png"
@@ -10,7 +9,7 @@ import { SearchInput } from "../../../Components";
 
 
 
-export const Refunded = () => {
+export const Refunded = ({ allTravelBookings }: { allTravelBookings: any[] }) => {
     const [travelBookings, setTravelBookings] = useState<any[]>([])
     const [displayedBookings, setDisplayedBookings] = useState<any[]>([])
     const [bookingsFiltered, setBookingsFiltered] = useState<any[]>([])
@@ -27,23 +26,11 @@ export const Refunded = () => {
     };
 
     useEffect(() => {
-        const fetchTravelBookings = async () => {
-            setLoading(true);
-            const bookingsRef = collection(db, "transactions");
-            const bookingsSnapshot = await getDocs(bookingsRef);
-            const bookings: any[] = [];
-            bookingsSnapshot.forEach((doc) => {
-                bookings.push({
-                    id: doc.id,
-                    ...doc.data(),
-                });
-            });
-            // set bookings of type "Promoted Travel Package" and status === "refunded"
-            setTravelBookings(bookings.filter((booking: { type: string, paymentStatus: string }) => booking.type === "Promoted Travel Package" && booking.paymentStatus === "refunded"));
-            setLoading(false);
-        }
-        fetchTravelBookings()
-    }, [])
+        setLoading(true);
+        // set bookings of type "Promoted Travel Package" and status === "refunded" to state
+        setTravelBookings(allTravelBookings.filter((booking: { type: string, paymentStatus: string }) => booking.type === "Promoted Travel Package" && booking.paymentStatus === "refunded"));
+        setLoading(false);
+    }, [allTravelBookings]);
 
     const [status, setStatus] = useState<string>("all");
 
@@ -226,7 +213,7 @@ export const Refunded = () => {
                     Refunded Travel Bookings
                 </h2>
                 <div className="flex gap-2.5 items-center">
-                    <Link to="/" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
+                    <Link to="/explore" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
                         Dashboard
                     </Link>
                     {/* a dot */}

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 import TablePagination from '@mui/material/TablePagination';
-import { collection, getDocs, db } from '../../../Config/firebase';
 import { TableRow } from "../../../Components/Explore/TravelBookings";
 import { Sort } from "../../../Hooks";
 import noResultImg from "../../../assets/Images/Dashboard/no-results.png"
@@ -10,7 +9,7 @@ import { SearchInput } from "../../../Components";
 
 
 
-export const Paid = () => {
+export const Paid = ({ allTravelBookings }: { allTravelBookings: any[] }) => {
     const [travelBookings, setTravelBookings] = useState<any[]>([])
     const [displayedBookings, setDisplayedBookings] = useState<any[]>([])
     const [bookingsFiltered, setBookingsFiltered] = useState<any[]>([])
@@ -27,23 +26,11 @@ export const Paid = () => {
     };
 
     useEffect(() => {
-        const fetchTravelBookings = async () => {
-            setLoading(true);
-            const bookingsRef = collection(db, "transactions");
-            const bookingsSnapshot = await getDocs(bookingsRef);
-            const bookings: any[] = [];
-            bookingsSnapshot.forEach((doc) => {
-                bookings.push({
-                    id: doc.id,
-                    ...doc.data(),
-                });
-            });
-            // set bookings of type "Promoted Travel Package" and status "confirmed"
-            setTravelBookings(bookings.filter((booking: { type: string, status: string }) => booking.type === "Promoted Travel Package" && booking.status === "confirmed"));
-            setLoading(false);
-        }
-        fetchTravelBookings()
-    }, [])
+        setLoading(true);
+        // set bookings of type "Promoted Travel Package" and status "confirmed" to state
+        setTravelBookings(allTravelBookings.filter((booking: { type: string, status: string }) => booking.type === "Promoted Travel Package" && booking.status === "confirmed"));
+        setLoading(false);
+    }, [allTravelBookings]);
 
     const [status, setStatus] = useState<string>("all");
 
@@ -227,7 +214,7 @@ export const Paid = () => {
                     Confirmed Travel Bookings
                 </h2>
                 <div className="flex gap-2.5 items-center">
-                    <Link to="/" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
+                    <Link to="/explore" className="text-[rgb(33,43,54)] text-sm font-medium hover:underline">
                         Dashboard
                     </Link>
                     {/* a dot */}
@@ -314,7 +301,7 @@ export const Paid = () => {
                 </div>
                 {/* filter by search */}
                 <div className="flex justify-end pt-5 px-4">
-                <SearchInput search={search} setSearch={setSearch} placeholder="Search by name, email, booking ID" />
+                    <SearchInput search={search} setSearch={setSearch} placeholder="Search by name, email, booking ID" />
                 </div>
                 <div className="p-5 flex flex-col gap-3">
                     {activeFilter.length > 0 &&
