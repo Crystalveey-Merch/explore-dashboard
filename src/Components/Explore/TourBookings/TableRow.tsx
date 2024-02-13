@@ -32,7 +32,7 @@ export const TableRow = ({ booking }: any) => {
             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                 <div className="flex gap-2 items-center min-w-[max-content]">
                     <img
-                        src={booking.moreData ? booking.moreData.images.imageOne : travelImage}
+                        src={booking?.moreData ? booking?.moreData.imageOne : travelImage}
                         alt="travelPackage"
                         className="w-14 h-14 rounded-md object-cover"
                     />
