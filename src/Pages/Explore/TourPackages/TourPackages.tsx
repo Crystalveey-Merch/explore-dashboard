@@ -65,10 +65,10 @@ export const TourPackages = ({ allTours }: { allTours: any }) => {
             setDisplayedTours([...displayedTours].sort((a, b) => a.price - b.price));
         } else if (sort === "desc" && activeTab === "price") {
             setDisplayedTours([...displayedTours].sort((a, b) => b.price - a.price));
-        } else if (sort === "asc" && activeTab === "category") {
-            setDisplayedTours([...displayedTours].sort((a, b) => a.category.localeCompare(b.category)));
-        } else if (sort === "desc" && activeTab === "category") {
-            setDisplayedTours([...displayedTours].sort((a, b) => b.category.localeCompare(a.category)));
+        } else if (sort === "asc" && activeTab === "country") {
+            setDisplayedTours([...displayedTours].sort((a, b) => a.country.localeCompare(b.country)));
+        } else if (sort === "desc" && activeTab === "country") {
+            setDisplayedTours([...displayedTours].sort((a, b) => b.country.localeCompare(a.country)));
         } else if (sort === "asc" && activeTab === "location") {
             setDisplayedTours([...displayedTours].sort((a, b) => a.location.localeCompare(b.location)));
         } else if (sort === "desc" && activeTab === "location") {
@@ -81,13 +81,15 @@ export const TourPackages = ({ allTours }: { allTours: any }) => {
 
     // search
     const [search, setSearch] = useState<string>("");
-    // search by name and category
+    // search by name and country
     useEffect(() => {
-        setDisplayedTours(tourPackages.filter((tour) => tour.name.toLowerCase().includes(search.toLowerCase()) || tour.category.toLowerCase().includes(search.toLowerCase())));
+        setDisplayedTours(tourPackages.filter((tour) => tour.name.toLowerCase().includes(search.toLowerCase()) || tour.country.toLowerCase().includes(search.toLowerCase()) || tour.location.toLowerCase().includes(search.toLowerCase())
+        ));
     }, [search, tourPackages]);
 
 
     // pagination 
+
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -240,7 +242,7 @@ export const TourPackages = ({ allTours }: { allTours: any }) => {
                                                             {tour.price ? tour.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }) : "Free"}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            {tour.category}
+                                                            {tour.country}
                                                         </td>
                                                         <td className="px-6 py-4">
                                                             Yes
