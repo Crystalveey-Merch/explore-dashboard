@@ -38,6 +38,7 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
     const [rating, setRating] = useState<number>(0)
     const [duration, setDuration] = useState<string>("")
     const [price, setPrice] = useState<number | string>("")
+    const [occupancyPriceDiff, setOccupancyPriceDiff] = useState<number | string>("")
     //inclusion is array of string
     const [inclusion, setInclusion] = useState<string>("")
     const [inclusions, setInclusions] = useState<string[]>([])
@@ -97,6 +98,13 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
         const value = e.target.value
         if (value === "" || /^[0-9\b]+$/.test(value)) {
             setPrice(value)
+        }
+    }
+
+    const handleOccupancyPriceDiffChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value
+        if (value === "" || /^[0-9\b]+$/.test(value)) {
+            setOccupancyPriceDiff(value)
         }
     }
 
@@ -179,6 +187,7 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
             setReviews(travelPackage.reviews)
             setRating(travelPackage.rating)
             setPrice(travelPackage.price)
+            setOccupancyPriceDiff(travelPackage.occupancyPriceDiff)
             setInclusions(travelPackage.inclusions)
             setVisitingCities(travelPackage.visitingCities)
             setImageOneUrl(travelPackage.images.imageOne)
@@ -270,6 +279,7 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
                 endDate.trim() === "" ||
                 duration.trim() === "" ||
                 price === "" ||
+                occupancyPriceDiff === "" ||
                 inclusions.length === 0 ||
                 visitingCities.length === 0 ||
                 imageOneUrl.trim() === ""
@@ -311,6 +321,7 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
                 rating,
                 //convert price to number
                 price: Number(price),
+                occupancyPriceDiff: Number(occupancyPriceDiff),
                 inclusions,
                 visitingCities,
                 images: {
@@ -329,6 +340,7 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
             setReviews([]);
             setRating(0);
             setPrice("")
+            setOccupancyPriceDiff("")
             setInclusions([])
             setVisitingCities([{ name: '', activities: [''] }])
             setImageOneFile(null)
@@ -598,18 +610,20 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
                         </h3>
                     </div>
                     <div className="grid grid-cols-2 grid-flow-row p-4 gap-8">
-                        <label htmlFor="duration" className="flex flex-col gap-1.5 w-full">
-                            <p className="text-sm font-medium text-gray-700">
-                                Duration (Days)
-                            </p>
-                            <Input placeholder="e.g 5" name={"duration"} type={"text"} value={duration} onChange={handleDurationChange} className={"w-full"} required />
-                        </label>
                         <label htmlFor="price" className="flex flex-col gap-1.5 w-full">
                             <p className="text-sm font-medium text-gray-700">
                                 Price (₦)
                             </p>
                             <Input placeholder="e.g 1000" name={"price"} type={"text"} value={price}
                                 onChange={handlePriceChange}
+                                className={"w-full"} required />
+                        </label>
+                        <label htmlFor="price" className="flex flex-col gap-1.5 w-full">
+                            <p className="text-sm font-medium text-gray-700">
+                                Occupancy Price (₦)
+                            </p>
+                            <Input placeholder="e.g 1000" name={"occupancyPriceDiff"} type={"text"} value={occupancyPriceDiff}
+                                onChange={handleOccupancyPriceDiffChange}
                                 className={"w-full"} required />
                         </label>
                         <div className="flex flex-col gap-2 w-full sm:col-span-2">
@@ -637,6 +651,12 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
                                     onClick={handleAddInclusion}>Add</button>
                             </div>
                         </div>
+                        <label htmlFor="duration" className="flex flex-col gap-1.5 w-full">
+                            <p className="text-sm font-medium text-gray-700">
+                                Duration (Days)
+                            </p>
+                            <Input placeholder="e.g 5" name={"duration"} type={"text"} value={duration} onChange={handleDurationChange} className={"w-full"} required />
+                        </label>
                     </div>
                     <div className="flex flex-col p-4 gap-2 w-full">
                         <div className="flex justify-between items-center">
