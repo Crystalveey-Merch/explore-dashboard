@@ -94,7 +94,7 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                             </svg>
                         </button>
                     </div>
-                    <div className="h-full bg-[rgb(0,108,156)] pt-10 p-2 flex flex-col gap-5 overflow-y-scroll scrollbar-hide sm:py-3 sm:p-1">
+                    <div className="h-full bg-[rgb(0,108,156)] pt-10 p-2 flex flex-col gap-5 overflow-y-scroll scrollbarhide sm:py-3 sm:p-1">
                         {/* Overview */}
                         <div className="flex flex-col gap-2.5">
                             <h4 className="pl-2 uppercase font-extrabold text-[0.75rem] text-gray-100">
