@@ -71,8 +71,9 @@ export const Register = () => {
             await sendEmailVerification(user);
             await navigate("/verify-email")
             toast.success("Registration successful");
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+            toast.error(error.message)
         }
     }
 

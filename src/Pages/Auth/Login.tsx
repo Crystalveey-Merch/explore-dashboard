@@ -130,7 +130,27 @@ export const Login = () => {
                                 onClick={() => setShowPassword(!showPassword)}
                             />
                         </div>
-
+                        <div className="flex items-center justify-between mt-1">
+                            <label
+                                htmlFor="remember"
+                                className="text-sm text-gray-900 font-medium flex items-center"
+                            >
+                                <input
+                                    id="remember"
+                                    name="remember"
+                                    type="checkbox"
+                                    className="mr-2 bg-blue-600 cursor-pointer border-transparent rounded h-4 w-4"
+                                />
+                                <p> Remember for 30 days</p>
+                            </label>
+                            <p className="text-sm font-normal text-gray-600">
+                                <NavLink
+                                    to="/forget-password"
+                                    className="text-blue-700 font-semibold"
+                                >Forgot password
+                                </NavLink>
+                            </p>
+                        </div>
                         <button type="submit"
 
                             className="bg-[#00afef] text-white font-medium text-lg rounded-lg p-3 transition ease-in-out duration-300 hover:bg-[#3fc5e7]  md:text-base md:p-2.5">
