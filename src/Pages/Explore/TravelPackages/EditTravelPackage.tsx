@@ -43,6 +43,7 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
     const [inclusion, setInclusion] = useState<string>("")
     const [inclusions, setInclusions] = useState<string[]>([])
     const [visitingCities, setVisitingCities] = useState([{ name: '', activities: [''] }]);
+    const [itinerary, setItinerary] = useState([{ description: "" }])
 
     const handleAddInclusion = () => {
         if (inclusion !== "") {
@@ -100,6 +101,18 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
             setPrice(value)
         }
     }
+
+    const handleAddItinerary = () => {
+        setItinerary([...itinerary, { description: "" }])
+    }
+
+    const handleRemoveItinerary = (index: number) => {
+        const newItinerary = [...itinerary]
+        newItinerary.splice(index, 1)
+        setItinerary(newItinerary)
+    }
+
+
 
     const handleOccupancyPriceDiffChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value
@@ -190,6 +203,7 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
             setOccupancyPriceDiff(travelPackage.occupancyPriceDiff)
             setInclusions(travelPackage.inclusions)
             setVisitingCities(travelPackage.visitingCities)
+            setItinerary(travelPackage.itinerary)
             setImageOneUrl(travelPackage.images.imageOne)
             setImageTwoUrl(travelPackage.images.imageTwo)
         }
@@ -282,6 +296,7 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
                 occupancyPriceDiff === "" ||
                 inclusions.length === 0 ||
                 visitingCities.length === 0 ||
+                itinerary.length === 0 ||
                 imageOneUrl.trim() === ""
                 //imageTwoUrl.trim() === ""
             ) {
@@ -324,6 +339,7 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
                 occupancyPriceDiff: Number(occupancyPriceDiff),
                 inclusions,
                 visitingCities,
+                itinerary,
                 images: {
                     imageOne: isImageOneChanged ? imageDownloadURLs[0] : imageOneUrl,
                     imageTwo: isImageTwoChanged ? imageDownloadURLs[1] : imageTwoUrl,
@@ -343,6 +359,7 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
             setOccupancyPriceDiff("")
             setInclusions([])
             setVisitingCities([{ name: '', activities: [''] }])
+            setItinerary([{ description: "" }])
             setImageOneFile(null)
             setImageTwoFile(null)
             setImageOneUrl("")
@@ -736,6 +753,55 @@ export const EditTravelPackage = ({ travelPackages }: { travelPackages: any[] })
                                             </button>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex flex-col p-4 gap-4 w-full">
+                        <div className="flex justify-between items-center sm:flex-wrap sm:gap-2">
+                            <p className="text-sm font-medium text-gray-700">
+                                Itinerary
+                            </p>
+                            <div className="sticky top-32 bg-white z-10 p-2">
+
+
+                                <button
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-md w-max"
+                                    type="button"
+                                    onClick={handleAddItinerary}
+                                >
+                                    Add Itinerary Field
+                                </button>
+                            </div>
+                        </div>
+                        {itinerary?.map((item, index) => (
+                            <div key={index} className="flex flex-col gap-4 p-3 border border-gray-100 rounded">
+                                {index > 0 && (
+                                    <BlueButton
+                                        label={<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>}
+                                        onClick={() => handleRemoveItinerary(index)}
+                                        className="w-max place-self-end bg-red-500 border-red-500 hover:bg-red-600 hover:border-red-600"
+                                    />
+                                )}
+                                <div className='flex flex-col gap-4 w-full'>
+                                    <label htmlFor="description" className="flex flex-col gap-1.5 w-full">
+                                        <p className="text-sm font-medium text-gray-700">
+                                            Description
+                                        </p>
+                                        <textarea
+                                            id="description"
+                                            name="description"
+                                            rows={3}
+                                            value={item.description}
+                                            onChange={(e) => {
+                                                const newItinerary = [...itinerary]
+                                                newItinerary[index].description = e.target.value
+                                                setItinerary(newItinerary)
+                                            }}
+                                            placeholder="enter description"
+                                            className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out w-full"
+                                        />
+                                    </label>
                                 </div>
                             </div>
                         ))}
