@@ -66,6 +66,7 @@ export const createUserProfileDocument = async (userAuth: User,
         const createdAt = new Date().toISOString()
 
         const lastLogin = serverTimestamp();
+        const lastActive = serverTimestamp();
 
         try {
             await setDoc(userRef, {
@@ -74,6 +75,7 @@ export const createUserProfileDocument = async (userAuth: User,
                 photoURL,
                 createdAt,
                 lastLogin,
+                lastActive,
                 ...additionalData,
             });
             //await updateDoc(userRef, { lastLoginAt});

@@ -24,6 +24,7 @@ import routeSVG from "../../assets/SVG/Dashboard/route-solid.svg"
 import mapSVG from "../../assets/SVG/Dashboard/map-location-dot-solid.svg"
 import bellRingSVG from "../../assets/SVG/Dashboard/bell-ring.svg"
 import piggySolidSVG from "../../assets/SVG/Dashboard/piggy-bank-solid.svg"
+import userSVG from "../../assets/SVG/Dashboard/user-solid.svg"
 
 
 export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tourBookings, waitList }: { travelBookings: any[], activityBookings: any[], retreatBookings: any[], tourBookings: any[], waitList: any[] }) => {
@@ -94,7 +95,7 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                             </svg>
                         </button>
                     </div>
-                    <div className="h-full bg-[rgb(0,108,156)] pt-10 p-2 flex flex-col gap-5 overflow-y-scroll scrollbarhide sm:py-3 sm:p-1">
+                    <div className="h-full bg-[rgb(0,108,156)] pt-10 p-2 py-5 flex flex-col gap-5 overflow-y-scroll scrollbarhide sm:py-3 sm:p-1">
                         {/* Overview */}
                         <div className="flex flex-col gap-2.5">
                             <h4 className="pl-2 uppercase font-extrabold text-[0.75rem] text-gray-100">
@@ -1135,6 +1136,26 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                     Invoices
                                 </h4>
                             </NavLink>
+                        </div>
+                        {/* Finance End */}
+                        {/* Employees */}
+                        <div className="flex flex-col gap-2.5">
+                            <h4 className="pl-2 uppercase font-extrabold text-[0.75rem] text-gray-100">
+                                <span className="">
+                                    Employees
+                                </span>
+                            </h4>
+                            <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
+                                <NavLink
+                                    to="/employees"
+                                    className={`flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 cursor-pointer ${location.pathname === "/employees" ? "bg-gray-500" : ""}`}
+                                >
+                                    <img src={userSVG} alt="employees" className="w-5 h-5" />
+                                    <h4 className={`font-semibold text-base sm:text-[15px] sm:block ${location.pathname === "/employees" ? "text-white" : "text-white"}`}>
+                                        Employees
+                                    </h4>
+                                </NavLink>
+                            </div>
                         </div>
                     </div>
                 </div>

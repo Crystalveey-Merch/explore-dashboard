@@ -27,7 +27,8 @@ import {
 } from './Pages';
 import {
   Overview,
-  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, RetreatPackages, AddRetreatPackages, EditRetreatPackages, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications, PrivateTrips, ExploreVault
+  Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, RetreatPackages, AddRetreatPackages, EditRetreatPackages, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications, PrivateTrips, ExploreVault,
+  Employees
 } from "./Pages"
 import { AtelierOverview } from './Pages/Atelier';
 import { All, Cancelled, Installments, Paid, Review, Refunded, Booking } from "./Pages/Explore/TravelBookinngs"
@@ -143,6 +144,8 @@ function App() {
   const [retreatPackages, setRetreatPackages] = useState<any[]>([])
   const [tourPackages, setTourPackages] = useState<any[]>([])
 
+  const [admins, setAdmins] = useState<any[]>([])
+
   useEffect(() => {
     const unsubscribeBookings = onSnapshot(collection(db, 'transactions'), (snapshot) => {
       const updatedBookings = [] as any;
@@ -193,6 +196,17 @@ function App() {
       setTourPackages(updatedTourPackages);
     });
 
+
+    const unsubscribeAdmins = onSnapshot(collection(db, 'admins'), (snapshot) => {
+      const updatedAdmins = [] as any;
+      snapshot.forEach((doc) => {
+        updatedAdmins.push({ ...doc.data(), id: doc.id });
+      });
+      setAdmins(updatedAdmins);
+    });
+
+
+
     // Cleanup function to unsubscribe from real-time updates
     return () => {
       unsubscribeBookings();
@@ -201,6 +215,7 @@ function App() {
       unsubscribeTravelPackages();
       unsubscribeRetreatPackages();
       unsubscribeTourPackages();
+      unsubscribeAdmins()
     };
   }, []);
 
@@ -262,8 +277,15 @@ function App() {
         <Route path="*" element={<NotFound />} />
 
         {/* <ExploreRoutes /> */}
-
         <Route element={<PrivateRoutes />}>
+          <Route
+            path="/employees"
+            element={
+              <ExploreDasboardLayout>
+                <Employees admins={admins} />
+              </ExploreDasboardLayout>
+            }
+          />
           <Route
             path="/explore"
             element={
@@ -597,171 +619,172 @@ function App() {
               </ExploreDasboardLayout>
             }
           />
+
+          <Route
+            path="/explore/retreat-bookings"
+            element={
+              <ExploreDasboardLayout>
+                <AllRetreats retreatBookings={retreatBookings} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/retreat-bookings/confirmed"
+            element={
+              <ExploreDasboardLayout>
+                <PaidRetreats />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/retreat-bookings/installments"
+            element={
+              <ExploreDasboardLayout>
+                <InstallmentRetreats />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/retreat-bookings/pending"
+            element={
+              <ExploreDasboardLayout>
+                <ReviewRetreats />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/retreat-bookings/refunded"
+            element={
+              <ExploreDasboardLayout>
+                <RefundedRetreats />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/retreat-bookings/cancelled"
+            element={
+              <ExploreDasboardLayout>
+                <CancelledRetreats />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/retreat-bookings/:id"
+            element={
+              <ExploreDasboardLayout>
+                <BookingRetreats bookings={retreatBookings} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/waitlist/:packageTitle"
+            element={
+              <ExploreDasboardLayout>
+                <Waitlist allWaitlist={waitList} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/explore-vault"
+            element={
+              <ExploreDasboardLayout>
+                <ExploreVault />
+              </ExploreDasboardLayout>
+            }
+          />
         </Route>
-        <Route
-          path="/explore/retreat-bookings"
-          element={
-            <ExploreDasboardLayout>
-              <AllRetreats retreatBookings={retreatBookings} />
-            </ExploreDasboardLayout>
-          }
-        />
-        <Route
-          path="/explore/retreat-bookings/confirmed"
-          element={
-            <ExploreDasboardLayout>
-              <PaidRetreats />
-            </ExploreDasboardLayout>
-          }
-        />
-        <Route
-          path="/explore/retreat-bookings/installments"
-          element={
-            <ExploreDasboardLayout>
-              <InstallmentRetreats />
-            </ExploreDasboardLayout>
-          }
-        />
-        <Route
-          path="/explore/retreat-bookings/pending"
-          element={
-            <ExploreDasboardLayout>
-              <ReviewRetreats />
-            </ExploreDasboardLayout>
-          }
-        />
-        <Route
-          path="/explore/retreat-bookings/refunded"
-          element={
-            <ExploreDasboardLayout>
-              <RefundedRetreats />
-            </ExploreDasboardLayout>
-          }
-        />
-        <Route
-          path="/explore/retreat-bookings/cancelled"
-          element={
-            <ExploreDasboardLayout>
-              <CancelledRetreats />
-            </ExploreDasboardLayout>
-          }
-        />
-        <Route
-          path="/explore/retreat-bookings/:id"
-          element={
-            <ExploreDasboardLayout>
-              <BookingRetreats bookings={retreatBookings} />
-            </ExploreDasboardLayout>
-          }
-        />
-        <Route
-          path="/explore/waitlist/:packageTitle"
-          element={
-            <ExploreDasboardLayout>
-              <Waitlist allWaitlist={waitList} />
-            </ExploreDasboardLayout>
-          }
-        />
-        <Route
-          path="/explore/explore-vault"
-          element={
-            <ExploreDasboardLayout>
-              <ExploreVault />
-            </ExploreDasboardLayout>
-          }
-        />
         {/* explore routes end */}
         {/* atelier routes */}
         <Route element={<PrivateRoutes />}>
-          <Route
-            path="/atelier"
-            element={
-              <AtelierDashboardLayout>
-                <AtelierOverview />
-              </AtelierDashboardLayout>
-            }
-          />
-          <Route
-            path="/atelier/upload-product"
-            element={
-              <AtelierDashboardLayout>
-                <UploadProductForm />
-              </AtelierDashboardLayout>
-            }
-          />
-          <Route
-            path="/atelier/all-products"
-            element={
-              <AtelierDashboardLayout>
-                <AllProducts />
-              </AtelierDashboardLayout>
-            }
-          />
-          <Route
-            path="/atelier/uploadproduct/:id"
-            element={
-              <AtelierDashboardLayout>
-                <UploadProductForm />
-              </AtelierDashboardLayout>
-            }
-          />
-          <Route
-            path="/atelier/refurblish"
-            element={
-              <AtelierDashboardLayout>
-                <Refurblish />
-              </AtelierDashboardLayout>
-            }
-          />
-          <Route
-            path="/atelier/refurblish-and-sell"
-            element={
-              <AtelierDashboardLayout>
-                <RefurblishAndSell />
-              </AtelierDashboardLayout>
-            }
-          />
-          <Route
-            path="/atelier/orders"
-            element={
-              <AtelierDashboardLayout>
-                <Orders />
-              </AtelierDashboardLayout>
-            }
+          <Route element={<PrivateRoutes />}>
+            <Route
+              path="/atelier"
+              element={
+                <AtelierDashboardLayout>
+                  <AtelierOverview />
+                </AtelierDashboardLayout>
+              }
+            />
+            <Route
+              path="/atelier/upload-product"
+              element={
+                <AtelierDashboardLayout>
+                  <UploadProductForm />
+                </AtelierDashboardLayout>
+              }
+            />
+            <Route
+              path="/atelier/all-products"
+              element={
+                <AtelierDashboardLayout>
+                  <AllProducts />
+                </AtelierDashboardLayout>
+              }
+            />
+            <Route
+              path="/atelier/uploadproduct/:id"
+              element={
+                <AtelierDashboardLayout>
+                  <UploadProductForm />
+                </AtelierDashboardLayout>
+              }
+            />
+            <Route
+              path="/atelier/refurblish"
+              element={
+                <AtelierDashboardLayout>
+                  <Refurblish />
+                </AtelierDashboardLayout>
+              }
+            />
+            <Route
+              path="/atelier/refurblish-and-sell"
+              element={
+                <AtelierDashboardLayout>
+                  <RefurblishAndSell />
+                </AtelierDashboardLayout>
+              }
+            />
+            <Route
+              path="/atelier/orders"
+              element={
+                <AtelierDashboardLayout>
+                  <Orders />
+                </AtelierDashboardLayout>
+              }
 
-          />
-          <Route
-            path="/atelier/untag-sell"
-            element={
-              <AtelierDashboardLayout>
-                <UntagSell />
-              </AtelierDashboardLayout>
-            }
+            />
+            <Route
+              path="/atelier/untag-sell"
+              element={
+                <AtelierDashboardLayout>
+                  <UntagSell />
+                </AtelierDashboardLayout>
+              }
 
-          />
-          <Route
-            path="/atelier/custom-made"
-            element={
-              <AtelierDashboardLayout>
-                <CustonMade />
-              </AtelierDashboardLayout>
-            }
+            />
+            <Route
+              path="/atelier/custom-made"
+              element={
+                <AtelierDashboardLayout>
+                  <CustonMade />
+                </AtelierDashboardLayout>
+              }
 
-          />
-          <Route
-            path="/atelier/users"
-            element={
-              <AtelierDashboardLayout>
-                <Users />
-              </AtelierDashboardLayout>
-            }
+            />
+            <Route
+              path="/atelier/users"
+              element={
+                <AtelierDashboardLayout>
+                  <Users />
+                </AtelierDashboardLayout>
+              }
 
-          />
+            />
 
+          </Route>
+          {/* atelier routes end */}
         </Route>
-
-
-        {/* atelier routes end */}
       </Routes>
 
       <ToastContainer />

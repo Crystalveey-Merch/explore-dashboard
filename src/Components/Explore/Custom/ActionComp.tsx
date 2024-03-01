@@ -5,7 +5,7 @@ import editSVG from "../../../assets/SVG/Invoice/pencil-ui.svg";
 import trashSVG from "../../../assets/SVG/Invoice/trash-bin.svg";
 
 
-export const ActionComp = ({ showActions, handleDelete, viewRoute, id, toggleActions, showRef }: { showActions: boolean, handleDelete: any,viewRoute: any, id: string, toggleActions: any, showRef: any }) => {
+export const ActionComp = ({ showActions, handleDelete, viewRoute, id, toggleActions, showRef }: { showActions: boolean, handleDelete: any, viewRoute: any, id: string, toggleActions: any, showRef: any }) => {
 
     return (
         <div className="relative" ref={showRef}>
@@ -38,7 +38,7 @@ export const ActionComp = ({ showActions, handleDelete, viewRoute, id, toggleAct
                         </span>
                     </button>
                     <button
-                        className="inline-flex p-2 gap-2.5 hover:bg-gray-100 rounded-md items-center w-full text-left"
+                        className="inline-flex hidden p-2 gap-2.5 hover:bg-gray-100 rounded-md items-center w-full text-left"
                         onClick={() => handleDelete(id)}
                     >
                         <img src={trashSVG} alt="Delete flightBooking" className="w-5 h-5" />

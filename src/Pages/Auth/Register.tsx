@@ -56,6 +56,20 @@ export const Register = () => {
             return;
         }
 
+        // Check if the email is not one of the specified email addresses
+        const authorizedEmails = [
+            "victoria@crystalveey.com",
+            "muzardemoses@crystalveey.com",
+            "prudence@crystalveey.com",
+        ];
+
+        if (!authorizedEmails.includes(email)) {
+            toast.error(
+                "You are not authorized to register with this email address."
+            );
+            return;
+        }
+
         try {
             const { user } = await createUserWithEmailAndPassword(
                 auth,
