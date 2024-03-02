@@ -1,19 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
 import TablePagination from '@mui/material/TablePagination';
-// import { toast } from "react-toastify";
-import { handleFormatTimestampToDateC } from "../../Hooks";
-import { SearchInput } from "../../Components"
-import { Sort } from "../../Hooks";
-import noResultImg from "../../assets/Images/Dashboard/no-results.png"
+import { handleFormatDateB, handleFormatToDateAndTime } from "../Hooks";
+import { SearchInput } from "../Components"
+import { Sort } from "../Hooks";
+import noResultImg from "../assets/Images/Dashboard/no-results.png"
 
 
-export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
-    const { packageTitle } = useParams<{ packageTitle: string }>();
-    // const [allWaitlist, setAllWaitlist] = useState<any[]>([]);
-    const [waitlist, setWaitlist] = useState<any[]>([]);
-    const [displayedWaitlist, setDisplayedWaitlist] = useState<any[]>([]);
+export const Employees = ({ admins }: any) => {
+    const [displayedAdmins, setDisplayedAdmins] = useState<any[]>([]);
 
     const [sort, setSort] = useState("");
     const [activeTab, setActiveTab] = useState("");
@@ -23,95 +18,48 @@ export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
         setActiveTab(tab);
     };
 
-    // const capitalizeFirstLetter = (word: string) => {
-    //     return word.charAt(0).toUpperCase() + word.slice(1);
-    // };
-
-    // const convertToMatchCountry = (routeTitle: string) => {
-    //     if (routeTitle.includes("-")) {
-    //         return routeTitle
-    //             .split("-")
-    //             .map((word) => capitalizeFirstLetter(word))
-    //             .join(" ");
-    //     }
-    //     return capitalizeFirstLetter(routeTitle);
-    // };
-
-    const convertedTitle = (title: string) => {
-        return title.toLowerCase().split(" ").join("-");
-    };
-
-    useEffect(() => {
-        if (allWaitlist.length > 0) {
-            const waitlist = allWaitlist.filter((entry: { packageTitle: string; }) => convertedTitle(entry.packageTitle) === packageTitle);
-            setWaitlist(waitlist);
-            setDisplayedWaitlist(waitlist);
-        }
-
-    }, [packageTitle, allWaitlist]);
-
-
-    // const handleDelete = async (id: string, title: string) => {
-    //     if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
-    //         try {
-    //             await deleteDoc(doc(db, "waitlist", id));
-
-    //             // Update the state after successful deletion
-    //             const newWaitlist = allWaitlist.filter(
-    //                 (waitlist) => waitlist.id !== id
-    //             );
-    //             setAllWaitlist(newWaitlist);
-    //             toast.success("Travel Package deleted successfully");
-    //         } catch (error) {
-    //             console.log(error);
-    //             toast.error("Something went wrong");
-    //         }
-    //     }
-    // }
-
     // format date to string
     const formatDateToString = (dateString: string): number => new Date(dateString).getTime();
 
     // sort 
     useEffect(() => {
-        if (sort === "asc" && activeTab === "packageTitle") {
-            setDisplayedWaitlist([...displayedWaitlist].sort((a, b) => a.packageTitle.localeCompare(b.packageTitle)));
-        } else if (sort === "desc" && activeTab === "packageTitle") {
-            setDisplayedWaitlist([...displayedWaitlist].sort((a, b) => b.packageTitle.localeCompare(a.packageTitle)));
-        } else if (sort === "asc" && activeTab === "authorName") {
-            setDisplayedWaitlist([...displayedWaitlist].sort((a, b) => a.authorName.localeCompare(b.authorName)));
-        } else if (sort === "desc" && activeTab === "authorName") {
-            setDisplayedWaitlist([...displayedWaitlist].sort((a, b) => b.authorName.localeCompare(a.authorName)));
-        } else if (sort === "asc" && activeTab === "authorPhone") {
-            setDisplayedWaitlist([...displayedWaitlist].sort((a, b) => a.authorPhone.localeCompare(b.authorPhone)));
-        } else if (sort === "desc" && activeTab === "authorPhone") {
-            setDisplayedWaitlist([...displayedWaitlist].sort((a, b) => b.authorPhone.localeCompare(a.authorPhone)));
+        if (sort === "asc" && activeTab === "displayName") {
+            setDisplayedAdmins([...displayedAdmins].sort((a, b) => a.displayName.localeCompare(b.displayName)));
+        } else if (sort === "desc" && activeTab === "email") {
+            setDisplayedAdmins([...displayedAdmins].sort((a, b) => b.email.localeCompare(a.email)));
+        } else if (sort === "asc" && activeTab === "lastLogin") {
+            setDisplayedAdmins([...displayedAdmins].sort((a, b) => a.lastLogin - b.lastLogin))
+        } else if (sort === "desc" && activeTab === "lastLogin") {
+            setDisplayedAdmins([...displayedAdmins].sort((a, b) => b.lastLogin - a.lastLogin))
+        } else if (sort === "asc" && activeTab === "lastActive") {
+            setDisplayedAdmins([...displayedAdmins].sort((a, b) => a.lastActive - b.lastActive))
+        } else if (sort === "desc" && activeTab === "lastActive") {
+            setDisplayedAdmins([...displayedAdmins].sort((a, b) => b.lastActive - a.lastActive))
         } else if (sort === "asc" && activeTab === "createdAt") {
-            setDisplayedWaitlist([...displayedWaitlist].sort((a, b) => formatDateToString(a.createdAt) - formatDateToString(b.createdAt)));
+            setDisplayedAdmins([...displayedAdmins].sort((a, b) => formatDateToString(a.createdAt) - formatDateToString(b.createdAt)));
         } else if (sort === "desc" && activeTab === "createdAt") {
-            setDisplayedWaitlist([...displayedWaitlist].sort((a, b) => formatDateToString(b.createdAt) - formatDateToString(a.createdAt)));
+            setDisplayedAdmins([...displayedAdmins].sort((a, b) => formatDateToString(b.createdAt) - formatDateToString(a.createdAt)));
         } else {
-            setDisplayedWaitlist(waitlist);
+            setDisplayedAdmins(admins);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sort, activeTab]);
 
     // search
     const [search, setSearch] = useState<string>("");
-    // search by authorName, packageTitle, authorPhone and authorEmail
+
+    // search by name and email
     useEffect(() => {
         if (search) {
-            const searchResult = waitlist.filter((entry: { authorName: string; packageTitle: string; authorPhone: string; authorEmail: string; }) => {
+            const searchResult = admins.filter((entry: { displayName: string; email: string; }) => {
                 return (
-                    entry.authorName.toLowerCase().includes(search.toLowerCase()) ||
-                    entry.packageTitle.toLowerCase().includes(search.toLowerCase()) ||
-                    entry.authorPhone.toLowerCase().includes(search.toLowerCase()) ||
-                    entry.authorEmail.toLowerCase().includes(search.toLowerCase())
+                    entry.displayName.toLowerCase().includes(search.toLowerCase()) ||
+                    entry.email.toLowerCase().includes(search.toLowerCase())
                 );
             });
-            setDisplayedWaitlist(searchResult);
+            setDisplayedAdmins(searchResult);
         } else {
-            setDisplayedWaitlist(waitlist);
+            setDisplayedAdmins(admins);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
@@ -134,7 +82,7 @@ export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
         <div className="px-10 py-14 flex flex-col gap-20 xl:px-6 xl:w-[calc(100vw-10px)] lg:gap-16 md:gap-12 md:w-[100vw] sm:gap-9 sm:px-4">
             <div className="flex justify-between items-center sm:flex-col sm:items-start sm:gap-3">
                 <h1 className="text-3xl font-bold text-gray-800 xl:text-2xl lg:text-xl">
-                    Waitlist for {waitlist[0]?.packageTitle}
+                    Admins
                 </h1>
             </div>
             <div
@@ -142,7 +90,7 @@ export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
                 style={{ boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px" }}
             >
                 <div className="flex justify-end pt-5 px-4">
-                    <SearchInput search={search} setSearch={setSearch} placeholder="Search by name, phone, email, or package title" />
+                    <SearchInput search={search} setSearch={setSearch} placeholder="Search by name and email" />
                 </div>
                 <div className="relative w-full lg:overflow-x-scroll xl:overflow-y-hidden xl:rounded-lg">
                     <table className="w-full text-sm text-left text-gray-500">
@@ -154,8 +102,8 @@ export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
                                         sort={sort}
                                         activeTab={activeTab}
                                         handleSortChange={handleSortChange}
-                                        tab="authorName"
-                                        label="Customer Info"
+                                        tab="displayName"
+                                        label="Admin Info"
                                     />
                                 </th>
                                 <th scope="col" className="px-6 py-3">
@@ -163,8 +111,8 @@ export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
                                         sort={sort}
                                         activeTab={activeTab}
                                         handleSortChange={handleSortChange}
-                                        tab="packageTitle"
-                                        label="Package Title"
+                                        tab="lastActive"
+                                        label="Last Active"
                                     />
                                 </th>
                                 <th scope="col" className="px-6 py-3">
@@ -172,8 +120,8 @@ export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
                                         sort={sort}
                                         activeTab={activeTab}
                                         handleSortChange={handleSortChange}
-                                        tab="authorPhone"
-                                        label="Customer Phone"
+                                        tab="lastLogin"
+                                        label="Last Login"
                                     />
                                 </th>
                                 <th scope="col" className="px-6 py-3">
@@ -182,7 +130,7 @@ export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
                                         activeTab={activeTab}
                                         handleSortChange={handleSortChange}
                                         tab="createdAt"
-                                        label="Date"
+                                        label="Date Created"
                                     />
                                 </th>
                                 <th scope="col" className="px-6 py-3">
@@ -190,10 +138,10 @@ export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
                                 </th>
                             </tr>
                         </thead>
-                        {displayedWaitlist.length === 0 ? (
+                        {displayedAdmins.length === 0 ? (
                             <tbody className="bg-white border-b border-gray-200">
                                 <tr className="bg-white border-b">
-                                    <td className="px-6 py-6" colSpan={6}>
+                                    <td className="px-6 py-6" colSpan={5}>
                                         <div className="flex flex-col gap-1 items-center">
                                             <img
                                                 src={noResultImg}
@@ -209,31 +157,31 @@ export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
                             </tbody>
                         ) : (
                             <>
-                                {displayedWaitlist.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, id) => (
+                                {displayedAdmins.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((person, id) => (
                                     <tbody key={id} >
                                         <tr className="bg-white border-b hover:bg-gray-50 ">
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex gap-2 items-center mx-6">
                                                 <div className="flex flex-col gap-0.5">
                                                     <p className="text-sm font-medium text-ellipsis">
-                                                        {item.authorName}
+                                                        {person.displayName}
                                                     </p>
                                                     <p className="text-[rgb(99,115,129)] text-xs font-normal">
-                                                        {item.authorEmail}
+                                                        {person.email}
                                                     </p>
                                                 </div>
                                             </th>
                                             <td className="px-6 py-4">
-                                                {item.packageTitle}
+                                                {handleFormatToDateAndTime(person.lastActive)}
                                             </td>
                                             <td className="px-6 py-4">
-                                                {item.authorPhone}
+                                                {handleFormatToDateAndTime(person.lastLogin)}
                                             </td>
                                             <td className="px-6 py-4">
-                                                {handleFormatTimestampToDateC(item.createdAt)}
+                                                {handleFormatDateB(person.createdAt)}
                                             </td>
                                             <td className="flex items-center px-6 py-4 space-x-3">
                                                 {/* <button
-                                                    onClick={() => handleDelete(item.id, item.title)} className="font-medium my-auto text-red-600 dark:text-red-500 hover:underline">Remove</button> */}
+                                                    onClick={() => handleDelete(person.id} className="font-medium my-auto text-red-600 dark:text-red-500 hover:underline">Remove</button> */}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -245,7 +193,7 @@ export const Waitlist = ({ allWaitlist }: { allWaitlist: any[] }) => {
                 <div className="p-2">
                     <TablePagination
                         component="div"
-                        count={displayedWaitlist.length}
+                        count={displayedAdmins.length}
                         page={page}
                         onPageChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
