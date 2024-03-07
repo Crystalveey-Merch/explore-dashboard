@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useRef } from 'react'
+import { useState, useRef, Key } from 'react'
 import { useNavigate } from 'react-router-dom';
 import {
     serverTimestamp,
@@ -15,10 +15,10 @@ import Input from "../../../Components/Explore/Custom/Input"
 import imagePictureSVG from "../../../assets/SVG/Dashboard/image-picture.svg"
 import downloadCloudSVG from "../../../assets/SVG/Dashboard/download-cloud.svg"
 import { BlueButton } from '../../../Components';
-import { categories, countries } from '../../../data/data'
+import { countries } from '../../../data/data'
 
 
-export const AddActivity = () => {
+export const AddActivity = ({ categories }: { categories: any }) => {
     const navigate = useNavigate()
 
     const [loading, setLoading] = useState(false)
@@ -292,7 +292,7 @@ export const AddActivity = () => {
                                     className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out w-full"
                                 >
                                     <option value="">--Select Category--</option>
-                                    {categories.map((category) => (
+                                    {categories.map((category: { id: Key | null | undefined; name: string }) => (
                                         <option key={category.id} value={category.name}>{category.name}</option>
                                     ))}
                                 </select>
@@ -628,9 +628,9 @@ export const AddActivity = () => {
                     >
                         {loading ? "Adding..." : "Add Activity"}
                     </button>
-                    <button 
-                    onClick={() => navigate("/explore/activities")}
-                    className="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-gray-200" type="button">Cancel</button>
+                    <button
+                        onClick={() => navigate("/explore/activities")}
+                        className="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-gray-200" type="button">Cancel</button>
                 </div>
             </form>
 

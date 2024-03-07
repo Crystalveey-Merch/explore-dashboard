@@ -342,7 +342,7 @@ function App() {
             path="/explore/activities/add"
             element={
               <ExploreDasboardLayout>
-                <AddActivity />
+                <AddActivity categories={categories} />
               </ExploreDasboardLayout>
             }
           />
@@ -351,7 +351,7 @@ function App() {
             path="/explore/activities/edit/:id"
             element={
               <ExploreDasboardLayout>
-                <EditActivity activities={activities} />
+                <EditActivity activities={activities} categories={categories} />
               </ExploreDasboardLayout>
             }
           />
