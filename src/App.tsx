@@ -28,7 +28,7 @@ import {
 import {
   Overview,
   Activities, AddActivity, EditActivity, TravelPackages, AddTravelPackage, EditTravelPackage, RetreatPackages, AddRetreatPackages, EditRetreatPackages, Invoice, Invoices, EditInvoice, FlightBookings, HotelReservations, VisaApplications, PrivateTrips, ExploreVault,
-  Employees
+  Employees, AllCategory, AddCategory, Category
 } from "./Pages"
 import { AtelierOverview } from './Pages/Atelier';
 import { All, Cancelled, Installments, Paid, Review, Refunded, Booking } from "./Pages/Explore/TravelBookinngs"
@@ -140,6 +140,7 @@ function App() {
   const [waitList, setWaitList] = useState<any[]>([])
 
   const [activities, setActivities] = useState<any[]>([])
+  const [categories, setCategories] = useState<any[]>([])
   const [travelPackages, setTravelPackages] = useState<any[]>([])
   const [retreatPackages, setRetreatPackages] = useState<any[]>([])
   const [tourPackages, setTourPackages] = useState<any[]>([])
@@ -170,6 +171,14 @@ function App() {
         updatedActivities.push({ ...doc.data(), id: doc.id });
       });
       setActivities(updatedActivities);
+    });
+
+    const unsubscribeCategories = onSnapshot(collection(db, 'categories'), (snapshot) => {
+      const updatedCategories = [] as any;
+      snapshot.forEach((doc) => {
+        updatedCategories.push({ ...doc.data(), id: doc.id });
+      });
+      setCategories(updatedCategories);
     });
 
     const unsubscribeTravelPackages = onSnapshot(collection(db, 'travelPackages'), (snapshot) => {
@@ -212,6 +221,7 @@ function App() {
       unsubscribeBookings();
       unsubscribeWaitlist();
       unsubscribeActivities();
+      unsubscribeCategories();
       unsubscribeTravelPackages();
       unsubscribeRetreatPackages();
       unsubscribeTourPackages();
@@ -342,6 +352,31 @@ function App() {
             element={
               <ExploreDasboardLayout>
                 <EditActivity activities={activities} />
+              </ExploreDasboardLayout>
+            }
+          />
+
+          <Route
+            path="/explore/activities/categories"
+            element={
+              <ExploreDasboardLayout>
+                <AllCategory AllCategories={categories} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/activities/categories/add"
+            element={
+              <ExploreDasboardLayout>
+                <AddCategory />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/activities/categories/edit/:id"
+            element={
+              <ExploreDasboardLayout>
+                <Category categories={categories} />
               </ExploreDasboardLayout>
             }
           />

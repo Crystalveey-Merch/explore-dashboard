@@ -1,3 +1,6 @@
 export * from "./Activities"
 export * from "./AddActivity"
 export * from "./EditActivity"
+export * from "./AddCategory"
+export * from "./AllCategory"
+export * from "./Category"

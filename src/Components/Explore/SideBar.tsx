@@ -824,6 +824,21 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                                 </p>
                                             </NavLink>
                                         </li>
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/activities/categories" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/activities/categories" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-base sm:text-[15px] ${location.pathname === "/explore/activities/categories" ? "text-white" : "text-white"}`}>
+                                                    <span className="sm:block"> Categories</span>
+                                                </p>
+                                            </NavLink>
+                                        </li>
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/activities/categories/add" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/activities/categories/add" ? "bg-gray-500" : ""}`}>
+                                                <img src={PlusSVG} alt="plus" className="w-4 h-4" />
+                                                <p className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/activities/categories/add" ? "text-white" : "text-white"}`}>
+                                                    Add Category
+                                                </p>
+                                            </NavLink>
+                                        </li>
                                     </ul>
                                 </Collapsible>
                             </div>

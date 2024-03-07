@@ -19,9 +19,7 @@ import { categories, countries } from '../../../data/data'
 
 
 export const AddActivity = () => {
-
     const navigate = useNavigate()
-
 
     const [loading, setLoading] = useState(false)
     const [name, setName] = useState<string>('')
@@ -630,7 +628,9 @@ export const AddActivity = () => {
                     >
                         {loading ? "Adding..." : "Add Activity"}
                     </button>
-                    <button className="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-gray-200" type="button">Cancel</button>
+                    <button 
+                    onClick={() => navigate("/explore/activities")}
+                    className="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-gray-200" type="button">Cancel</button>
                 </div>
             </form>
 

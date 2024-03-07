@@ -677,7 +677,9 @@ export const EditActivity = ({ activities }: { activities: any }) => {
                     >
                         {loading ? "Updating..." : "Update Activity"}
                     </button>
-                    <button className="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-gray-200" type="button">Cancel</button>
+                    <button
+                     onClick={() => navigate("/explore/activities")}
+                     className="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2 rounded-md w-max transition duration-300 ease-in-out hover:bg-gray-200" type="button">Cancel</button>
                 </div>
             </form>
 

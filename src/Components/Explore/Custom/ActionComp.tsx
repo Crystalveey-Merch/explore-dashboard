@@ -38,7 +38,7 @@ export const ActionComp = ({ showActions, handleDelete, viewRoute, id, toggleAct
                         </span>
                     </button>
                     <button
-                        className="inline-flex hidden p-2 gap-2.5 hover:bg-gray-100 rounded-md items-center w-full text-left"
+                        className="inlineflex hidden p-2 gap-2.5 hover:bg-gray-100 rounded-md items-center w-full text-left"
                         onClick={() => handleDelete(id)}
                     >
                         <img src={trashSVG} alt="Delete flightBooking" className="w-5 h-5" />
