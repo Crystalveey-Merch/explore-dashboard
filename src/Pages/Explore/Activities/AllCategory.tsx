@@ -206,7 +206,8 @@ export const AllCategory = ({ AllCategories }: { AllCategories: any[], }) => {
                                                             </p>
                                                         </th>
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            {category.description}
+                                                            {/* must not be more than 10 words */}
+                                                            {category.description.split(" ").slice(0, 10).join(" ")}...
                                                         </td>
                                                         <td className="px-6 py-4">
                                                             {new Date(category.createdAt).toLocaleDateString()}
