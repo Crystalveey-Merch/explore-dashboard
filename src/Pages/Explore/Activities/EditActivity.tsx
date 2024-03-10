@@ -12,9 +12,12 @@ import { db, storage } from '../../../Config/firebase';
 import Input from "../../../Components/Explore/Custom/Input"
 import imagePictureSVG from "../../../assets/SVG/Dashboard/image-picture.svg"
 import downloadCloudSVG from "../../../assets/SVG/Dashboard/download-cloud.svg"
-import { BlueButton } from '../../../Components';
+import { BlueButton, IOSSwitch } from '../../../Components';
 import { countries } from '../../../data/data'
-
+import { FormControlLabel } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Grid from '@mui/material/Grid';
 
 export const EditActivity = ({ activities, categories }: { activities: any, categories: any }) => {
     const { id } = useParams<{ id: string }>()
@@ -29,10 +32,22 @@ export const EditActivity = ({ activities, categories }: { activities: any, cate
 
     const navigate = useNavigate()
 
+    const [open, setOpen] = useState(false);
+    const handleTooltipClose = () => {
+        setOpen(false);
+    };
+
+    const handleTooltipOpen = () => {
+        setOpen(true);
+    };
+
     const [isImageOneChanged, setIsImageOneChanged] = useState(false)
     const [isImageTwoChanged, setIsImageTwoChanged] = useState(false)
 
     const [loading, setLoading] = useState(false)
+    const [isActive, setIsActive] = useState<boolean>(true)
+    const [destinationLocation, setDestinationLocation] = useState<string>('')
+    const [sortOrder, setSortOrder] = useState<number | string>("")
     const [name, setName] = useState<string>('')
     const [description, setDescription] = useState<string>('')
     const [location, setLocation] = useState<string>('')
@@ -47,6 +62,13 @@ export const EditActivity = ({ activities, categories }: { activities: any, cate
     const [featureList, setFeatureList] = useState<string>("")
     const [featureLists, setFeatureLists] = useState<string[]>([])
     const [whatToExpect, setWhatToExpect] = useState([{ name: "", duration: "", description: "" }])
+
+    const handleSortOrderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value
+        if (value === "" || /^[0-9\b]+$/.test(value)) {
+            setSortOrder(value)
+        }
+    }
 
     const handleAddInclusion = () => {
         if (inclusion !== "") {
@@ -173,6 +195,9 @@ export const EditActivity = ({ activities, categories }: { activities: any, cate
 
     useEffect(() => {
         if (activity) {
+            setIsActive(activity.isActive)
+            setDestinationLocation(activity.destinationLocation)
+            setSortOrder(activity.sortOrder)
             setName(activity.name)
             setDescription(activity.description)
             setLocation(activity.location)
@@ -224,6 +249,8 @@ export const EditActivity = ({ activities, categories }: { activities: any, cate
 
         if (
             name.trim() === "" ||
+            destinationLocation.trim() === "" ||
+            sortOrder === "" ||
             description.trim() === "" ||
             location.trim() === "" ||
             category === "" ||
@@ -244,8 +271,11 @@ export const EditActivity = ({ activities, categories }: { activities: any, cate
 
         try {
             await updateDoc(activitiesRef, {
+                isActive,
                 name,
                 description,
+                destinationLocation,
+                sortOrder: Number(sortOrder),
                 location,
                 category,
                 country,
@@ -260,8 +290,11 @@ export const EditActivity = ({ activities, categories }: { activities: any, cate
                 whatToExpect,
                 updatedAt: timestamp,
             });
+            setIsActive(true);
             setName("");
             setDescription("");
+            setDestinationLocation("");
+            setSortOrder("");
             setLocation("");
             setCategory("");
             setCountry("");
@@ -294,6 +327,73 @@ export const EditActivity = ({ activities, categories }: { activities: any, cate
                 </h1>
             </div>
             <form className="w-full min-h-[400px] flex flex-col gap-10">
+                <div className="flex flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
+                    <div className="p-3 border-b border-gray-200">
+                        <h3 className="text-xl font-semibold text-gray-700 md:text-lg">
+                            Activity Settings
+                        </h3>
+                    </div>
+                    <div className="p-4 flex gap-10 xl:gap-5 lg:flex-col">
+                        <div className="w-full flex justify-between items-center border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 placeholder:text-gray-900 placeholder:opacity-60 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out">
+                            <div className="flex gap-1 items-center">
+                                <p>
+                                    Set Active
+                                </p>
+                            </div>
+                            <FormControlLabel
+                                control={
+                                    <IOSSwitch
+                                        checked={isActive}
+                                        onChange={() => setIsActive(!isActive)}
+                                        name="isActive"
+                                        className='w-max'
+                                    />
+                                }
+                                label=""
+                            />
+                        </div>
+                        <label htmlFor="destinationLocation" className="flex flex-col gap-1.5 w-full">
+                            <p className="text-sm font-medium text-gray-700">
+                                Destination Location (it must be a google map address)
+                            </p>
+                            <Input placeholder="enter destination location" name={"destinationLocation"} type={"text"} value={destinationLocation} onChange={(e) => setDestinationLocation(e.target.value)} className={"w-full"} required />
+                        </label>
+                        <label htmlFor="maxBookings" className="flex flex-col gap-1.5 w-full">
+                            <div className='flex gap-1.5'>
+                                <p className="text-sm font-medium text-gray-700">
+                                    Sort Order
+                                </p>
+                                <Grid item>
+                                    <ClickAwayListener onClickAway={handleTooltipClose}>
+                                        <div>
+                                            <Tooltip
+                                                PopperProps={{
+                                                    disablePortal: true,
+                                                }}
+                                                onClose={handleTooltipClose}
+                                                open={open}
+                                                disableFocusListener
+                                                disableHoverListener
+                                                disableTouchListener
+                                                title="give a number to sort the activity on the explore page. The lower the number, the higher it appears on the page."
+                                                arrow
+                                                placement="top"
+                                            >
+                                                <button className="h-6 w-6 mr-2" onClick={handleTooltipOpen}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                                </svg>
+                                                </button>
+                                            </Tooltip>
+                                        </div>
+                                    </ClickAwayListener>
+                                </Grid>
+                            </div>
+
+                            <Input placeholder="e.g 15"
+                                name={"sortOrder"} type={"text"} value={sortOrder} onChange={handleSortOrderChange} className={"w-full"} required />
+                        </label>
+                    </div>
+                </div>
                 <div className="flex gap-10 xl:gap-5 lg:flex-col">
                     <div className="flex flex-1 flex-col gap-2 border border-gray-200 rounded-xl shadow-md">
                         <div className="p-3 border-b border-gray-200">
@@ -339,7 +439,7 @@ export const EditActivity = ({ activities, categories }: { activities: any, cate
                                     className="border border-solid bg-white border-gray-300 font-normal text-base text-gray-900 rounded-lg px-3.5 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent disabled:background-gray-50 disabled:border-gray-300 disabled:text-gray-500 after:bg-white transition duration-300 ease-in-out w-full"
                                 >
                                     <option value="">--Select Category--</option>
-                                    {categories.map((category:  any) => (
+                                    {categories.map((category: any) => (
                                         <option key={category.id} value={category.name}>{category.name}</option>
                                     ))}
                                 </select>
