@@ -37,6 +37,7 @@ import { AllRetreats, CancelledRetreats, InstallmentRetreats, PaidRetreats, Revi
 import { AllTours, CancelledTours, InstallmentTours, PaidTours, ReviewTours, RefundedTours, BookingTours } from "./Pages/Explore/TourBookings"
 import { AddTourPackage, EditTourPackage, TourPackages } from "./Pages/Explore/TourPackages"
 import { Waitlist } from './Components/Explore/Waitlist';
+import { AddBlog, Blogs, EditBlog } from './Pages/Explore/Blogs';
 import { UploadProductForm } from './Components/Atelier/UploadProduct/UploadProductForm';
 import { AllProducts } from './Components/Atelier/AllProducts';
 import { Refurblish } from './Components/Atelier/Refurblish';
@@ -144,6 +145,7 @@ function App() {
   const [travelPackages, setTravelPackages] = useState<any[]>([])
   const [retreatPackages, setRetreatPackages] = useState<any[]>([])
   const [tourPackages, setTourPackages] = useState<any[]>([])
+  const [blogs, setBlogs] = useState<any[]>([])
 
   const [admins, setAdmins] = useState<any[]>([])
 
@@ -205,6 +207,14 @@ function App() {
       setTourPackages(updatedTourPackages);
     });
 
+    const unsubscribeBlogs = onSnapshot(collection(db, 'blogs'), (snapshot) => {
+      const updatedBlogs = [] as any;
+      snapshot.forEach((doc) => {
+        updatedBlogs.push({ ...doc.data(), id: doc.id });
+      });
+      setBlogs(updatedBlogs);
+    });
+
 
     const unsubscribeAdmins = onSnapshot(collection(db, 'admins'), (snapshot) => {
       const updatedAdmins = [] as any;
@@ -225,6 +235,7 @@ function App() {
       unsubscribeTravelPackages();
       unsubscribeRetreatPackages();
       unsubscribeTourPackages();
+      unsubscribeBlogs();
       unsubscribeAdmins()
     };
   }, []);
@@ -716,6 +727,30 @@ function App() {
             element={
               <ExploreDasboardLayout>
                 <Waitlist allWaitlist={waitList} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/blogs"
+            element={
+              <ExploreDasboardLayout>
+                <Blogs blogs={blogs} setBlogs={setBlogs} />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/blogs/add"
+            element={
+              <ExploreDasboardLayout>
+                <AddBlog />
+              </ExploreDasboardLayout>
+            }
+          />
+          <Route
+            path="/explore/blogs/edit/:id"
+            element={
+              <ExploreDasboardLayout>
+                <EditBlog blogs={blogs} setBlogs={setBlogs} />
               </ExploreDasboardLayout>
             }
           />

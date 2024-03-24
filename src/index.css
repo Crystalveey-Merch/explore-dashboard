@@ -36,6 +36,13 @@ body {
   font-family: "Public Sans", sans-serif;
 }
 
+@media screen and (max-width: 1439px) {
+  .editor-container {
+    flex-direction: column;
+  }
+
+}
+
 @media screen and (max-width: 1279px) {
   .bar-links {
     position: fixed;

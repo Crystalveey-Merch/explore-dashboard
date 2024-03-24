@@ -25,6 +25,7 @@ import mapSVG from "../../assets/SVG/Dashboard/map-location-dot-solid.svg"
 import bellRingSVG from "../../assets/SVG/Dashboard/bell-ring.svg"
 import piggySolidSVG from "../../assets/SVG/Dashboard/piggy-bank-solid.svg"
 import userSVG from "../../assets/SVG/Dashboard/user-solid.svg"
+import blogSVG from "../../assets/SVG/Dashboard/square-rss-solid.svg"
 
 
 export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tourBookings, waitList }: { travelBookings: any[], activityBookings: any[], retreatBookings: any[], tourBookings: any[], waitList: any[] }) => {
@@ -40,6 +41,7 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
     const [tourBookingDropdown, setTourBookingDropdown] = useState<boolean>(false);
     const [bookingDropdown, setBookingDropdown] = useState<boolean>(false);
     const [waitlistDropdown, setWaitlistDropdown] = useState<boolean>(false);
+    const [blogDropdown, setBlogDropdown] = useState<boolean>(false);
 
 
     const handleMenu = () => {
@@ -137,7 +139,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                                 setRetreatsBookingDropdown(false),
                                                 setWaitlistDropdown(false),
                                                 setTourBookingDropdown(false),
-                                                setTourPackageDropdown(false)
+                                                setTourPackageDropdown(false),
+                                                setBlogDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -276,7 +279,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                                 setRetreatsBookingDropdown(false),
                                                 setWaitlistDropdown(false),
                                                 setTourBookingDropdown(false),
-                                                setTourPackageDropdown(false)
+                                                setTourPackageDropdown(false),
+                                                setBlogDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -413,7 +417,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                                 setBookingDropdown(false),
                                                 setWaitlistDropdown(false),
                                                 setTourBookingDropdown(false),
-                                                setTourPackageDropdown(false)
+                                                setTourPackageDropdown(false),
+                                                setBlogDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -548,7 +553,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                                 setBookingDropdown(false),
                                                 setRetreatsBookingDropdown(false),
                                                 setWaitlistDropdown(false),
-                                                setTourPackageDropdown(false)
+                                                setTourPackageDropdown(false),
+                                                setBlogDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -684,7 +690,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                                 setTravelBookingDropdown(false),
                                                 setWaitlistDropdown(false),
                                                 setTourBookingDropdown(false),
-                                                setTourPackageDropdown(false)
+                                                setTourPackageDropdown(false),
+                                                setBlogDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -776,7 +783,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                                 setBookingDropdown(false),
                                                 setWaitlistDropdown(false),
                                                 setTourBookingDropdown(false),
-                                                setTourPackageDropdown(false)
+                                                setTourPackageDropdown(false),
+                                                setBlogDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -857,7 +865,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                                 setBookingDropdown(false),
                                                 setWaitlistDropdown(false),
                                                 setTourBookingDropdown(false),
-                                                setTourPackageDropdown(false)
+                                                setTourPackageDropdown(false),
+                                                setBlogDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -925,7 +934,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                                 setBookingDropdown(false),
                                                 setWaitlistDropdown(false),
                                                 setTourBookingDropdown(false),
-                                                setTourPackageDropdown(false)
+                                                setTourPackageDropdown(false),
+                                                setBlogDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -993,7 +1003,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                                 setRetreatsBookingDropdown(false),
                                                 setBookingDropdown(false),
                                                 setWaitlistDropdown(false),
-                                                setTourBookingDropdown(false)
+                                                setTourBookingDropdown(false),
+                                                setBlogDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -1071,7 +1082,8 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                                 setRetreatsBookingDropdown(false),
                                                 setBookingDropdown(false),
                                                 setTourBookingDropdown(false),
-                                                setTourPackageDropdown(false)
+                                                setTourPackageDropdown(false),
+                                                setBlogDropdown(false)
                                             )}
                                         >
                                             <div className="flex gap-3.5 items-center">
@@ -1170,6 +1182,95 @@ export const SideBar = ({ travelBookings, activityBookings, retreatBookings, tou
                                         Employees
                                     </h4>
                                 </NavLink>
+                            </div>
+                        </div>
+                        {/* Employees End */}
+                        {/* Community */}
+                        <div className="flex flex-col gap-2.5">
+                            <h4 className="pl-2 uppercase font-extrabold text-[0.75rem] text-gray-100">
+                                <span className="">
+                                    Community
+                                </span>
+                            </h4>
+                            {/* <div className="bar-item flex flex-col items-center gap-1 xl:px-1">
+                                <NavLink
+                                    to="/explore/reviews"
+                                    className={`flex gap-3.5 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 pl-3.5 cursor-pointer ${location.pathname === "/explore/reviews" ? "bg-gray-500" : ""}`}
+                                >
+                                    <img src={reviewSVG} alt="activity" className="w-6 h-6" />
+                                    <h4 className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/reviews" ? "text-white" : "text-white"}`}>
+                                        Reviews
+                                    </h4>
+                                </NavLink>
+                            </div> */}
+                            <div className="xl:px-1">
+                                <Collapsible
+                                    trigger={
+                                        <button
+                                            className={`flex justify-between w-full h-10 mb-1 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer`}
+                                            onClick={() => (
+                                                setBlogDropdown(!blogDropdown),
+                                                setActivityDropdown(false),
+                                                setTravelPackageDropdown(false),
+                                                setRetreatPackageDropdown(false),
+                                                setTravelBookingDropdown(false),
+                                                setActivitiesBookingDropdown(false),
+                                                setRetreatsBookingDropdown(false),
+                                                setBookingDropdown(false),
+                                                setWaitlistDropdown(false),
+                                                setTourBookingDropdown(false),
+                                                setTourPackageDropdown(false)
+                                            )}
+                                        >
+                                            <div className="flex gap-3.5 items-center">
+                                                <img src={blogSVG} alt="blog" className="w-6 h-6" />
+                                                <h4 className={`font-semibold text-base sm:text-[15px] sm:block ${location.pathname === "/explore/blogs" ? "text-white" : "text-white"}`}>
+                                                    Blogs
+                                                </h4>
+                                            </div>
+                                            <svg
+                                                className={`w-4 h-4 transform transition-transform duration-500 ${blogDropdown ? "rotate-180" : ""}`}
+                                                aria-hidden="true"
+                                                fill="none"
+                                                stroke="#ffffff"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M19 9l-7 7-7-7"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                    }
+                                    open={blogDropdown}
+                                    transitionTime={300}
+                                    easing="ease-in-out"
+                                >
+                                    <ul
+                                        className={`pl-1 flex flex-col gap-1.5 w-full transition-all duration-500 ease-in-out`}
+                                    >
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/blogs" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/blogs" ? "bg-gray-500" : ""}`}>
+                                                <p className={`font-semibold text-base sm:text-[15px] ${location.pathname === "/explore/blogs" ? "text-white" : "text-white"}`}>
+                                                    <span className="">
+                                                        All Blogs
+                                                    </span>
+                                                </p>
+                                            </NavLink>
+                                        </li>
+                                        <li className="bar-item hover:text-gray-400">
+                                            <NavLink to="/explore/blogs/add" className={`flex gap-3 w-full h-10 items-center bgwhite hover:bg-gray-400 rounded-md transition duration-500 ease-in-out py-3 px-3.5 cursor-pointer ${location.pathname === "/explore/blogs/add" ? "bg-gray-500" : ""}`}>
+                                                <img src={PlusSVG} alt="plus" className="w-4 h-4" />
+                                                <p className={`font-semibold text-base  sm:text-[15px] sm:block ${location.pathname === "/explore/blogs/add" ? "text-white" : "text-white"}`}>
+                                                    Add Blog
+                                                </p>
+                                            </NavLink>
+                                        </li>
+                                    </ul>
+                                </Collapsible>
                             </div>
                         </div>
                     </div>
