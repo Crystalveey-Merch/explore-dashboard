@@ -149,7 +149,7 @@ export const EditBlog = ({ blogs, setBlogs }: any) => {
                     updatedAt: timestamp,
                 });
                 await setBlogs((prevBlogs: any) => {
-                    const updatedBlogs = prevBlogs.map((blog: any) => {
+                    return prevBlogs.map((blog: any) => {
                         if (blog.id === id) {
                             return {
                                 ...blog,
@@ -158,7 +158,6 @@ export const EditBlog = ({ blogs, setBlogs }: any) => {
                         }
                         return blog;
                     });
-                    return updatedBlogs;
                 });
             } else {
                 const updatedBlog = {
@@ -173,7 +172,7 @@ export const EditBlog = ({ blogs, setBlogs }: any) => {
                     ...updatedBlog,
                 });
                 await setBlogs((prevBlogs: any) => {
-                    const updatedBlogs = prevBlogs.map((blog: any) => {
+                    return prevBlogs.map((blog: any) => {
                         if (blog.id === id) {
                             return {
                                 ...blog,
@@ -182,8 +181,8 @@ export const EditBlog = ({ blogs, setBlogs }: any) => {
                         }
                         return blog;
                     });
-                    return updatedBlogs;
                 });
+
             }
 
             setLoading(false);

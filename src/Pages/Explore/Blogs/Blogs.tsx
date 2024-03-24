@@ -8,6 +8,7 @@ import { BlueButton, SearchInput } from "../../../Components"
 import PlusSVG from "../../../assets/SVG/Dashboard/plus.svg"
 import { Sort } from "../../../Hooks";
 import noResultImg from "../../../assets/Images/Dashboard/no-results.png"
+import { handleFormatTimestampToDateC } from "../../../Hooks";
 
 
 
@@ -208,7 +209,7 @@ export const Blogs = ({ blogs, setBlogs }: any) => {
                                                 {blog.category}
                                             </td>
                                             <td className="px-6 py-4">
-                                                {new Date(blog.createdAt).toLocaleDateString()}
+                                                {handleFormatTimestampToDateC(blog.createdAt)}
                                             </td>
                                             <td className="px-6 py-4">
                                                 {blog.authorName}
