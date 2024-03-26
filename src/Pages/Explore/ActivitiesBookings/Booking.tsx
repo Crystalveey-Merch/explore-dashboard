@@ -7,7 +7,7 @@ import { handleFormatDate, handleFormatTime, ConfirmModal, ConfirmPassKeyModal, 
 import { StatusDropDown } from "../../../Components";
 import printSVG from "../../../assets/SVG/Dashboard/Action/print.svg";
 import travelImage from "../../../assets/Images/Dashboard/travel-location.png"
-import { ConfirmedBookingForPayments, ConfirmationBookingGeneralConfirmed } from "../../../Components/Explore/Emails";
+import { ConfirmedBookingForPaymentsActivity, ConfirmationBookingGeneralConfirmed } from "../../../Components/Explore/Emails";
 
 
 
@@ -74,7 +74,7 @@ export const BookingActivities = ({ bookings }: { bookings: any }) => {
         setOpen(false);
 
         if (pickedStatus === "confirmed" && booking?.paymentMethod === "bank") {
-            ConfirmedBookingForPayments(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookingDate, checkInDate, booking?.title)
+            ConfirmedBookingForPaymentsActivity(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookingDate, checkInDate, booking?.title)
         }
         else if (pickedStatus === "confirmed" && booking?.paymentMethod === "paystack") {
             ConfirmationBookingGeneralConfirmed(booking?.customer.email, booking?.customer.name.split(" ")[0], totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }), booking?.id, booking?.travellers, bookingDate, checkInDate, booking?.title)
