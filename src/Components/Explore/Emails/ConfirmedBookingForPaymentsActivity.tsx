@@ -23,7 +23,7 @@ export const ConfirmedBookingForPaymentsActivity = async (recipientEmail: string
                         Content: "<strong>Example content<strong>"
                     },
                 ],
-                TemplateName: "Your Booking is Confirmed for bank transfers - Activity"
+                TemplateName: "Your Booking is Confirmed for bank transfers - Activity",
                 Merge: {
                     firstname: firstName,
                     amount: price,
